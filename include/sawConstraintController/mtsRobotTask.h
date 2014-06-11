@@ -1,16 +1,11 @@
-#ifndef mtsRobotTask_H
-#define mtsRobotTask_H
-
 /* -*- Mode: C++; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-    */
 /* ex: set filetype=cpp softtabstop=4 shiftwidth=4 tabstop=4 cindent expandtab: */
 
 /*
- $Id: $
-
  Author(s):  Paul Wilkening
- Created on:
+ Created on: 2014
 
- (C) Copyright 2013 Johns Hopkins University (JHU), All Rights Reserved.
+ (C) Copyright 2014 Johns Hopkins University (JHU), All Rights Reserved.
 
  --- begin cisst license - do not edit ---
 
@@ -21,17 +16,21 @@
  --- end cisst license ---
  */
 
-#include <cisstMultiTask.h>
+#ifndef _mtsRobotTask_h
+#define _mtsRobotTask_h
+
+#include <cisstMultiTask/mtsTaskPeriodic.h>
+
 #include <sawConstraintController/mtsVFController.h>
 #include <sawConstraintController/prmJointState.h>
 
-class mtsRobotTask : public mtsTaskPeriodic
-{    
-    CMN_DECLARE_SERVICES(CMN_NO_DYNAMIC_CREATION, CMN_LOG_LOD_RUN_VERBOSE)
+class mtsRobotTask: public mtsTaskPeriodic
+{
+    CMN_DECLARE_SERVICES(CMN_NO_DYNAMIC_CREATION, CMN_LOG_LOD_RUN_VERBOSE);
 
 protected:
 
-    enum TASKMODE{JPOS = 1, JVEL = 2};
+    enum TASKMODE {JPOS = 1, JVEL = 2};
 
     //VF Controller
     mtsVFController CO_Controller;
@@ -54,23 +53,22 @@ protected:
 
 public:
 
-    mtsRobotTask(const std::string & taskName, double period) : mtsTaskPeriodic(taskName,period,false,1000)
-    {
+    mtsRobotTask(const std::string & taskName, double period): mtsTaskPeriodic(taskName, period, false, 1000) {
         // These communication methods are the same for all tasks
         InitializeInterfaces();
     }
 
-    ~mtsRobotTask(void){}
+    ~mtsRobotTask(void) {}
 
     // Methods needed for periodic tasks
-    // (implementations of all but run can be empty if not needed)    
+    // (implementations of all but run can be empty if not needed)
     virtual void Run(void);
 
     // Set up methods that pass VFs, sensors, kins, mode, etc
-    bool InitializeInterfaces();
+    bool InitializeInterfaces(void);
 
     // Update local kins, sensors
-    virtual bool UpdateRobotStateData() = 0;
+    virtual bool UpdateRobotStateData(void) = 0;
 
     // Safety check on the CO output
     virtual bool ValidMotion(const vctDoubleVec & ControllerOutput) = 0;
@@ -91,4 +89,4 @@ public:
 
 CMN_DECLARE_SERVICES_INSTANTIATION(mtsRobotTask);
 
-#endif // mtsRobotTask_H
+#endif // _mtsRobotTask_h

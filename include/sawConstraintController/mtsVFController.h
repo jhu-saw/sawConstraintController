@@ -1,17 +1,11 @@
-#ifndef _mtsVFController_h
-#define _mtsVFController_h
-
-
 /* -*- Mode: C++; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-    */
 /* ex: set filetype=cpp softtabstop=4 shiftwidth=4 tabstop=4 cindent expandtab: */
 
 /*
- $Id: $
+  Author(s):  Paul Wilkening
+  Created on: 2014
 
- Author(s):  Paul Wilkening
- Created on:
-
- (C) Copyright 2012 Johns Hopkins University (JHU), All Rights Reserved.
+ (C) Copyright 2014 Johns Hopkins University (JHU), All Rights Reserved.
 
  --- begin cisst license - do not edit ---
 
@@ -22,6 +16,11 @@
  --- end cisst license ---
  */
 
+#ifndef _mtsVFController_h
+#define _mtsVFController_h
+
+#include <cisstNumerical/nmrConstraintOptimizer.h>
+
 #include <sawConstraintController/mtsVFBase.h>
 #include <sawConstraintController/mtsVFJointVel.h>
 #include <sawConstraintController/mtsVFJointPos.h>
@@ -30,7 +29,6 @@
 #include <sawConstraintController/prmKinematicsState.h>
 #include <sawConstraintController/prmSensorState.h>
 #include <sawConstraintController/prmOffsetState.h>
-#include <cisstNumerical/nmrConstraintOptimizer.h>
 #include <sawConstraintController/mtsVFDataSideview.h>
 #include <sawConstraintController/mtsVFCartVel.h>
 #include <sawConstraintController/mtsVFCartOrientationVel.h>
@@ -39,18 +37,18 @@
  */
 class mtsVFController : public cmnGenericObject
 {
-    CMN_DECLARE_SERVICES(CMN_NO_DYNAMIC_CREATION, CMN_LOG_LOD_RUN_VERBOSE)
+    CMN_DECLARE_SERVICES(CMN_NO_DYNAMIC_CREATION, CMN_LOG_LOD_RUN_VERBOSE);
 
 public:
 
     //map between string names and pointers to virtual fixtures
-    std::map<std::string,mtsVFBase *> VFMap;
+    std::map<std::string, mtsVFBase *> VFMap;
 
     //map between string names and pointers to kinematics objects
-    std::map<std::string,prmKinematicsState *> Kinematics;
+    std::map<std::string, prmKinematicsState *> Kinematics;
 
     //map between string names and pointers to sensor objects
-    std::map<std::string,prmSensorState *> Sensors;
+    std::map<std::string, prmSensorState *> Sensors;
 
     //robot joint state
     prmJointState JointState;
@@ -71,7 +69,8 @@ public:
     /*! Constructor
     */
     mtsVFController(size_t num_joints):
-        Optimizer(num_joints){}
+        Optimizer(num_joints)
+    {}
 
     //! Adds/Updates a vf data object
     void AddVFJointVelocity(const mtsVFDataBase & vf);
@@ -129,6 +128,6 @@ private:
 
 };
 
-CMN_DECLARE_SERVICES_INSTANTIATION(mtsVFController)
+CMN_DECLARE_SERVICES_INSTANTIATION(mtsVFController);
 
-#endif
+#endif // _mtsVFController_h
