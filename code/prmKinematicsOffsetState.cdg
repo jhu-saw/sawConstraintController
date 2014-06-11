@@ -1,0 +1,84 @@
+inline-header {
+#include <sawConstraintController/prmKinematicsState.h>
+}
+class {
+    name prmKinematicsOffsetState;
+
+    base-class {
+      type prmKinematicsState;
+    }
+
+    member {    
+      name baseName;
+      type std::string;
+      visibility protected;
+    }
+
+    member {    
+      name baseKinematics;
+      type prmKinematicsState*;
+      default 0;
+      is-data false;
+      visibility protected;
+      accessors none;
+    }
+
+    member {    
+      name offset;
+      type vctFrm3;
+      visibility protected;
+    }
+
+    inline-header{
+        /*! Constructor
+        */
+        prmKinematicsOffsetState(const std::string & n, const std::string & bn, const vctFrm3 & o);
+
+        //! Finds the base kinematics object by name and assigns it to the base kinematics pointer
+        /*! LookupKinematics
+        @param k map of names to kinematics
+        */
+        void LookupKinematics(std::map<std::string,prmKinematicsState *> & k);
+
+        //! Updates the offset kinematics using the values of the base kinematics object
+        /*! Update
+        */
+        virtual void Update(){}
+
+    }
+}
+
+inline-code {
+
+/*! Constructor
+*/ 
+prmKinematicsOffsetState::prmKinematicsOffsetState(const std::string & n, const std::string & bn, const vctFrm3 & o) : prmKinematicsState()
+{	
+	Name = n;
+	UserCount = 0;
+    moffset = o;
+    mbaseName = bn;
+	NeedsBase = true;
+}	
+
+//! Finds the base kinematics object by name and assigns it to the base kinematics pointer
+/*! LookupKinematics
+@param k map of names to kinematics
+*/
+void prmKinematicsOffsetState::LookupKinematics(std::map<std::string,prmKinematicsState *> & k)
+{
+    std::map<std::string,prmKinematicsState *>::iterator it;
+    it = k.find(mbaseName);
+    if(it != k.end())
+    {
+        mbaseKinematics = it->second;
+        NeedsBase = false;
+    }
+    else
+    {
+        std::cerr << "Base kinematics \"" << mbaseName << "\" not found!" << std::endl;
+    }
+}
+
+}
+

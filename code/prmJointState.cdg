@@ -1,0 +1,27 @@
+inline-header {
+#include <cisstCommon/cmnGenericObject.h>
+#include <cisstVector/vctDynamicVectorTypes.h>
+}
+class {
+    name prmJointState;
+
+    member {    
+      name JointPosition;
+      type vctDoubleVec;
+      visibility public;
+    }
+
+    member {    
+      name JointVelocity;
+      type vctDoubleVec;
+      visibility public;
+    }
+
+    member {    
+      name JointAcceleration;
+      type vctDoubleVec;
+      visibility public;
+    }
+
+}
+

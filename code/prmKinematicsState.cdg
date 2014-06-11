@@ -1,0 +1,97 @@
+inline-header {
+#include <sawConstraintController/prmJointState.h>
+#include <cisstMultiTask.h>
+#include <cisstVector/vctDynamicMatrixTypes.h>
+#include <cisstVector/vctDataFunctionsDynamicMatrix.h>
+}
+class {
+    name prmKinematicsState;
+
+    member {    
+      name Frame;
+      type vctFrm3;
+      visibility public;
+    }
+
+    member {    
+      name CartesianVelocity;
+      type vct3;
+      visibility public;
+    }
+
+    member {    
+      name AngularVelocity;
+      type vct3;
+      visibility public;
+    }
+
+    member {    
+      name Jacobian;
+      type vctDoubleMat;
+      visibility public;
+    }
+
+    member {
+      name InverseJacobian;
+      type vctDoubleMat;
+      visibility public;
+    }
+
+    member {    
+      name UserCount;
+      type int;
+      visibility public;
+    }
+
+    member {    
+      name Name;
+      type std::string;
+      visibility public;
+    }
+
+    member {    
+      name NeedsBase;
+      type bool;
+      visibility public;
+    }
+
+    member {    
+      name JointState;
+      type prmJointState*;
+      visibility public;
+      default 0;
+      is-data false;
+      accessors none;
+    }
+    inline-header{
+
+        //! This method looks up a base kinematics object for those with an offset, and nothing for others
+            /*! LookupKinematics
+            @param k map of kinematics names to kinematics objects
+            */
+            virtual void LookupKinematics(const std::map<std::string,prmKinematicsState *> &){}
+
+            /*! Constructor
+            */
+            prmKinematicsState(const std::string & n, prmJointState * js);
+
+            //! Updates the kinematics information using the pointer to a joint state.
+            /*! Update
+            */
+            virtual void Update(){};
+    }
+}
+
+inline-code {
+
+/*! Constructor	
+*/
+prmKinematicsState::prmKinematicsState(const std::string & n, prmJointState * js)
+{
+	Name = n;
+	UserCount = 0;
+    JointState = js;
+	NeedsBase = false;
+}
+}
+

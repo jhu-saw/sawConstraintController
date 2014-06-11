@@ -1,0 +1,82 @@
+inline-header {
+#include <sawConstraintController/prmSensorState.h>
+#include <sawConstraintController/prmKinematicsOffsetState.h>
+}
+class {
+    name prmOffsetState;
+
+    base-class {
+      type prmSensorState;
+    }
+
+    member {    
+      name baseName;
+      type std::string;
+      visibility protected;
+    }
+
+    member {    
+      name baseSensor;
+      default 0;
+      is-data false;
+      type prmSensorState*;
+      visibility protected;
+      accessors none;
+    }
+
+    member {    
+      name offsetFrame;
+      type vctFrm3;
+      visibility protected;
+    }
+
+    inline-header{
+	/*! Constructor
+	*/ 
+    prmOffsetState(const std::string & n, const std::string & bn, const vctFrm3 & of);
+
+	//! Finds the base sensor object by name and assigns it to the base sensor pointer
+	/*! LookupSensor
+	@param s map of names to sensors
+	*/
+    void LookupSensor(std::map<std::string,prmSensorState *> & s);
+
+	//! Updates the values vector by using the base sensor's newest values
+	/*! Updates
+	*/
+    virtual void Update(){}
+    }
+
+}
+
+inline-code {
+
+/*! Constructor
+*/ 
+prmOffsetState::prmOffsetState(const std::string & n, const std::string & bn, const vctFrm3 & of) : prmSensorState(n)
+{	
+    mbaseName = bn;
+    moffsetFrame = of;
+	NeedsBase = true;
+}	
+
+//! Finds the base sensor object by name and assigns it to the base sensor pointer
+/*! LookupSensor
+@param s map of names to sensors
+*/
+void prmOffsetState::LookupSensor(std::map<std::string,prmSensorState *> & s)
+{
+    std::map<std::string,prmSensorState *>::iterator it;
+    it = s.find(mbaseName);
+    if(it != s.end())
+    {
+        mbaseSensor = it->second;
+        NeedsBase = false;
+    }
+    else
+    {
+        std::cerr << "Base sensor \"" << mbaseName << "\" not found!" << std::endl;
+    }
+}
+}
+

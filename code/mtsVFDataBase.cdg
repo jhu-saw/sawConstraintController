@@ -1,0 +1,110 @@
+inline-header {
+#include <cisstVector/vctDynamicVectorTypes.h>
+#include <cisstVector/vctDynamicMatrixTypes.h>
+#include <cisstVector/vctDataFunctionsDynamicVector.h>
+#include <cisstVector/vctDataFunctionsDynamicMatrix.h>
+}
+class {
+    name mtsVFDataBase;
+
+    member {    
+      name Name;
+      type std::string;
+      visibility public;
+    }
+    member {
+      default 0.0;
+      name Importance;
+      type double;
+      visibility public;
+    }
+    member {
+      default false;
+      name Active;
+      type bool;
+      visibility public;
+    }
+    member {    
+      name KinNames;
+      type std::vector<std::string>;
+      visibility public;
+    }
+    member {    
+      name SensorNames;
+      type std::vector<std::string>;
+      visibility public;
+    }
+    member {     
+      name SlackLimits;
+      type vctDynamicVector<double>;
+      visibility public;
+    }
+    member {      
+      name SlackCosts;
+      type vctDynamicVector<double>;
+      visibility public;
+    }
+    member {
+      default 0;
+      is-size_t true;
+      name NumSlacks;
+      type size_t;
+      visibility public;
+    }
+    member {      
+      name DOFSelections;
+      type vctDynamicVector<size_t>;
+      visibility public;
+    }
+    member {
+      default 0;
+      is-size_t true;
+      name ObjectiveRows;
+      type size_t;
+      visibility public;
+    }
+    member {
+      default 0;
+      is-size_t true;
+      name IneqConstraintRows;
+      type size_t;
+      visibility public;
+    }
+    member {
+      default 0;
+      is-size_t true;
+      name EqConstraintRows;
+      type size_t;
+      visibility public;
+    }
+    member {      
+      name ObjectiveMatrix;
+      type vctDynamicMatrix<double>;
+      visibility public;
+    }
+    member {      
+      name ObjectiveVector;
+      type vctDynamicVector<double>;
+      visibility public;
+    }
+    member {      
+      name IneqConstraintMatrix;
+      type vctDynamicMatrix<double>;
+      visibility public;
+    }
+    member {      
+      name IneqConstraintVector;
+      type vctDynamicVector<double>;
+      visibility public;
+    }
+    member {      
+      name EqConstraintMatrix;
+      type vctDynamicMatrix<double>;
+      visibility public;
+    }
+    member {     
+      name EqConstraintVector;
+      type vctDynamicVector<double>;
+      visibility public;
+    }
+}

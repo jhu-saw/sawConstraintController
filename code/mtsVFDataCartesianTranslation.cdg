@@ -1,0 +1,17 @@
+inline-header {
+#include <sawConstraintController/mtsVFDataBase.h>
+}
+
+class {
+    name mtsVFDataCartesian;
+
+    base-class {
+      type mtsVFDataBase;
+    }
+
+    member {    
+      name OffsetVector;
+      type vctDoubleVec;
+      visibility public;
+    }
+}

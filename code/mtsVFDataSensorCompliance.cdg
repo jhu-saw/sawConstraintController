@@ -1,0 +1,46 @@
+inline-header {
+#include <sawConstraintController/mtsVFDataBase.h>
+}
+
+class {
+    name mtsVFDataSensorCompliance;
+
+    base-class {
+      type mtsVFDataBase;
+    }
+
+    member {    
+      name Gain;
+      type vctDoubleMat;
+      visibility public;
+    }
+    member {      
+      name SensorSelections;
+      type vctDynamicVector<size_t>;
+      visibility public;
+    }
+    inline-header {
+        mtsVFDataSensorCompliance(const std::string & name, const std::string & kinName,
+                                  const std::string & forceSensorName, const std::string & overallGainName,
+                                  const vctDoubleMat & g, const vctDoubleVec & selections = vctDoubleVec(0));
+    }   
+}
+
+//TODO can create new cpp file
+inline-code {
+    /*! Constructor
+    \param name String name of object
+    \param importance Number representing this virtual fixture's relative importance
+    */
+    mtsVFDataSensorCompliance::mtsVFDataSensorCompliance(const std::string & name, const std::string & kinName,
+                                                         const std::string & forceSensorName, const std::string & overallGainName,
+                                                         const vctDoubleMat & g, const vctDoubleVec & selections) : mtsVFDataBase()
+    {
+        Name = name;
+        KinNames.push_back(kinName);
+        SensorNames.push_back(forceSensorName);
+        SensorNames.push_back(overallGainName);
+        Gain = g;
+        SensorSelections = selections;
+    }
+}

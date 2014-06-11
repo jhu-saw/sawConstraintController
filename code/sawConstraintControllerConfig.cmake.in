@@ -1,0 +1,22 @@
+#
+# $Id$
+#
+# Cmake configuration file for the installed version of cisst
+#
+# Author(s):  Paul Wilkening
+# Created on: 2014-06-07
+#
+# (C) Copyright 2003-2012 Johns Hopkins University (JHU), All Rights
+# Reserved.
+#
+# --- begin cisst license - do not edit ---
+#
+# This software is provided "as is" under an open source license, with
+# no warranty.  The complete license can be found in license.txt and
+# http://www.cisst.org/cisst/license.txt.
+#
+# --- end cisst license ---
+
+set (sawConstraintController_INCLUDE_DIR "@sawConstraintController_INCLUDE_DIR@")
+set (sawConstraintController_LIBRARY_DIR "@sawConstraintController_LIBRARY_DIR@")
+set (sawConstraintController_LIBRARIES   "@sawConstraintController_LIBRARIES@")

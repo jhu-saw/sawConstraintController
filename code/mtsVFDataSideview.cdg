@@ -1,0 +1,37 @@
+inline-header {
+#include <sawConstraintController/mtsVFDataBase.h>
+}
+
+class {
+    name mtsVFDataSideview;
+
+    base-class {
+      type mtsVFDataBase;
+    }
+
+    member {    
+      name VFPoint;
+      type vct3;
+      default vct3(0.0,0.0,0.0);
+      visibility public;
+    }
+    inline-header {
+        mtsVFDataSideview(const std::string & name, const std::string & kinName,
+                                  const vct3 & point);
+    }   
+}
+
+//TODO can create new cpp file
+inline-code {
+    /*! Constructor
+    \param name String name of object
+    \param importance Number representing this virtual fixture's relative importance
+    */
+    mtsVFDataSideview::mtsVFDataSideview(const std::string & name, const std::string & kinName,
+                                                         const vct3 & point) : mtsVFDataBase()
+    {
+        Name = name;
+        KinNames.push_back(kinName);
+        VFPoint = point;
+    }
+}

@@ -1,0 +1,57 @@
+inline-header {
+#include <cisstVector/vctDynamicVectorTypes.h>
+#include <cisstVector/vctDynamicMatrixTypes.h>
+#include <cisstMultiTask.h>
+}
+class {
+    name prmSensorState;
+
+    member {    
+      name Name;
+      type std::string;
+      visibility public;
+    }
+
+    member {    
+      name Values;
+      type vctDynamicVector<double>;
+      visibility public;
+    }
+
+    member {    
+      name UserCount;
+      type int;
+      visibility public;
+    }
+
+    member {    
+      name NeedsBase;
+      type bool;
+      visibility public;
+    }
+
+    inline-header{
+
+        /*! Constructor
+        */
+        prmSensorState(const std::string & n);
+
+        //! Looks up the base sensor pointer if it is needed
+        /*! LookupSensor
+        @param s map of sensor names to sensor pointers
+        */
+        virtual void LookupSensor(const std::map<std::string,prmSensorState *> &){};
+    }
+
+}
+
+inline-code {
+
+    /*! Constructor
+    */
+    prmSensorState::prmSensorState(const std::string & n)
+    {
+        Name = n;
+    }
+
+}
