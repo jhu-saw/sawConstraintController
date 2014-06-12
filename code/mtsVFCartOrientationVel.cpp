@@ -29,8 +29,11 @@ CMN_IMPLEMENT_SERVICES(mtsVFCartesianOrientation)
 void mtsVFCartesianOrientation::FillInTableauRefs(const mtsVFBase::CONTROLLERMODE mode, const double TickTime)
 {
     // Standard VF for cartesian velocity control
+    // Given a rotation R and an offset from the Frame of this rotation v (where we will define the VF)
+    // We define R* as dR * R and m as R * v
+    // Here, d is our objective vector
+    // We aim to minimize the following expression by our selection of dx
     // min || R* * v x d || => min || [0 | sk(d)*sk(m)] * dx + m x d ||
-    // Where m = R*v
 
     // First check if we have all dependencies met
     if(Kinematics.size() < 1)
@@ -39,9 +42,10 @@ void mtsVFCartesianOrientation::FillInTableauRefs(const mtsVFBase::CONTROLLERMOD
         cmnThrow("FillInTableauRefs: Cart Orientation VF given improper input");
     }
 
+    // Convert base class of VF data to a cartesian VF data subclass to access OffsetVector
     mtsVFDataCartesian * CartData = (mtsVFDataCartesian *)Data;
 
-    //R*v is the frame rotation multiplied by the offset vector input
+    //m = R*v is the frame rotation multiplied by the offset vector input
     m.Assign(Kinematics.at(0)->Frame.Rotation().ApplyTo(CartData->OffsetVector));
 
     //Fill in [0 | sk(d)*sk(m) ]
@@ -84,8 +88,8 @@ void mtsVFCartesianOrientation::FillInTableauRefs(const mtsVFBase::CONTROLLERMOD
 
     for(size_t i = 0; i < Data->NumSlacks; i++)
     {
-        ObjectiveMatrixSlackRef.Column(i).SetAll(Data->SlackCosts[i]);
-        IneqConstraintMatrixRef[i][i] = 1;
+        ObjectiveMatrixSlackRef.Column(i).SetAll(Data->SlackCosts(i));
+        IneqConstraintMatrixRef(i,i) = 1;
     }
 }
 

@@ -5,10 +5,13 @@ inline-header {
 class {
     name mtsVFDataCartesian;
 
+    //All VF data objects are subclasses of mtsVFDataBase
     base-class {
       type mtsVFDataBase;
     }
 
+    // We have one extra member, which is the offset from the kinematics frame being used
+    // The corresponding VF will center around F*v, where F is the kinematics frame and v is this offset vector
     member {    
       name OffsetVector;
       type vctDoubleVec;

@@ -29,9 +29,16 @@ CMN_IMPLEMENT_SERVICES(mtsVFCartesianTranslation)
 void mtsVFCartesianTranslation::FillInTableauRefs(const mtsVFBase::CONTROLLERMODE mode, const double TickTime)
 {
     // Standard VF for cartesian velocity control
-    // min || C * (F* * w - d) || => || C[I | sk(-w)] dx - C(w + d) ||
-    // A * (F* * w - b) >= 0 => A[I | sk(-w)] dx >= A(w + b)
-    // E * (F* * w - f) = 0 => E[I | sk(-w)] dx = E(w + f)
+    // Given a frame F, an offset from this frame v (this is where we will define this VF)
+    // We define F* as dF * F and w as F * v
+    // Here, C is our objective matrix and d is our objective vector
+    // A is our inequality constraint matrix and b is our inequality constraint vector
+    // E is our equality constraint matrix and f is our equality constraint vector
+    // We aim to minimize this expression with our choice of dx:
+    // min || C * (F* * v - d) || => || C[I | sk(-w)] dx - C(w + d) ||
+    // While ensuring the following equations still hold
+    // A * (F* * v - b) >= 0 => A[I | sk(-w)] dx >= A(w + b)
+    // E * (F* * v - f) = 0 => E[I | sk(-w)] dx = E(w + f)
 
     // First check if we have all dependencies met
     if(Kinematics.size() < 1)
@@ -40,9 +47,10 @@ void mtsVFCartesianTranslation::FillInTableauRefs(const mtsVFBase::CONTROLLERMOD
         cmnThrow("FillInTableauRefs: Cart Trans VF given improper input");
     }
 
+    // Convert base class data to cartesian data type to access offset vector
     mtsVFDataCartesian * CartData = (mtsVFDataCartesian *)Data;
 
-    //w is the transformed vector input
+    //w is the transformed vector input (F * v)
     w.Assign((Kinematics.at(0)->Frame)*CartData->OffsetVector);
 
     //Fill in identity part of [I | sk(-w)]
@@ -53,7 +61,7 @@ void mtsVFCartesianTranslation::FillInTableauRefs(const mtsVFBase::CONTROLLERMOD
         IdentitySkewMatrix(i,i) = 1;
     }
 
-    //Fill in skew part using w (skew of -w)
+    //Fill in skew part using of [I | sk(-w)]
     IdentitySkewMatrix(0,1) = w(2);
     IdentitySkewMatrix(0,2) = -w(1);
     IdentitySkewMatrix(1,0) = -w(2);
@@ -95,7 +103,7 @@ void mtsVFCartesianTranslation::FillInTableauRefs(const mtsVFBase::CONTROLLERMOD
 
     for(size_t i = 0; i < Data->NumSlacks; i++)
     {
-        ObjectiveMatrixSlackRef.Column(i).SetAll(Data->SlackCosts[i]);
+        ObjectiveMatrixSlackRef.Column(i).SetAll(Data->SlackCosts(i));
         IneqConstraintMatrixRef(i,i) = 1;
     }
 }

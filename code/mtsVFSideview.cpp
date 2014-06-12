@@ -25,14 +25,18 @@ CMN_IMPLEMENT_SERVICES(mtsVFSideview)
 //! Updates co with virtual fixture data.
 /*! FillInTableauRefs
 */
-void mtsVFSideview::FillInTableauRefs(const CONTROLLERMODE, const double)
+void mtsVFSideview::FillInTableauRefs(const CONTROLLERMODE mode, const double TickTime)
 {    
-#if 0
     // fill in refs
-    // min || [I | -skew(p-w)] * J - (w-v) ||
-    // p = Probe Tip
-    // v = VFPoint
-    // w = Projected Point
+    // We want to minimize the distance between a point in the center of the cochlea and its projection
+    // onto the sideview axis
+    // We aim to minimize this expression with our choice of dq
+    // min || [I | -sk(p)] * Jac * dq + w + p - v)
+    // p = Sideview Probe Tip
+    // v = VFPoint (point at center of cochlea saved in VF data object)
+    // w = Projected Point (VFPoint projected onto probe axis)
+    // Jac = the jacobian at the probe tip
+    // dq = the incremental joint movement of the robot
 
     if(Kinematics.size() < 1)
     {
@@ -40,40 +44,45 @@ void mtsVFSideview::FillInTableauRefs(const CONTROLLERMODE, const double)
         cmnThrow("Error: Sideview VF given improper input");
     }
 
+    // sideview specific VF data object (need this conversion to access VFPoint)
     mtsVFDataSideview * SideviewData = (mtsVFDataSideview *)(Data);
-    vctFrm3 * FrmP = &(Kinematics.at(0)->Frame);
-    vctDoubleMat * JacP = &(Kinematics.at(0)->Jacobian);
-    vct3 * VFPoint = &(SideviewData->VFPoint);
-
-    //Rz is the probe's axis
-    vct3 Rz = FrmP->Rotation()*vct3(0,0,1);
-
-    //probe tip to current point vector
-    vct3 pv;
-    pv = VFPoint - FrmP->Translation();
-
-    //probe tip to current point's projection onto Rz
-    vct3 pw = Rz*vctDotProduct(Rz,pv);
-
-    //vector we want to minimize (objective's vector)
-    vct3 wv = pv-pw;
+    // pointer to probe tip frame
+    FrmP = &(Kinematics.at(0)->Frame);
+    // pointer to jacobian
+    JacP = &(Kinematics.at(0)->Jacobian);
+    // pointer to cochlear center point for this VF object (v)
+    VFPoint = &(SideviewData->VFPoint);
+    // probe tip (p)
+    ProbeTip = &(FrmP->Translation());
+    // axis of probe
+    Rz = FrmP->Rotation()*vct3(0,0,1);
+    // projected point (w) by projecting VFPoint-ProbeTip onto Rz to get ProjectedPoint - ProbeTip
+    // add ProbeTip to get ProjectedPoint
+    ProjectedPoint = Rz*vctDotProduct(Rz,*VFPoint-*ProbeTip) + *ProbeTip;
 
     //set up objective's matrix
-    //[I | -skew(pw)]*J
-    Jw(0,4) = pw[2]; Jw(0,5) = -pw[1];
-    Jw(1,3) = -pw[2];  Jw(1,5) = pw[0];
-    Jw(2,3) = pw[1]; Jw(2,4) = -pw[0];
+    //[I | -skew(p)]
+    IdentitySkew.SetSize(3,6);
+    IdentitySkew.SetAll(0.0);
+    IdentitySkew(0,0) = 1;
+    IdentitySkew(1,1) = 1;
+    IdentitySkew(2,2) = 1;
+    IdentitySkew(0,4) = (*ProbeTip)(2); IdentitySkew(0,5) = -(*ProbeTip)(1);
+    IdentitySkew(1,3) = -(*ProbeTip)(2);  IdentitySkew(1,5) = (*ProbeTip)(0);
+    IdentitySkew(2,3) = (*ProbeTip)(1); IdentitySkew(2,4) = -(*ProbeTip)(0);
 
-    ObjectiveMatrixRef.Assign(Jw*(*JacP));
+    // [I | -sk(p)] * Jac
+    ObjectiveMatrixRef.Assign(IdentitySkew*(*JacP));
 
-    ObjectiveVectorRef.Assign(wv);
+    // w + p - v
+    ObjectiveVectorRef.Assign(ProjectedPoint + *ProbeTip - *VFPoint);
 
-    ConvertVariables(mode,TickTime);
+    ConvertRefs(mode,TickTime);
 
     for(size_t i = 0; i < Data->NumSlacks; i++)
     {
-        ObjectiveMatrixSlackRef.Column(i).SetAll(Data->SlackCosts[i]);
-        IneqConstraintMatrixRef[i][i] = 1;
+        ObjectiveMatrixSlackRef.Column(i).SetAll(Data->SlackCosts(i));
+        IneqConstraintMatrixRef(i,i) = 1;
     }
-#endif
+
 }

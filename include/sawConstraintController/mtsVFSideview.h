@@ -36,6 +36,23 @@ class mtsVFSideview : public mtsVFJointVelocity
 {
     CMN_DECLARE_SERVICES(CMN_DYNAMIC_CREATION, CMN_LOG_LOD_RUN_VERBOSE)
 
+private:
+
+    // pointer to probe tip frame
+    vctFrm3 * FrmP;
+    // pointer to jacobian of probe tip frame
+    vctDoubleMat * JacP;
+    // pointer to the cochlear center point given by the sideview VF data
+    vct3 * VFPoint;
+    // will store [I | -sk(pw)]
+    vctDoubleMat IdentitySkew;
+    // axis of probe
+    vct3 Rz;
+    // projection of VFPoint onto probe axis
+    vct3 ProjectedPoint;
+    // pointer to probe tip location
+    vct3 * ProbeTip;
+
 public:
 
     /*! Constructor
