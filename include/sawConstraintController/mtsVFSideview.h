@@ -2,12 +2,10 @@
 /* ex: set filetype=cpp softtabstop=4 shiftwidth=4 tabstop=4 cindent expandtab: */
 
 /*
- $Id: $
+  Author(s):  Paul Wilkening
+  Created on: 2014
 
- Author(s):  Paul Wilkening
- Created on:
-
- (C) Copyright 2013 Johns Hopkins University (JHU), All Rights Reserved.
+ (C) Copyright 2014 Johns Hopkins University (JHU), All Rights Reserved.
 
  --- begin cisst license - do not edit ---
 
@@ -21,20 +19,16 @@
 #ifndef _mtsVFSideview_h
 #define _mtsVFSideview_h
 
-#include <cisstVector/vctDynamicVectorTypes.h>
-#include <cisstVector/vctDynamicMatrixTypes.h>
-#include <sawConstraintController/prmKinematicsState.h>
-#include <sawConstraintController/prmSensorState.h>
-#include <sawConstraintController/mtsVFDataSensorCompliance.h>
 #include <sawConstraintController/mtsVFJointVel.h>
 #include <sawConstraintController/mtsVFDataSideview.h>
+#include <sawConstraintController/mtsVFDataSensorCompliance.h>
 
 //! This is the base class for all virtual fixture objects
 /*! \brief mtsVFSideview: A class that contains logic for the implementation of virtual fixtures
  */
-class mtsVFSideview : public mtsVFJointVelocity
+class mtsVFSideview: public mtsVFJointVelocity
 {
-    CMN_DECLARE_SERVICES(CMN_DYNAMIC_CREATION, CMN_LOG_LOD_RUN_VERBOSE)
+    CMN_DECLARE_SERVICES(CMN_DYNAMIC_CREATION, CMN_LOG_LOD_RUN_VERBOSE);
 
 private:
 
@@ -57,14 +51,20 @@ public:
 
     /*! Constructor
     */
-    mtsVFSideview() : mtsVFJointVelocity(){}
+    mtsVFSideview():
+        mtsVFJointVelocity()
+    {}
 
-    mtsVFSideview(mtsVFDataSensorCompliance *data) : mtsVFJointVelocity(DefaultKinematicsName,data){}
+    mtsVFSideview(mtsVFDataSensorCompliance *data):
+        mtsVFJointVelocity(DefaultKinematicsName, data)
+    {}
 
     /*! Constructor
     \param name String name of object
     */
-    mtsVFSideview(const std::string & name, mtsVFDataSideview * data) : mtsVFJointVelocity(name,data){}
+    mtsVFSideview(const std::string & name, mtsVFDataSideview * data):
+        mtsVFJointVelocity(name, data)
+    {}
 
     //! Updates co with virtual fixture data.
     /*! FillInTableauRefs
@@ -73,6 +73,6 @@ public:
 
 };
 
-CMN_DECLARE_SERVICES_INSTANTIATION(mtsVFSideview)
+CMN_DECLARE_SERVICES_INSTANTIATION(mtsVFSideview);
 
 #endif
