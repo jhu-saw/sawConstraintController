@@ -2,12 +2,10 @@
 /* ex: set filetype=cpp softtabstop=4 shiftwidth=4 tabstop=4 cindent expandtab: */
 
 /*
- $Id: $
+  Author(s):  Paul Wilkening
+  Created on: 2014
 
- Author(s):  Paul Wilkening
- Created on:
-
- (C) Copyright 2013 Johns Hopkins University (JHU), All Rights Reserved.
+  (C) Copyright 2014 Johns Hopkins University (JHU), All Rights Reserved.
 
  --- begin cisst license - do not edit ---
 
@@ -20,13 +18,13 @@
 
 #include <sawConstraintController/mtsVFSensorCompliance.h>
 
-CMN_IMPLEMENT_SERVICES(mtsVFSensorCompliance)
+CMN_IMPLEMENT_SERVICES(mtsVFSensorCompliance);
 
 //! Updates co with virtual fixture data.
 /*! FillInTableauRefs
 */
 void mtsVFSensorCompliance::FillInTableauRefs(const CONTROLLERMODE mode, const double TickTime)
-{    
+{
     // fill in refs
     // min || J(q)*dq - gain*overallGain*sensorValues ||
 
@@ -59,7 +57,7 @@ void mtsVFSensorCompliance::FillInTableauRefs(const CONTROLLERMODE mode, const d
     //set the reference to the right hand side of the above equation (gain*Force)
     ObjectiveVectorRef.Assign(SensorComplianceData->Gain * UsedValues);
 
-    //now set reference to the left hand side of the above equation, the jacobian (only rows indicated in DOFSelections)    
+    //now set reference to the left hand side of the above equation, the jacobian (only rows indicated in DOFSelections)
     for(size_t r = 0; r < SensorComplianceData->DOFSelections.size(); r++)
     {
         for (size_t c = 0; c < JacP->cols(); c++)

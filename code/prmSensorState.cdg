@@ -1,7 +1,6 @@
 inline-header {
 #include <cisstVector/vctDynamicVectorTypes.h>
 #include <cisstVector/vctDynamicMatrixTypes.h>
-#include <cisstMultiTask.h>
 }
 class {
     name prmSensorState;

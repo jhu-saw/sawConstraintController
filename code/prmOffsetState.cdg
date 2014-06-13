@@ -39,7 +39,7 @@ class {
 	/*! LookupSensor
 	@param s map of names to sensors
 	*/
-    void LookupSensor(std::map<std::string,prmSensorState *> & s);
+    void LookupSensor(const std::map<std::string,prmSensorState *> & s);
 
 	//! Updates the values vector by using the base sensor's newest values
 	/*! Updates
@@ -64,9 +64,9 @@ prmOffsetState::prmOffsetState(const std::string & n, const std::string & bn, co
 /*! LookupSensor
 @param s map of names to sensors
 */
-void prmOffsetState::LookupSensor(std::map<std::string,prmSensorState *> & s)
+void prmOffsetState::LookupSensor(const std::map<std::string,prmSensorState *> & s)
 {
-    std::map<std::string,prmSensorState *>::iterator it;
+    std::map<std::string,prmSensorState *>::const_iterator it;
     it = s.find(mbaseName);
     if(it != s.end())
     {

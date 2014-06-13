@@ -21,6 +21,7 @@
 
 #include <cisstCommon/cmnPath.h>
 #include <cisstNumerical/nmrConstraintOptimizer.h>
+#include <cisstMultiTask/mtsTaskPeriodic.h>
 #include <sawConstraintController/prmForceOffsetState.h>
 #include <sawConstraintController/mtsVFDataBase.h>
 #include <sawConstraintController/mtsVFDataSensorCompliance.h>
@@ -65,7 +66,7 @@ class mtsVFSenderTask : public mtsTaskPeriodic
     //! Runs once, set up functions
     /*! Configure
      */
-    void Configure(void);
+    void Configure(const std::string & filename = "");
 
     //! Runs every period
     /*! Run

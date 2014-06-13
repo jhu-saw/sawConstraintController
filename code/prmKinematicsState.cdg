@@ -1,6 +1,5 @@
 inline-header {
 #include <sawConstraintController/prmJointState.h>
-#include <cisstMultiTask.h>
 #include <cisstVector/vctDynamicMatrixTypes.h>
 #include <cisstVector/vctDataFunctionsDynamicMatrix.h>
 }
@@ -84,14 +83,13 @@ class {
 
 inline-code {
 
-/*! Constructor	
-*/
-prmKinematicsState::prmKinematicsState(const std::string & n, prmJointState * js)
-{
-	Name = n;
-	UserCount = 0;
-    JointState = js;
-	NeedsBase = false;
-}
+    /*! Constructor */
+    prmKinematicsState::prmKinematicsState(const std::string & n, prmJointState * js)
+    {
+        Name = n;
+        UserCount = 0;
+        JointState = js;
+        NeedsBase = false;
+    }
 }
 

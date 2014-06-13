@@ -2,12 +2,10 @@
 /* ex: set filetype=cpp softtabstop=4 shiftwidth=4 tabstop=4 cindent expandtab: */
 
 /*
- $Id: $
+  Author(s):  Paul Wilkening
+  Created on: 2014
 
- Author(s):  Paul Wilkening
- Created on:
-
- (C) Copyright 2013 Johns Hopkins University (JHU), All Rights Reserved.
+  (C) Copyright 2014 Johns Hopkins University (JHU), All Rights Reserved.
 
  --- begin cisst license - do not edit ---
 
@@ -57,7 +55,7 @@ void mtsVFCartesianTranslation::FillInTableauRefs(const mtsVFBase::CONTROLLERMOD
     IdentitySkewMatrix.SetSize(3,6);
     IdentitySkewMatrix.SetAll(0.0);
     for(size_t i = 0; i < 3; i++)
-    {        
+    {
         IdentitySkewMatrix(i,i) = 1;
     }
 
@@ -84,7 +82,7 @@ void mtsVFCartesianTranslation::FillInTableauRefs(const mtsVFBase::CONTROLLERMOD
             break;
         }
         case JVEL:
-        {                        
+        {
             //1/TickTime*A[I;sk(-w)]*Jac*dq >= 1/TickTime*A*(w+b)
             ObjectiveMatrixRef.Assign(1/TickTime*Data->ObjectiveMatrix*IdentitySkewMatrix*Kinematics.at(0)->Jacobian);
             ObjectiveVectorRef.Assign(1/TickTime*Data->ObjectiveMatrix * (w + Data->ObjectiveVector));

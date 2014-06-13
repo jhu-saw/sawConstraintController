@@ -19,8 +19,9 @@
  */
 
 #include "mtsVFSenderTask.h"
-#include <stdio.h>
-//#include <conio.h>
+#include <cisstMultiTask/mtsInterfaceRequired.h>
+
+// #include <stdio.h>
 
 CMN_IMPLEMENT_SERVICES(mtsVFSenderTask);
 
@@ -57,7 +58,7 @@ mtsVFSenderTask::mtsVFSenderTask(const std::string & taskName, double period) : 
     tickNum = 0;
 }
 
-void mtsVFSenderTask::Configure()
+void mtsVFSenderTask::Configure(const std::string & CMN_UNUSED(filename))
 {
     //link the functions defined in the header with strings that match those of the run loop example
     mtsInterfaceRequired * required = this->AddInterfaceRequired("RequiresVF");
