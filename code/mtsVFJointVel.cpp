@@ -36,20 +36,18 @@ void mtsVFJointVelocity::FillInTableauRefs(const mtsVFBase::CONTROLLERMODE mode,
 
         case JPOS:
         {
-            //A*TickTime*dq >= b * TickTime
-            ObjectiveMatrixRef.Assign(Data->ObjectiveMatrix * TickTime);
-            ObjectiveVectorRef.Assign(Data->ObjectiveVector * TickTime);
-            IneqConstraintMatrixRef.Assign(Data->IneqConstraintMatrix * TickTime);
-            IneqConstraintVectorRef.Assign(Data->IneqConstraintVector * TickTime);
-            EqConstraintMatrixRef.Assign(Data->EqConstraintMatrix * TickTime);
-            EqConstraintVectorRef.Assign(Data->EqConstraintVector * TickTime);
+            //A/TickTime*dq >= b / TickTime
+            ObjectiveMatrixRef.Assign(Data->ObjectiveMatrix / TickTime);
+            ObjectiveVectorRef.Assign(Data->ObjectiveVector / TickTime);
+            IneqConstraintMatrixRef.Assign(Data->IneqConstraintMatrix / TickTime);
+            IneqConstraintVectorRef.Assign(Data->IneqConstraintVector / TickTime);
+            EqConstraintMatrixRef.Assign(Data->EqConstraintMatrix / TickTime);
+            EqConstraintVectorRef.Assign(Data->EqConstraintVector / TickTime);
             break;
         }
         case JVEL:
         {
             //A*dq >= b
-            std::cout << ObjectiveMatrixRef.sizes() << std::endl;
-            std::cout << Data->ObjectiveMatrix.sizes() << std::endl;
             ObjectiveMatrixRef.Assign(Data->ObjectiveMatrix);
             ObjectiveVectorRef.Assign(Data->ObjectiveVector);
             IneqConstraintMatrixRef.Assign(Data->IneqConstraintMatrix);

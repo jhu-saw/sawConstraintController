@@ -14,7 +14,7 @@ class {
     // The corresponding VF will center around F*v, where F is the kinematics frame and v is this offset vector
     member {    
       name OffsetVector;
-      type vctDoubleVec;
+      type vct3;
       visibility public;
     }
 }

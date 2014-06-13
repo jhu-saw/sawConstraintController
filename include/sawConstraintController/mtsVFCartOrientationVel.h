@@ -30,7 +30,7 @@
  */
 class mtsVFCartesianOrientation: public mtsVFBase
 {
-    CMN_DECLARE_SERVICES(CMN_DYNAMIC_CREATION, CMN_LOG_LOD_RUN_VERBOSE);
+    CMN_DECLARE_SERVICES(CMN_DYNAMIC_CREATION, CMN_LOG_LOD_RUN_VERBOSE)
 
 public:
 
@@ -58,6 +58,6 @@ public:
 
 };
 
-CMN_DECLARE_SERVICES_INSTANTIATION(mtsVFCartesianOrientation);
+CMN_DECLARE_SERVICES_INSTANTIATION(mtsVFCartesianOrientation)
 
 #endif // _mtsVFCartOrientation_h

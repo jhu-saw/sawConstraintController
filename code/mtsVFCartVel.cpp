@@ -69,13 +69,15 @@ void mtsVFCartesianTranslation::FillInTableauRefs(const mtsVFBase::CONTROLLERMOD
     IdentitySkewMatrix(2,0) = w(1);
     IdentitySkewMatrix(2,1) = -w(0);
 
+    // vctDoubleMat C = Data->ObjectiveMatrix*CartData->Importance;
+
     switch(mode)
     {
 
         case JPOS:
         {
             //A[I;sk(-w)]*Jac*dq >= A*(w+b)
-            ObjectiveMatrixRef.Assign(Data->ObjectiveMatrix*IdentitySkewMatrix*Kinematics.at(0)->Jacobian);
+            ObjectiveMatrixRef.Assign((Data->ObjectiveMatrix*CartData->Importance)*IdentitySkewMatrix*Kinematics.at(0)->Jacobian);
             ObjectiveVectorRef.Assign(Data->ObjectiveMatrix * (w + Data->ObjectiveVector));
             IneqConstraintMatrixRef.Assign(Data->IneqConstraintMatrix*IdentitySkewMatrix*Kinematics.at(0)->Jacobian);
             IneqConstraintVectorRef.Assign(Data->IneqConstraintMatrix * (w + Data->IneqConstraintVector));
@@ -85,13 +87,14 @@ void mtsVFCartesianTranslation::FillInTableauRefs(const mtsVFBase::CONTROLLERMOD
         }
         case JVEL:
         {                        
-            //1/TickTime*A[I;sk(-w)]*Jac*dq >= 1/TickTime*A*(w+b)
-            ObjectiveMatrixRef.Assign(1/TickTime*Data->ObjectiveMatrix*IdentitySkewMatrix*Kinematics.at(0)->Jacobian);
-            ObjectiveVectorRef.Assign(1/TickTime*Data->ObjectiveMatrix * (w + Data->ObjectiveVector));
-            IneqConstraintMatrixRef.Assign(1/TickTime*Data->IneqConstraintMatrix*IdentitySkewMatrix*Kinematics.at(0)->Jacobian);
-            IneqConstraintVectorRef.Assign(1/TickTime*Data->IneqConstraintMatrix * (w + Data->IneqConstraintVector));
-            EqConstraintMatrixRef.Assign(1/TickTime*Data->EqConstraintMatrix*IdentitySkewMatrix*Kinematics.at(0)->Jacobian);
-            EqConstraintVectorRef.Assign(1/TickTime*Data->EqConstraintMatrix * (w + Data->EqConstraintVector));
+            //1/TickTime*A[I;sk(-w)]*Jac*dq >= TickTime*A*(w+b)
+            vctDoubleMat VelJacobean = Kinematics.at(0)->Jacobian*TickTime;
+            ObjectiveMatrixRef.Assign(TickTime*Data->ObjectiveMatrix*IdentitySkewMatrix*Kinematics.at(0)->Jacobian);
+            ObjectiveVectorRef.Assign(TickTime*Data->ObjectiveMatrix * (w + Data->ObjectiveVector));
+            IneqConstraintMatrixRef.Assign(TickTime*Data->IneqConstraintMatrix*IdentitySkewMatrix*Kinematics.at(0)->Jacobian);
+            IneqConstraintVectorRef.Assign(TickTime*Data->IneqConstraintMatrix * (w + Data->IneqConstraintVector));
+            EqConstraintMatrixRef.Assign(TickTime*Data->EqConstraintMatrix*IdentitySkewMatrix*Kinematics.at(0)->Jacobian);
+            EqConstraintVectorRef.Assign(TickTime*Data->EqConstraintMatrix * (w + Data->EqConstraintVector));
             break;
         }
         default:

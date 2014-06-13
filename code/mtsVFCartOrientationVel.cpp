@@ -46,12 +46,13 @@ void mtsVFCartesianOrientation::FillInTableauRefs(const mtsVFBase::CONTROLLERMOD
     mtsVFDataCartesian * CartData = (mtsVFDataCartesian *)Data;
 
     //m = R*v is the frame rotation multiplied by the offset vector input
-    m.Assign(Kinematics.at(0)->Frame.Rotation().ApplyTo(CartData->OffsetVector));
+    m.Assign(Kinematics.at(0)->Frame.Rotation()*CartData->OffsetVector);
+    m *= Data->Importance;
+   // old  m.Assign(Kinematics.at(0)->Frame.Rotation().ApplyTo(CartData->OffsetVector));
 
     //Fill in [0 | sk(d)*sk(m) ]
     IdentitySkewMatrix.SetSize(3,6);
     IdentitySkewMatrix.SetAll(0.0);
-
     IdentitySkewMatrix(0,0) = -Data->ObjectiveVector(2)*m(2) - Data->ObjectiveVector(1)*m(1);
     IdentitySkewMatrix(0,1) = Data->ObjectiveVector(1)*m(0);
     IdentitySkewMatrix(0,2) = Data->ObjectiveVector(2)*m(0);
@@ -67,16 +68,16 @@ void mtsVFCartesianOrientation::FillInTableauRefs(const mtsVFBase::CONTROLLERMOD
 
         case JPOS:
         {
-            // || [0 | sk(d)*sk(m)] * Jac * dx + Jac * mxd ||
+            // || [0 | sk(d)*sk(m)] * Jac * dq + mxd ||
             ObjectiveMatrixRef.Assign(IdentitySkewMatrix*Kinematics.at(0)->Jacobian);
-            ObjectiveVectorRef.Assign(Kinematics.at(0)->Jacobian*m%Data->ObjectiveVector);
+            ObjectiveVectorRef.Assign(m%Data->ObjectiveVector);
             break;
         }
         case JVEL:
         {
-            // || 1/TickTime * [0 | sk(d)*sk(m)] * Jac * dx + 1/TickTime * Jac * mxd ||
-            ObjectiveMatrixRef.Assign(1/TickTime*IdentitySkewMatrix*Kinematics.at(0)->Jacobian);
-            ObjectiveVectorRef.Assign(1/TickTime*Kinematics.at(0)->Jacobian*m%Data->ObjectiveVector);
+            // || TickTime * [0 | sk(d)*sk(m)] * Jac * dx + TickTime * mxd ||
+            ObjectiveMatrixRef.Assign(TickTime*IdentitySkewMatrix*Kinematics.at(0)->Jacobian);
+            ObjectiveVectorRef.Assign(TickTime*m%Data->ObjectiveVector);
             break;
         }
         default:

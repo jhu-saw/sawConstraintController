@@ -59,13 +59,13 @@ void mtsVFJointPosition::FillInTableauRefs(const mtsVFBase::CONTROLLERMODE mode,
         }
         case JVEL:
         {
-            //1/TickTime*A*dq >= 1/TickTime*b
-            ObjectiveMatrixRef.Assign(1/TickTime*Data->ObjectiveMatrix);
-            ObjectiveVectorRef.Assign(1/TickTime * Data->ObjectiveVector);
-            IneqConstraintMatrixRef.Assign(1/TickTime*Data->IneqConstraintMatrix);
-            IneqConstraintVectorRef.Assign(1/TickTime * Data->IneqConstraintVector);
-            EqConstraintMatrixRef.Assign(1/TickTime*Data->EqConstraintMatrix);
-            EqConstraintVectorRef.Assign(1/TickTime*Data->EqConstraintVector);
+            //TickTime*A*dq >= TickTime*b
+            ObjectiveMatrixRef.Assign(TickTime*Data->ObjectiveMatrix);
+            ObjectiveVectorRef.Assign(TickTime * Data->ObjectiveVector);
+            IneqConstraintMatrixRef.Assign(TickTime*Data->IneqConstraintMatrix);
+            IneqConstraintVectorRef.Assign(TickTime * Data->IneqConstraintVector);
+            EqConstraintMatrixRef.Assign(TickTime*Data->EqConstraintMatrix);
+            EqConstraintVectorRef.Assign(TickTime*Data->EqConstraintVector);
             break;
         }
         default:
