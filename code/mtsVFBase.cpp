@@ -2,12 +2,10 @@
 /* ex: set filetype=cpp softtabstop=4 shiftwidth=4 tabstop=4 cindent expandtab: */
 
 /*
- $Id: $
+  Author(s):  Paul Wilkening
+  Created on: 2014
 
- Author(s):  Paul Wilkening
- Created on:
-
- (C) Copyright 2013 Johns Hopkins University (JHU), All Rights Reserved.
+  (C) Copyright 2014 Johns Hopkins University (JHU), All Rights Reserved.
 
  --- begin cisst license - do not edit ---
 
@@ -20,7 +18,7 @@
 
 #include <sawConstraintController/mtsVFBase.h>
 
-CMN_IMPLEMENT_SERVICES(mtsVFBase)
+CMN_IMPLEMENT_SERVICES(mtsVFBase);
 
 std::string mtsVFBase::DefaultKinematicsName = "";
 

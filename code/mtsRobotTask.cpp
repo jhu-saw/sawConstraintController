@@ -2,12 +2,10 @@
 /* ex: set filetype=cpp softtabstop=4 shiftwidth=4 tabstop=4 cindent expandtab: */
 
 /*
- $Id: $
+  Author(s):  Paul Wilkening
+  Created on: 2014
 
- Author(s):  Paul Wilkening
- Created on:
-
- (C) Copyright 2013 Johns Hopkins University (JHU), All Rights Reserved.
+  (C) Copyright 2014 Johns Hopkins University (JHU), All Rights Reserved.
 
  --- begin cisst license - do not edit ---
 
@@ -19,8 +17,9 @@
  */
 
 #include <sawConstraintController/mtsRobotTask.h>
+#include <cisstMultiTask/mtsInterfaceProvided.h>
 
-CMN_IMPLEMENT_SERVICES(mtsRobotTask)
+CMN_IMPLEMENT_SERVICES(mtsRobotTask);
 
 bool mtsRobotTask::InitializeInterfaces(void)
 {
@@ -47,6 +46,10 @@ bool mtsRobotTask::InitializeInterfaces(void)
     }
     if (!(provided->AddCommandWrite(&mtsVFController::AddVFSensorCompliance, &CO_Controller, "AddVFSensorCompliance"))) {
         CMN_LOG_CLASS_RUN_ERROR << "SetVFSensorCompliance failed" << std::endl;
+        return false;
+    }
+    if (!(provided->AddCommandWrite(&mtsVFController::AddVFDaVinciFollow, &CO_Controller, "AddVFDaVinciFollow"))) {
+        CMN_LOG_CLASS_RUN_ERROR << "AddVFDaVinciFollow failed" << std::endl;
         return false;
     }
     if (!(provided->AddCommandWrite(&mtsVFController::SetSensor, &CO_Controller, "SetSensor"))) {
@@ -89,7 +92,7 @@ void mtsRobotTask::Run()
         StopMotion();
     }
     else
-    {        
+    {
         try
         {
             // Go through the VF list, update state data pointers, assign tableau references, and fill in the references
@@ -115,7 +118,7 @@ void mtsRobotTask::Run()
                             //Incremental joint position mode
                             case JPOS:
                                 JointPositionMove(ControllerOutput + JointState.JointPosition);
-                                break;                                                        
+                                break;
                             default:
                                 CMN_LOG_CLASS_RUN_ERROR << "Invalid task mode" << std::endl;
                                 cmnThrow("Invalid task mode");
@@ -131,7 +134,7 @@ void mtsRobotTask::Run()
                             //Incremental joint position mode
                             case JPOS:
                                 JointPositionMove(this->GetPeriodicity()*ControllerOutput + JointState.JointPosition);
-                                break;                            
+                                break;
                             default:
                                 CMN_LOG_CLASS_RUN_ERROR << "Invalid task mode" << std::endl;
                                 cmnThrow("Invalid task mode");

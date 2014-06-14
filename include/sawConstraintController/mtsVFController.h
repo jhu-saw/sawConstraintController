@@ -32,12 +32,13 @@
 #include <sawConstraintController/mtsVFDataSideview.h>
 #include <sawConstraintController/mtsVFCartVel.h>
 #include <sawConstraintController/mtsVFCartOrientationVel.h>
+#include <sawConstraintController/mtsVFDaVinciFollow.h>
 
 /*! \brief mtsVFController: A class that is responsible for managing the virtual fixtures, relevant state data, and the control optimizer
  */
 class mtsVFController : public cmnGenericObject
 {
-    CMN_DECLARE_SERVICES(CMN_NO_DYNAMIC_CREATION, CMN_LOG_LOD_RUN_VERBOSE);
+    CMN_DECLARE_SERVICES(CMN_NO_DYNAMIC_CREATION, CMN_LOG_LOD_RUN_VERBOSE)
 
 public:
 
@@ -86,6 +87,9 @@ public:
 
     //! Adds/Updates a vf data object
     void AddVFSensorCompliance(const mtsVFDataSensorCompliance & vf);
+
+    //! Adds/Updates a vf data object
+    void AddVFDaVinciFollow(const mtsVFDataBase & vf);
 
     void AddVFSideview(const mtsVFDataSideview & vf);
 

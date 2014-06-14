@@ -1,5 +1,4 @@
 inline-header {
-#include <cisstCommon/cmnGenericObject.h>
 #include <cisstVector/vctDynamicVectorTypes.h>
 }
 class {

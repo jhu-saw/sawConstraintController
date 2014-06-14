@@ -38,7 +38,7 @@ class {
         /*! LookupKinematics
         @param k map of names to kinematics
         */
-        void LookupKinematics(std::map<std::string,prmKinematicsState *> & k);
+        void LookupKinematics(const std::map<std::string,prmKinematicsState *> & k);
 
         //! Updates the offset kinematics using the values of the base kinematics object
         /*! Update
@@ -65,9 +65,9 @@ prmKinematicsOffsetState::prmKinematicsOffsetState(const std::string & n, const 
 /*! LookupKinematics
 @param k map of names to kinematics
 */
-void prmKinematicsOffsetState::LookupKinematics(std::map<std::string,prmKinematicsState *> & k)
+void prmKinematicsOffsetState::LookupKinematics(const std::map<std::string,prmKinematicsState *> & k)
 {
-    std::map<std::string,prmKinematicsState *>::iterator it;
+    std::map<std::string,prmKinematicsState *>::const_iterator it;
     it = k.find(mbaseName);
     if(it != k.end())
     {

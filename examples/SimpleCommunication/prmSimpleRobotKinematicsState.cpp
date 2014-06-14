@@ -1,6 +1,6 @@
 #include "prmSimpleRobotKinematicsState.h"
 
-CMN_IMPLEMENT_SERVICES(prmSimpleRobotKinematicsState);
+CMN_IMPLEMENT_SERVICES(prmSimpleRobotKinematicsState)
 
 //! Updates the kinematics information using the pointer to a joint state. 
 /*! Update

@@ -19,8 +19,9 @@
  */
 
 #include "mtsVFSenderTask.h"
-#include <stdio.h>
-//#include <conio.h>
+#include <cisstMultiTask/mtsInterfaceRequired.h>
+
+// #include <stdio.h>
 
 CMN_IMPLEMENT_SERVICES(mtsVFSenderTask);
 
@@ -57,7 +58,7 @@ mtsVFSenderTask::mtsVFSenderTask(const std::string & taskName, double period) : 
     tickNum = 0;
 }
 
-void mtsVFSenderTask::Configure()
+void mtsVFSenderTask::Configure(const std::string & CMN_UNUSED(filename))
 {
     //link the functions defined in the header with strings that match those of the run loop example
     mtsInterfaceRequired * required = this->AddInterfaceRequired("RequiresVF");
@@ -78,6 +79,9 @@ void mtsVFSenderTask::Configure()
     }
     if (!(required->AddFunction("AddVFSensorCompliance", this->AddVFSensorCompliance))) {
         CMN_LOG_CLASS_RUN_ERROR << "Adding AddVFSensorCompliance failed" << std::endl;
+    }
+    if (!(required->AddFunction("AddVFDaVinciFollow", this->AddVFDaVinciFollow))) {
+        CMN_LOG_CLASS_RUN_ERROR << "Adding AddVFDaVinciFollow failed" << std::endl;
     }
     if (!(required->AddFunction("SetSensor", this->SetSensor))) {
         CMN_LOG_CLASS_RUN_ERROR << "Adding SetSensor failed" << std::endl;

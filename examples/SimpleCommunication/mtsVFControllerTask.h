@@ -47,7 +47,7 @@ public:
     mtsVFControllerTask(const std::string & taskName, double period);
     ~mtsVFControllerTask(void) {}
 
-    bool Configure(void) {return true;}
+    void Configure(const std::string & CMN_UNUSED(filename) = "") {}
     void Startup(void) {}
     void Cleanup(void) {}
 

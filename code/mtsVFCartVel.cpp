@@ -2,12 +2,10 @@
 /* ex: set filetype=cpp softtabstop=4 shiftwidth=4 tabstop=4 cindent expandtab: */
 
 /*
- $Id: $
+  Author(s):  Paul Wilkening
+  Created on: 2014
 
- Author(s):  Paul Wilkening
- Created on:
-
- (C) Copyright 2013 Johns Hopkins University (JHU), All Rights Reserved.
+  (C) Copyright 2014 Johns Hopkins University (JHU), All Rights Reserved.
 
  --- begin cisst license - do not edit ---
 
@@ -57,7 +55,7 @@ void mtsVFCartesianTranslation::FillInTableauRefs(const mtsVFBase::CONTROLLERMOD
     IdentitySkewMatrix.SetSize(3,6);
     IdentitySkewMatrix.SetAll(0.0);
     for(size_t i = 0; i < 3; i++)
-    {        
+    {
         IdentitySkewMatrix(i,i) = 1;
     }
 
@@ -69,32 +67,31 @@ void mtsVFCartesianTranslation::FillInTableauRefs(const mtsVFBase::CONTROLLERMOD
     IdentitySkewMatrix(2,0) = w(1);
     IdentitySkewMatrix(2,1) = -w(0);
 
-    // vctDoubleMat C = Data->ObjectiveMatrix*CartData->Importance;
+    //vctDoubleMat ScaledObjectiveMatrix = Data->ObjectiveMatrix*TickTime;
 
     switch(mode)
     {
 
         case JPOS:
         {
-            //A[I;sk(-w)]*Jac*dq >= A*(w+b)
-            ObjectiveMatrixRef.Assign((Data->ObjectiveMatrix*CartData->Importance)*IdentitySkewMatrix*Kinematics.at(0)->Jacobian);
-            ObjectiveVectorRef.Assign(Data->ObjectiveMatrix * (w + Data->ObjectiveVector));
+            //A*[I;sk(-w)]*Jac*dq >= A*(w+b)
+            ObjectiveMatrixRef.Assign(Data->ObjectiveMatrix*IdentitySkewMatrix*Kinematics.at(0)->Jacobian);
+            ObjectiveVectorRef.Assign(Data->ObjectiveMatrix*(w + Data->ObjectiveVector));
             IneqConstraintMatrixRef.Assign(Data->IneqConstraintMatrix*IdentitySkewMatrix*Kinematics.at(0)->Jacobian);
-            IneqConstraintVectorRef.Assign(Data->IneqConstraintMatrix * (w + Data->IneqConstraintVector));
+            IneqConstraintVectorRef.Assign(Data->IneqConstraintMatrix*(w + Data->IneqConstraintVector));
             EqConstraintMatrixRef.Assign(Data->EqConstraintMatrix*IdentitySkewMatrix*Kinematics.at(0)->Jacobian);
-            EqConstraintVectorRef.Assign(Data->EqConstraintMatrix * (w + Data->EqConstraintVector));
+            EqConstraintVectorRef.Assign(Data->EqConstraintMatrix*(w + Data->EqConstraintVector));
             break;
         }
         case JVEL:
         {                        
-            //1/TickTime*A[I;sk(-w)]*Jac*dq >= TickTime*A*(w+b)
-            vctDoubleMat VelJacobean = Kinematics.at(0)->Jacobian*TickTime;
-            ObjectiveMatrixRef.Assign(TickTime*Data->ObjectiveMatrix*IdentitySkewMatrix*Kinematics.at(0)->Jacobian);
-            ObjectiveVectorRef.Assign(TickTime*Data->ObjectiveMatrix * (w + Data->ObjectiveVector));
-            IneqConstraintMatrixRef.Assign(TickTime*Data->IneqConstraintMatrix*IdentitySkewMatrix*Kinematics.at(0)->Jacobian);
-            IneqConstraintVectorRef.Assign(TickTime*Data->IneqConstraintMatrix * (w + Data->IneqConstraintVector));
-            EqConstraintMatrixRef.Assign(TickTime*Data->EqConstraintMatrix*IdentitySkewMatrix*Kinematics.at(0)->Jacobian);
-            EqConstraintVectorRef.Assign(TickTime*Data->EqConstraintMatrix * (w + Data->EqConstraintVector));
+            //TickTime*A[I;sk(-w)]*Jac*dq >= TickTime*A*(w+b)
+            ObjectiveMatrixRef.Assign((Data->ObjectiveMatrix*TickTime)*IdentitySkewMatrix*Kinematics.at(0)->Jacobian);
+            ObjectiveVectorRef.Assign((Data->ObjectiveMatrix*TickTime)*(w + Data->ObjectiveVector));
+            IneqConstraintMatrixRef.Assign((Data->ObjectiveMatrix*TickTime)*IdentitySkewMatrix*Kinematics.at(0)->Jacobian);
+            IneqConstraintVectorRef.Assign((Data->ObjectiveMatrix*TickTime)*(w + Data->IneqConstraintVector));
+            EqConstraintMatrixRef.Assign((Data->ObjectiveMatrix*TickTime)*IdentitySkewMatrix*Kinematics.at(0)->Jacobian);
+            EqConstraintVectorRef.Assign((Data->ObjectiveMatrix*TickTime)*(w + Data->EqConstraintVector));
             break;
         }
         default:

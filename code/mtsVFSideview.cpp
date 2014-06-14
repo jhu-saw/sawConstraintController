@@ -2,12 +2,10 @@
 /* ex: set filetype=cpp softtabstop=4 shiftwidth=4 tabstop=4 cindent expandtab: */
 
 /*
- $Id: $
+  Author(s):  Paul Wilkening
+  Created on: 2014
 
- Author(s):  Paul Wilkening
- Created on:
-
- (C) Copyright 2013 Johns Hopkins University (JHU), All Rights Reserved.
+  (C) Copyright 2014 Johns Hopkins University (JHU), All Rights Reserved.
 
  --- begin cisst license - do not edit ---
 
@@ -20,13 +18,13 @@
 
 #include <sawConstraintController/mtsVFSideview.h>
 
-CMN_IMPLEMENT_SERVICES(mtsVFSideview)
+CMN_IMPLEMENT_SERVICES(mtsVFSideview);
 
 //! Updates co with virtual fixture data.
 /*! FillInTableauRefs
 */
 void mtsVFSideview::FillInTableauRefs(const CONTROLLERMODE mode, const double TickTime)
-{    
+{
     // fill in refs
     // We want to minimize the distance between a point in the center of the cochlea and its projection
     // onto the sideview axis

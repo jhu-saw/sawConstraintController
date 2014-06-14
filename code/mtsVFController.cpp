@@ -2,12 +2,10 @@
 /* ex: set filetype=cpp softtabstop=4 shiftwidth=4 tabstop=4 cindent expandtab: */
 
 /*
- $Id: $
+  Author(s):  Paul Wilkening
+  Created on: 2014
 
- Author(s):  Paul Wilkening
- Created on:
-
- (C) Copyright 2013 Johns Hopkins University (JHU), All Rights Reserved.
+  (C) Copyright 2014 Johns Hopkins University (JHU), All Rights Reserved.
 
  --- begin cisst license - do not edit ---
 
@@ -97,7 +95,7 @@ void mtsVFController::AddVFJointPosition(const mtsVFDataBase & vf)
     // If we can find the VF, only change its data. Otherwise, create a new VF object.
     if (!SetVFData(vf, typeid(mtsVFJointPosition)))
     {
-        // Adds a new virtual fixture to the active vector              
+        // Adds a new virtual fixture to the active vector
         VFMap.insert(std::pair<std::string,mtsVFBase *>(vf.Name,new mtsVFJointPosition(vf.Name,new mtsVFDataBase(vf))));
         // Increment users of each kinematics and sensor object found
         IncrementUsers(vf.KinNames,vf.SensorNames);
@@ -148,6 +146,22 @@ void mtsVFController::AddVFSensorCompliance(const mtsVFDataSensorCompliance & vf
     {
         // Adds a new virtual fixture to the active vector
         VFMap.insert(std::pair<std::string,mtsVFSensorCompliance *>(vf.Name,new mtsVFSensorCompliance(vf.Name,new mtsVFDataSensorCompliance(vf))));
+        // Increment users of each kinematics and sensor object found
+        IncrementUsers(vf.KinNames,vf.SensorNames);
+    }
+}
+
+//! Adds/updates a sensor compliance virtual fixture in the map and increments users of kinematics and sensors
+/*! AddVFDaVinciFollow
+@param vf virtual fixture to be added
+*/
+void mtsVFController::AddVFDaVinciFollow(const mtsVFDataBase & vf)
+{
+    // If we can find the VF, only change its data. Otherwise, create a new VF object.
+    if (!SetVFData(vf, typeid(mtsVFDaVinciFollow)))
+    {
+        // Adds a new virtual fixture to the active vector
+        VFMap.insert(std::pair<std::string,mtsVFDaVinciFollow *>(vf.Name,new mtsVFDaVinciFollow(vf.Name,new mtsVFDataBase(vf))));
         // Increment users of each kinematics and sensor object found
         IncrementUsers(vf.KinNames,vf.SensorNames);
     }
@@ -247,7 +261,7 @@ void mtsVFController::UpdateOptimizer(double TickTime)
     {
         mtsVFBase * tempVFData = itVF->second;
         if(tempVFData->Data->Active)
-        {            
+        {
             //updates the virtual fixture's kinematics and sensor objects
             tempVFData->LookupStateData(Kinematics,Sensors);
 
