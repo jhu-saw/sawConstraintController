@@ -29,39 +29,20 @@ void mtsVFJointVelocity::FillInTableauRefs(const mtsVFBase::CONTROLLERMODE mode,
     // min || C(dq) - d ||
     // A(dq) >= b
     // E(dq) = f
-    switch(mode)
-    {
 
-        case JPOS:
-        {
-            //A*TickTime*dq >= b * TickTime
-            ObjectiveMatrixRef.Assign(Data->ObjectiveMatrix * TickTime);
-            ObjectiveVectorRef.Assign(Data->ObjectiveVector * TickTime);
-            IneqConstraintMatrixRef.Assign(Data->IneqConstraintMatrix * TickTime);
-            IneqConstraintVectorRef.Assign(Data->IneqConstraintVector * TickTime);
-            EqConstraintMatrixRef.Assign(Data->EqConstraintMatrix * TickTime);
-            EqConstraintVectorRef.Assign(Data->EqConstraintVector * TickTime);
-            break;
-        }
-        case JVEL:
-        {
-            //A*dq >= b
-            std::cout << ObjectiveMatrixRef.sizes() << std::endl;
-            std::cout << Data->ObjectiveMatrix.sizes() << std::endl;
-            ObjectiveMatrixRef.Assign(Data->ObjectiveMatrix);
-            ObjectiveVectorRef.Assign(Data->ObjectiveVector);
-            IneqConstraintMatrixRef.Assign(Data->IneqConstraintMatrix);
-            IneqConstraintVectorRef.Assign(Data->IneqConstraintVector);
-            EqConstraintMatrixRef.Assign(Data->EqConstraintMatrix);
-            EqConstraintVectorRef.Assign(Data->EqConstraintVector);
-            break;
-        }
-        default:
-        {
-            CMN_LOG_CLASS_RUN_ERROR << "FillInTableauRefs: JointVel VF given improper mode" << std::endl;
-            cmnThrow("FillInTableauRefs: JointVel VF given improper mode");
-        }
+    double Scale = 1.0;
+    if(mode == JPOS)
+    {
+        Scale = 1/TickTime;
     }
+
+    //A/TickTime*dq >= b / TickTime
+    ObjectiveMatrixRef.Assign(Data->ObjectiveMatrix * Scale * Data->Importance);
+    ObjectiveVectorRef.Assign(Data->ObjectiveVector * Scale * Data->Importance);
+    IneqConstraintMatrixRef.Assign(Data->IneqConstraintMatrix * Scale);
+    IneqConstraintVectorRef.Assign(Data->IneqConstraintVector * Scale);
+    EqConstraintMatrixRef.Assign(Data->EqConstraintMatrix * Scale);
+    EqConstraintVectorRef.Assign(Data->EqConstraintVector * Scale);
 
     for(size_t i = 0; i < Data->NumSlacks; i++)
     {
@@ -75,11 +56,11 @@ void mtsVFJointVelocity::ConvertRefs(const mtsVFBase::CONTROLLERMODE mode, const
     if(mode == JPOS)
     {
         //A*TickTime*dq >= b * TickTime
-        ObjectiveMatrixRef.Assign(ObjectiveMatrixRef * TickTime);
-        ObjectiveVectorRef.Assign(ObjectiveVectorRef * TickTime);
-        IneqConstraintMatrixRef.Assign(IneqConstraintMatrixRef * TickTime);
-        IneqConstraintVectorRef.Assign(IneqConstraintVectorRef * TickTime);
-        EqConstraintMatrixRef.Assign(EqConstraintMatrixRef * TickTime);
-        EqConstraintVectorRef.Assign(EqConstraintVectorRef * TickTime);
+        ObjectiveMatrixRef.Assign(ObjectiveMatrixRef / TickTime);
+        ObjectiveVectorRef.Assign(ObjectiveVectorRef / TickTime);
+        IneqConstraintMatrixRef.Assign(IneqConstraintMatrixRef / TickTime);
+        IneqConstraintVectorRef.Assign(IneqConstraintVectorRef / TickTime);
+        EqConstraintMatrixRef.Assign(EqConstraintMatrixRef / TickTime);
+        EqConstraintVectorRef.Assign(EqConstraintVectorRef / TickTime);
     }
 }

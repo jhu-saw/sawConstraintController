@@ -43,6 +43,7 @@ mtsVFControllerTask::mtsVFControllerTask(const std::string & taskName, double pe
     CO_Controller.Sensors.insert(std::pair<std::string, prmSensorState *>(pedal.Name,&pedal));
 
     CO_Controller.ControllerMode = mtsVFBase::JVEL;
+
 }
 
 bool mtsVFControllerTask::UpdateRobotStateData()

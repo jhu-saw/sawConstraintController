@@ -11,7 +11,7 @@ class {
       visibility public;
     }
     member {
-      default 0.0;
+      default 1.0;
       name Importance;
       type double;
       visibility public;

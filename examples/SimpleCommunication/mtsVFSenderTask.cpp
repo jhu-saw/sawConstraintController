@@ -80,6 +80,9 @@ void mtsVFSenderTask::Configure(const std::string & CMN_UNUSED(filename))
     if (!(required->AddFunction("AddVFSensorCompliance", this->AddVFSensorCompliance))) {
         CMN_LOG_CLASS_RUN_ERROR << "Adding AddVFSensorCompliance failed" << std::endl;
     }
+    if (!(required->AddFunction("AddVFFollow", this->AddVFFollow))) {
+        CMN_LOG_CLASS_RUN_ERROR << "Adding AddVFFollow failed" << std::endl;
+    }
     if (!(required->AddFunction("SetSensor", this->SetSensor))) {
         CMN_LOG_CLASS_RUN_ERROR << "Adding SetSensor failed" << std::endl;
     }

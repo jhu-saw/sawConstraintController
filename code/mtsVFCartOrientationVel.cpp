@@ -44,12 +44,12 @@ void mtsVFCartesianOrientation::FillInTableauRefs(const mtsVFBase::CONTROLLERMOD
     mtsVFDataCartesian * CartData = (mtsVFDataCartesian *)Data;
 
     //m = R*v is the frame rotation multiplied by the offset vector input
-    m.Assign(Kinematics.at(0)->Frame.Rotation().ApplyTo(CartData->OffsetVector));
+    m.Assign(Kinematics.at(0)->Frame.Rotation()*CartData->OffsetVector);
+    m *= Data->Importance;   
 
     //Fill in [0 | sk(d)*sk(m) ]
     IdentitySkewMatrix.SetSize(3,6);
     IdentitySkewMatrix.SetAll(0.0);
-
     IdentitySkewMatrix(0,0) = -Data->ObjectiveVector(2)*m(2) - Data->ObjectiveVector(1)*m(1);
     IdentitySkewMatrix(0,1) = Data->ObjectiveVector(1)*m(0);
     IdentitySkewMatrix(0,2) = Data->ObjectiveVector(2)*m(0);
@@ -60,29 +60,15 @@ void mtsVFCartesianOrientation::FillInTableauRefs(const mtsVFBase::CONTROLLERMOD
     IdentitySkewMatrix(2,1) = Data->ObjectiveVector(1)*m(2);
     IdentitySkewMatrix(2,2) = -Data->ObjectiveVector(1)*m(1) - Data->ObjectiveVector(0)*m(0);
 
-    switch(mode)
+    double Scale = 1.0;
+    if(mode == JVEL)
     {
-
-        case JPOS:
-        {
-            // || [0 | sk(d)*sk(m)] * Jac * dx + Jac * mxd ||
-            ObjectiveMatrixRef.Assign(IdentitySkewMatrix*Kinematics.at(0)->Jacobian);
-            ObjectiveVectorRef.Assign(Kinematics.at(0)->Jacobian*m%Data->ObjectiveVector);
-            break;
-        }
-        case JVEL:
-        {
-            // || 1/TickTime * [0 | sk(d)*sk(m)] * Jac * dx + 1/TickTime * Jac * mxd ||
-            ObjectiveMatrixRef.Assign(1/TickTime*IdentitySkewMatrix*Kinematics.at(0)->Jacobian);
-            ObjectiveVectorRef.Assign(1/TickTime*Kinematics.at(0)->Jacobian*m%Data->ObjectiveVector);
-            break;
-        }
-        default:
-        {
-            CMN_LOG_CLASS_RUN_ERROR << "FillInTableauRefs: CartVel VF given improper mode" << std::endl;
-            cmnThrow("FillInTableauRefs: CartVel VF given improper mode");
-        }
+        Scale = TickTime;
     }
+
+    // || [0 | sk(d)*sk(m)]* Scale * Jac * dq + mxd ||
+    ObjectiveMatrixRef.Assign((IdentitySkewMatrix*Scale*Data->Importance)*Kinematics.at(0)->Jacobian);
+    ObjectiveVectorRef.Assign((m*Scale*Data->Importance)%Data->ObjectiveVector);
 
     for(size_t i = 0; i < Data->NumSlacks; i++)
     {
@@ -93,29 +79,16 @@ void mtsVFCartesianOrientation::FillInTableauRefs(const mtsVFBase::CONTROLLERMOD
 
 void mtsVFCartesianOrientation::ConvertRefs(const mtsVFBase::CONTROLLERMODE mode, const double TickTime)
 {
-    switch(mode)
+    double Scale = 1.0;
+    if(mode == JVEL)
     {
-        case JPOS:
-        {
-            ObjectiveMatrixRef.Assign(ObjectiveMatrixRef*Kinematics.at(0)->Jacobian);
-            IneqConstraintMatrixRef.Assign(IneqConstraintMatrixRef*Kinematics.at(0)->Jacobian);
-            EqConstraintMatrixRef.Assign(EqConstraintMatrixRef*Kinematics.at(0)->Jacobian);
-            break;
-        }
-        case JVEL:
-        {
-            ObjectiveMatrixRef.Assign(1/TickTime*ObjectiveMatrixRef*Kinematics.at(0)->Jacobian);
-            ObjectiveVectorRef.Assign(1/TickTime*ObjectiveVectorRef);
-            IneqConstraintMatrixRef.Assign(1/TickTime*IneqConstraintMatrixRef*Kinematics.at(0)->Jacobian);
-            IneqConstraintVectorRef.Assign(1/TickTime*IneqConstraintVectorRef);
-            EqConstraintMatrixRef.Assign(1/TickTime*EqConstraintMatrixRef*Kinematics.at(0)->Jacobian);
-            EqConstraintVectorRef.Assign(1/TickTime*EqConstraintVectorRef);
-            break;
-        }
-        default:
-        {
-            CMN_LOG_CLASS_RUN_ERROR << "FillInTableauRefs: Cart Trans VF given improper mode" << std::endl;
-            cmnThrow("FillInTableauRefs: Cart Trans VF given improper mode");
-        }
+        Scale = TickTime;
     }
+    ObjectiveMatrixRef.Assign((ObjectiveMatrixRef*Scale)*Kinematics.at(0)->Jacobian);
+    ObjectiveVectorRef.Assign(ObjectiveVectorRef*Scale);
+    IneqConstraintMatrixRef.Assign((IneqConstraintMatrixRef*Scale)*Kinematics.at(0)->Jacobian);
+    IneqConstraintVectorRef.Assign(IneqConstraintVectorRef*Scale);
+    EqConstraintMatrixRef.Assign((EqConstraintMatrixRef*Scale)*Kinematics.at(0)->Jacobian);
+    EqConstraintVectorRef.Assign(EqConstraintVectorRef*Scale);
+
 }

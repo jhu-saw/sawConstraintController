@@ -2,10 +2,12 @@
 /* ex: set filetype=cpp softtabstop=4 shiftwidth=4 tabstop=4 cindent expandtab: */
 
 /*
-  Author(s):  Paul Wilkening
-  Created on: 2014
+ $Id: $
 
-  (C) Copyright 2014 Johns Hopkins University (JHU), All Rights Reserved.
+ Author(s):  Paul Wilkening
+ Created on:
+
+ (C) Copyright 2013 Johns Hopkins University (JHU), All Rights Reserved.
 
  --- begin cisst license - do not edit ---
 
@@ -16,48 +18,41 @@
  --- end cisst license ---
  */
 
-#ifndef _mtsVFCartVel_h
-#define _mtsVFCartVel_h
+#ifndef _mtsVFFollow_h
+#define _mtsVFFollow_h
 
 #include <cisstVector/vctDynamicVectorTypes.h>
 #include <cisstVector/vctDynamicMatrixTypes.h>
+#include <sawConstraintController/prmSensorState.h>
+#include <sawConstraintController/mtsVFDataBase.h>
 #include <sawConstraintController/mtsVFBase.h>
+#include <sawConstraintController/mtsVFCartVel.h>
 
 //! This is the base class for all virtual fixture objects
-/*! \brief mtsVFCartVel: A class that contains logic for the implementation of virtual fixtures
+/*! \brief mtsVFFollow: A class that contains logic for the implementation of virtual fixtures
  */
-class mtsVFCartesianTranslation: public mtsVFBase
+class mtsVFFollow : public mtsVFCartesianTranslation
 {
     CMN_DECLARE_SERVICES(CMN_DYNAMIC_CREATION, CMN_LOG_LOD_RUN_VERBOSE)
 
 public:
 
-    vctDoubleMat IdentitySkewMatrix;
-    vctDoubleVec w;
-
     /*! Constructor
     */
-    mtsVFCartesianTranslation():
-	mtsVFBase()
-    {}
+    mtsVFFollow() : mtsVFCartesianTranslation(){}
 
     /*! Constructor
     \param name String name of object
-    \param data VF Data passed from remote user
     */
-    mtsVFCartesianTranslation(const std::string & name, mtsVFDataBase * data):
-	mtsVFBase(name, data)
-    {}
+    mtsVFFollow(const std::string & name, mtsVFDataBase * data) : mtsVFCartesianTranslation(name,data){}
 
     //! Updates co with virtual fixture data.
     /*! FillInTableauRefs
     */
     void FillInTableauRefs(const mtsVFBase::CONTROLLERMODE mode, const double TickTime);
 
-    void ConvertRefs(const mtsVFBase::CONTROLLERMODE mode, const double TickTime);
-
 };
 
-CMN_DECLARE_SERVICES_INSTANTIATION(mtsVFCartesianTranslation)
+CMN_DECLARE_SERVICES_INSTANTIATION(mtsVFFollow)
 
-#endif // _mtsVFCartVel_h
+#endif

@@ -48,6 +48,10 @@ bool mtsRobotTask::InitializeInterfaces(void)
         CMN_LOG_CLASS_RUN_ERROR << "SetVFSensorCompliance failed" << std::endl;
         return false;
     }
+    if (!(provided->AddCommandWrite(&mtsVFController::AddVFFollow, &CO_Controller, "AddVFFollow"))) {
+        CMN_LOG_CLASS_RUN_ERROR << "AddVFFollow failed" << std::endl;
+        return false;
+    }
     if (!(provided->AddCommandWrite(&mtsVFController::SetSensor, &CO_Controller, "SetSensor"))) {
         CMN_LOG_CLASS_RUN_ERROR << "SetSensor failed" << std::endl;
         return false;

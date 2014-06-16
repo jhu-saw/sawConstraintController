@@ -89,6 +89,7 @@ class mtsVFSenderTask : public mtsTaskPeriodic
     mtsFunctionWrite AddVFCartesianOrientation;
     //Adds/updates a vf data object
     mtsFunctionWrite AddVFSensorCompliance;
+    mtsFunctionWrite AddVFFollow;
     //Removes an existing vf data object
     mtsFunctionWrite RemoveVFFromMap;
 
