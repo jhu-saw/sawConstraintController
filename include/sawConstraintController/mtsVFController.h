@@ -32,7 +32,7 @@
 #include <sawConstraintController/mtsVFDataSideview.h>
 #include <sawConstraintController/mtsVFCartVel.h>
 #include <sawConstraintController/mtsVFCartOrientationVel.h>
-#include <sawConstraintController/mtsVFDaVinciFollow.h>
+#include <sawConstraintController/mtsVFFollow.h>
 
 /*! \brief mtsVFController: A class that is responsible for managing the virtual fixtures, relevant state data, and the control optimizer
  */
