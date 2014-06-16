@@ -18,30 +18,23 @@
 
 #include <sawConstraintController/mtsVFDaVinciFollow.h>
 
-CMN_IMPLEMENT_SERVICES(mtsVFDaVinciFollow)
+CMN_IMPLEMENT_SERVICES(mtsVFFollow)
 
 //! Updates co with virtual fixture data.
 /*! FillInTableauRefs
 */
-void mtsVFDaVinciFollow::FillInTableauRefs(const CONTROLLERMODE mode, const double TickTime)
+void mtsVFFollow::FillInTableauRefs(const CONTROLLERMODE mode, const double TickTime)
 {
     // fill in refs
     // min || I*dx - d ||
     // I is the identity matrix
     // d is the objective vector, which stores the desired cartesian position for the slave
 
-    // Check if we have a jacobian to use
-    if(Sensors.size() < 1)
-    {
-        CMN_LOG_CLASS_RUN_ERROR << "Error: Sensor Compliance VF given improper input" << std::endl;
-        cmnThrow("Error: Sensor Compliance VF given improper input");
-    }
-
     //now set reference to the left hand side of the above equation, the identity matrix
     ObjectiveMatrixRef.Diagonal().SetAll(1.0);
 
     //set the reference to the right hand side of the above equation (d)
-    ObjectiveVectorRef.Assign(Sensors.at(0)->Values);
+    ObjectiveVectorRef.Assign(Data->ObjectiveVector);
 
     ConvertRefs(mode,TickTime);
 }

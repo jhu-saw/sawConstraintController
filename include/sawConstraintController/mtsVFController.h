@@ -89,7 +89,7 @@ public:
     void AddVFSensorCompliance(const mtsVFDataSensorCompliance & vf);
 
     //! Adds/Updates a vf data object
-    void AddVFDaVinciFollow(const mtsVFDataBase & vf);
+    void AddVFFollow(const mtsVFDataBase & vf);
 
     void AddVFSideview(const mtsVFDataSideview & vf);
 

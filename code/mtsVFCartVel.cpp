@@ -67,39 +67,20 @@ void mtsVFCartesianTranslation::FillInTableauRefs(const mtsVFBase::CONTROLLERMOD
     IdentitySkewMatrix(2,0) = w(1);
     IdentitySkewMatrix(2,1) = -w(0);
 
-    //vctDoubleMat ScaledObjectiveMatrix = Data->ObjectiveMatrix*TickTime;
-
-    switch(mode)
+    //Convert to joint position or joint velocity mode
+    double Scale = 1.0;
+    if(mode == JVEL)
     {
-
-        case JPOS:
-        {
-            //A*[I;sk(-w)]*Jac*dq >= A*(w+b)
-            ObjectiveMatrixRef.Assign(Data->ObjectiveMatrix*IdentitySkewMatrix*Kinematics.at(0)->Jacobian);
-            ObjectiveVectorRef.Assign(Data->ObjectiveMatrix*(w + Data->ObjectiveVector));
-            IneqConstraintMatrixRef.Assign(Data->IneqConstraintMatrix*IdentitySkewMatrix*Kinematics.at(0)->Jacobian);
-            IneqConstraintVectorRef.Assign(Data->IneqConstraintMatrix*(w + Data->IneqConstraintVector));
-            EqConstraintMatrixRef.Assign(Data->EqConstraintMatrix*IdentitySkewMatrix*Kinematics.at(0)->Jacobian);
-            EqConstraintVectorRef.Assign(Data->EqConstraintMatrix*(w + Data->EqConstraintVector));
-            break;
-        }
-        case JVEL:
-        {                        
-            //TickTime*A[I;sk(-w)]*Jac*dq >= TickTime*A*(w+b)
-            ObjectiveMatrixRef.Assign((Data->ObjectiveMatrix*TickTime)*IdentitySkewMatrix*Kinematics.at(0)->Jacobian);
-            ObjectiveVectorRef.Assign((Data->ObjectiveMatrix*TickTime)*(w + Data->ObjectiveVector));
-            IneqConstraintMatrixRef.Assign((Data->ObjectiveMatrix*TickTime)*IdentitySkewMatrix*Kinematics.at(0)->Jacobian);
-            IneqConstraintVectorRef.Assign((Data->ObjectiveMatrix*TickTime)*(w + Data->IneqConstraintVector));
-            EqConstraintMatrixRef.Assign((Data->ObjectiveMatrix*TickTime)*IdentitySkewMatrix*Kinematics.at(0)->Jacobian);
-            EqConstraintVectorRef.Assign((Data->ObjectiveMatrix*TickTime)*(w + Data->EqConstraintVector));
-            break;
-        }
-        default:
-        {
-            CMN_LOG_CLASS_RUN_ERROR << "FillInTableauRefs: Cart Trans VF given improper mode" << std::endl;
-            cmnThrow("FillInTableauRefs: Cart Trans VF given improper mode");
-        }
+        Scale = TickTime;
     }
+
+    //A*Scale[I;sk(-w)]*Jac*dq >= A*Scale*(w+b)
+    ObjectiveMatrixRef.Assign((Data->ObjectiveMatrix*Scale*Data->Importance)*IdentitySkewMatrix*Kinematics.at(0)->Jacobian);
+    ObjectiveVectorRef.Assign((Data->ObjectiveMatrix*Scale*Data->Importance)*(w + Data->ObjectiveVector));
+    IneqConstraintMatrixRef.Assign((Data->IneqConstraintMatrix*Scale)*IdentitySkewMatrix*Kinematics.at(0)->Jacobian);
+    IneqConstraintVectorRef.Assign((Data->IneqConstraintMatrix*Scale)*(w + Data->IneqConstraintVector));
+    EqConstraintMatrixRef.Assign((Data->EqConstraintMatrix*Scale)*IdentitySkewMatrix*Kinematics.at(0)->Jacobian);
+    EqConstraintVectorRef.Assign((Data->EqConstraintMatrix*Scale)*(w + Data->EqConstraintVector));
 
     for(size_t i = 0; i < Data->NumSlacks; i++)
     {
@@ -110,29 +91,16 @@ void mtsVFCartesianTranslation::FillInTableauRefs(const mtsVFBase::CONTROLLERMOD
 
 void mtsVFCartesianTranslation::ConvertRefs(const mtsVFBase::CONTROLLERMODE mode, const double TickTime)
 {
-    switch(mode)
+    double Scale = 1.0;
+    if(mode == JVEL)
     {
-        case JPOS:
-        {
-            ObjectiveMatrixRef.Assign(ObjectiveMatrixRef*Kinematics.at(0)->Jacobian);
-            IneqConstraintMatrixRef.Assign(IneqConstraintMatrixRef*Kinematics.at(0)->Jacobian);
-            EqConstraintMatrixRef.Assign(EqConstraintMatrixRef*Kinematics.at(0)->Jacobian);
-            break;
-        }
-        case JVEL:
-        {
-            ObjectiveMatrixRef.Assign(1/TickTime*ObjectiveMatrixRef*Kinematics.at(0)->Jacobian);
-            ObjectiveVectorRef.Assign(1/TickTime*ObjectiveVectorRef);
-            IneqConstraintMatrixRef.Assign(1/TickTime*IneqConstraintMatrixRef*Kinematics.at(0)->Jacobian);
-            IneqConstraintVectorRef.Assign(1/TickTime*IneqConstraintVectorRef);
-            EqConstraintMatrixRef.Assign(1/TickTime*EqConstraintMatrixRef*Kinematics.at(0)->Jacobian);
-            EqConstraintVectorRef.Assign(1/TickTime*EqConstraintVectorRef);
-            break;
-        }
-        default:
-        {
-            CMN_LOG_CLASS_RUN_ERROR << "FillInTableauRefs: Cart Trans VF given improper mode" << std::endl;
-            cmnThrow("FillInTableauRefs: Cart Trans VF given improper mode");
-        }
+        Scale = TickTime;
     }
+    ObjectiveMatrixRef.Assign((ObjectiveMatrixRef*Scale)*Kinematics.at(0)->Jacobian);
+    ObjectiveVectorRef.Assign(ObjectiveVectorRef*Scale);
+    IneqConstraintMatrixRef.Assign((IneqConstraintMatrixRef*Scale)*Kinematics.at(0)->Jacobian);
+    IneqConstraintVectorRef.Assign(IneqConstraintVectorRef*Scale);
+    EqConstraintMatrixRef.Assign((EqConstraintMatrixRef*Scale)*Kinematics.at(0)->Jacobian);
+    EqConstraintVectorRef.Assign(EqConstraintVectorRef*Scale);
+
 }

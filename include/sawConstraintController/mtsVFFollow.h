@@ -18,8 +18,8 @@
  --- end cisst license ---
  */
 
-#ifndef _mtsVFDaVinciFollow_h
-#define _mtsVFDaVinciFollow_h
+#ifndef _mtsVFFollow_h
+#define _mtsVFFollow_h
 
 #include <cisstVector/vctDynamicVectorTypes.h>
 #include <cisstVector/vctDynamicMatrixTypes.h>
@@ -29,9 +29,9 @@
 #include <sawConstraintController/mtsVFCartVel.h>
 
 //! This is the base class for all virtual fixture objects
-/*! \brief mtsVFDaVinciFollow: A class that contains logic for the implementation of virtual fixtures
+/*! \brief mtsVFFollow: A class that contains logic for the implementation of virtual fixtures
  */
-class mtsVFDaVinciFollow : public mtsVFCartesianTranslation
+class mtsVFFollow : public mtsVFCartesianTranslation
 {
     CMN_DECLARE_SERVICES(CMN_DYNAMIC_CREATION, CMN_LOG_LOD_RUN_VERBOSE)
 
@@ -39,12 +39,12 @@ public:
 
     /*! Constructor
     */
-    mtsVFDaVinciFollow() : mtsVFCartesianTranslation(){}
+    mtsVFFollow() : mtsVFCartesianTranslation(){}
 
     /*! Constructor
     \param name String name of object
     */
-    mtsVFDaVinciFollow(const std::string & name, mtsVFDataBase * data) : mtsVFCartesianTranslation(name,data){}
+    mtsVFFollow(const std::string & name, mtsVFDataBase * data) : mtsVFCartesianTranslation(name,data){}
 
     //! Updates co with virtual fixture data.
     /*! FillInTableauRefs
@@ -53,6 +53,6 @@ public:
 
 };
 
-CMN_DECLARE_SERVICES_INSTANTIATION(mtsVFDaVinciFollow)
+CMN_DECLARE_SERVICES_INSTANTIATION(mtsVFFollow)
 
 #endif

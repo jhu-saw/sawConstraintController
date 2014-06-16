@@ -37,41 +37,24 @@ void mtsVFJointPosition::FillInTableauRefs(const mtsVFBase::CONTROLLERMODE mode,
         cmnThrow("FillInTableauRefs: Joint Pos VF given improper input");
     }
 
+    //Current joint position
     vctDoubleVec * CurrQ = new vctDoubleVec();
     CurrQ->Assign(Kinematics.at(0)->JointState->JointPosition);
 
-    switch(mode)
+    double Scale = 1.0;
+    if(mode == JVEL)
     {
-
-        case JPOS:
-        {
-            //A(dq + q) >= b
-            //A*dq >= b - A*q
-            ObjectiveMatrixRef.Assign(Data->ObjectiveMatrix);
-            ObjectiveVectorRef.Assign(Data->ObjectiveVector - Data->ObjectiveMatrix*(*CurrQ));
-            IneqConstraintMatrixRef.Assign(Data->IneqConstraintMatrix);
-            IneqConstraintVectorRef.Assign(Data->IneqConstraintVector - Data->IneqConstraintMatrix*(*CurrQ));
-            EqConstraintMatrixRef.Assign(Data->EqConstraintMatrix);
-            EqConstraintVectorRef.Assign(Data->EqConstraintVector - Data->EqConstraintMatrix*(*CurrQ));
-            break;
-        }
-        case JVEL:
-        {
-            //TickTime*A*dq >= TickTime*b
-            ObjectiveMatrixRef.Assign(TickTime*Data->ObjectiveMatrix);
-            ObjectiveVectorRef.Assign(TickTime * Data->ObjectiveVector);
-            IneqConstraintMatrixRef.Assign(TickTime*Data->IneqConstraintMatrix);
-            IneqConstraintVectorRef.Assign(TickTime * Data->IneqConstraintVector);
-            EqConstraintMatrixRef.Assign(TickTime*Data->EqConstraintMatrix);
-            EqConstraintVectorRef.Assign(TickTime*Data->EqConstraintVector);
-            break;
-        }
-        default:
-        {
-            CMN_LOG_CLASS_RUN_ERROR << "FillInTableauRefs: JointPos VF given improper mode" << std::endl;
-            cmnThrow("FillInTableauRefs: JointPos VF given improper mode");
-        }
+        Scale = TickTime;
     }
+
+    //A(dq + q) >= b
+    //A*Scale*dq >= Scale*(b - A*q)
+    ObjectiveMatrixRef.Assign(Data->ObjectiveMatrix*Scale*Data->Importance);
+    ObjectiveVectorRef.Assign((Data->ObjectiveVector - Data->ObjectiveMatrix*(*CurrQ))*Scale*Data->Importance);
+    IneqConstraintMatrixRef.Assign(Data->IneqConstraintMatrix*Scale);
+    IneqConstraintVectorRef.Assign((Data->IneqConstraintVector - Data->IneqConstraintMatrix*(*CurrQ))*Scale);
+    EqConstraintMatrixRef.Assign(Data->EqConstraintMatrix*Scale);
+    EqConstraintVectorRef.Assign((Data->EqConstraintVector - Data->EqConstraintMatrix*(*CurrQ))*Scale);
 
     for(size_t i = 0; i < Data->NumSlacks; i++)
     {
@@ -84,12 +67,12 @@ void mtsVFJointPosition::ConvertRefs(const mtsVFBase::CONTROLLERMODE mode, const
 {
     if(mode == JVEL)
     {
-        //1/TickTime*A*dq >= 1/TickTime*b
-        ObjectiveMatrixRef.Assign(1/TickTime*ObjectiveMatrixRef);
-        ObjectiveVectorRef.Assign(1/TickTime * ObjectiveVectorRef);
-        IneqConstraintMatrixRef.Assign(1/TickTime*IneqConstraintMatrixRef);
-        IneqConstraintVectorRef.Assign(1/TickTime * IneqConstraintVectorRef);
-        EqConstraintMatrixRef.Assign(1/TickTime*EqConstraintMatrixRef);
-        EqConstraintVectorRef.Assign(1/TickTime*EqConstraintVectorRef);
+        //TickTime*A*dq >= TickTime*b
+        ObjectiveMatrixRef.Assign(ObjectiveMatrixRef*TickTime);
+        ObjectiveVectorRef.Assign(ObjectiveVectorRef*TickTime);
+        IneqConstraintMatrixRef.Assign(IneqConstraintMatrixRef*TickTime);
+        IneqConstraintVectorRef.Assign(IneqConstraintVectorRef*TickTime);
+        EqConstraintMatrixRef.Assign(EqConstraintMatrixRef*TickTime);
+        EqConstraintVectorRef.Assign(EqConstraintVectorRef*TickTime);
     }
 }
