@@ -1,7 +1,6 @@
 inline-header {
 #include <sawConstraintController/prmJointState.h>
 #include <cisstVector/vctDynamicMatrixTypes.h>
-#include <cisstVector/vctDataFunctionsDynamicMatrix.h>
 }
 class {
     name prmKinematicsState;

@@ -1,8 +1,6 @@
 inline-header {
 #include <cisstVector/vctDynamicVectorTypes.h>
 #include <cisstVector/vctDynamicMatrixTypes.h>
-#include <cisstVector/vctDataFunctionsDynamicVector.h>
-#include <cisstVector/vctDataFunctionsDynamicMatrix.h>
 }
 class {
     name mtsVFDataBase;
