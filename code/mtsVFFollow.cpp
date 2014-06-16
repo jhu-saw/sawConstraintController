@@ -16,7 +16,7 @@
  --- end cisst license ---
  */
 
-#include <sawConstraintController/mtsVFDaVinciFollow.h>
+#include <sawConstraintController/mtsVFFollow.h>
 
 CMN_IMPLEMENT_SERVICES(mtsVFFollow)
 
