@@ -1,0 +1,3 @@
+#include <sawConstraintController/prmDaVinciKinematicsState.h>
+
+CMN_IMPLEMENT_SERVICES(prmDaVinciKinematicsState)

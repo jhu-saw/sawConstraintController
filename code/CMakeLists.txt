@@ -61,6 +61,7 @@ if (cisst_FOUND)
        ${sawConstraintController_HEADER_DIR}/mtsVFController.h
        ${sawConstraintController_HEADER_DIR}/mtsVFSideview.h
        ${sawConstraintController_HEADER_DIR}/mtsVFFollow.h
+       ${sawConstraintController_HEADER_DIR}/prmDaVinciKinematicsState.h
        )
 
   set (SOURCE_FILES
@@ -74,6 +75,7 @@ if (cisst_FOUND)
        mtsVFController.cpp
        mtsVFSideview.cpp
        mtsVFFollow.cpp
+       prmDaVinciKinematicsState.cpp
        )
 
   add_library (sawConstraintController

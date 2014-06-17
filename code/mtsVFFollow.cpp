@@ -25,16 +25,46 @@ CMN_IMPLEMENT_SERVICES(mtsVFFollow)
 */
 void mtsVFFollow::FillInTableauRefs(const CONTROLLERMODE mode, const double TickTime)
 {
-    // fill in refs
-    // min || I*dx - d ||
-    // I is the identity matrix
-    // d is the objective vector, which stores the desired cartesian position for the slave
 
-    //now set reference to the left hand side of the above equation, the identity matrix
-    ObjectiveMatrixRef.Diagonal().SetAll(1.0);
+    // fill in refs    
+    // min || I*dq - (q_des - q_curr) ||
+    // I is the identity matrix, q_des is the desired joint set, q_curr is the current joint set
 
-    //set the reference to the right hand side of the above equation (d)
-    ObjectiveVectorRef.Assign(Data->ObjectiveVector);
+    //check desired frame, current frame dependencies
+    if(Kinematics.size() < 2)
+    {
+        CMN_LOG_CLASS_RUN_ERROR << "FillInTableauRefs: Follow VF given improper input" << std::endl;
+        cmnThrow("FillInTableauRefs: Follow VF given improper input");
+    }
 
-    ConvertRefs(mode,TickTime);
+    // pointers to kinematics
+    CurrentKinematics = (prmDaVinciKinematicsState *)(&Kinematics.at(0));
+    DesiredKinematics = (prmDaVinciKinematicsState *)(&Kinematics.at(1));
+
+    // current kinematics gives us current joint set
+    CurrentJointSet = CurrentKinematics->Joints;
+
+    // desired kinematics gives us desired frame
+    DesiredFrame = DesiredKinematics->Frame * DesiredKinematics->Frame6to7Inverse;
+    DesiredFrame4x4.From(DesiredFrame);
+
+    // use desired frame to solve for desired joint set
+    DesiredJointSet.SetSize(6);
+    DesiredJointSet.SetAll(0.0);
+    if(DesiredKinematics->Manipulator.InverseKinematics(DesiredJointSet, DesiredFrame4x4))
+    {
+        DesiredJointSet.resize(7);
+        DesiredJointSet[6] = DesiredKinematics->DesiredOpenAngle;
+
+        ObjectiveMatrixRef.Diagonal().SetAll(1.0);
+
+        ObjectiveVectorRef.Assign(DesiredJointSet - CurrentJointSet);
+
+        ConvertRefs(mode,TickTime);
+    }
+    else
+    {
+        cmnThrow("FillInTableauRefs: Inverse Kinematics failed");
+    }
+
 }

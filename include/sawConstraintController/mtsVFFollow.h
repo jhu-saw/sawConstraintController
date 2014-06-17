@@ -26,25 +26,33 @@
 #include <sawConstraintController/prmSensorState.h>
 #include <sawConstraintController/mtsVFDataBase.h>
 #include <sawConstraintController/mtsVFBase.h>
-#include <sawConstraintController/mtsVFCartVel.h>
+#include <sawConstraintController/mtsVFJointPos.h>
+#include <sawConstraintController/prmDaVinciKinematicsState.h>
 
 //! This is the base class for all virtual fixture objects
 /*! \brief mtsVFFollow: A class that contains logic for the implementation of virtual fixtures
  */
-class mtsVFFollow : public mtsVFCartesianTranslation
+class mtsVFFollow : public mtsVFJointPosition
 {
     CMN_DECLARE_SERVICES(CMN_DYNAMIC_CREATION, CMN_LOG_LOD_RUN_VERBOSE)
 
 public:
 
+    prmDaVinciKinematicsState * CurrentKinematics;
+    prmDaVinciKinematicsState * DesiredKinematics;
+    vctDoubleVec CurrentJointSet;
+    vctFrm3 DesiredFrame;
+    vctFrm4x4 DesiredFrame4x4;
+    vctDoubleVec DesiredJointSet;
+
     /*! Constructor
     */
-    mtsVFFollow() : mtsVFCartesianTranslation(){}
+    mtsVFFollow() : mtsVFJointPosition(){}
 
     /*! Constructor
     \param name String name of object
     */
-    mtsVFFollow(const std::string & name, mtsVFDataBase * data) : mtsVFCartesianTranslation(name,data){}
+    mtsVFFollow(const std::string & name, mtsVFDataBase * data) : mtsVFJointPosition(name,data){}
 
     //! Updates co with virtual fixture data.
     /*! FillInTableauRefs
