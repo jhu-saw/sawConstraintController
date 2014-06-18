@@ -256,10 +256,12 @@ void mtsVFController::UpdateOptimizer(double TickTime)
     Optimizer.Allocate();
 
     // go through virtual fixtures again and fill in tableau
-    Optimizer.ResetIndices();
+    Optimizer.ResetIndices();    
+
     for(itVF = VFMap.begin(); itVF != VFMap.end(); itVF++)
     {
-        mtsVFBase * tempVFData = itVF->second;
+        mtsVFBase * tempVFData = itVF->second;        
+
         if(tempVFData->Data->Active)
         {
             //updates the virtual fixture's kinematics and sensor objects

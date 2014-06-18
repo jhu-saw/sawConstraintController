@@ -17,7 +17,7 @@ class {
       visibility public;
     }
     member {
-      default false;
+      default true;
       name Active;
       type bool;
       visibility public;

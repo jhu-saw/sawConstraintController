@@ -25,7 +25,7 @@ CMN_IMPLEMENT_SERVICES(mtsVFFollow)
 */
 void mtsVFFollow::FillInTableauRefs(const CONTROLLERMODE mode, const double TickTime)
 {
-
+    std::cout << "Being Called " << std::endl;
     // fill in refs    
     // min || I*dq - (q_des - q_curr) ||
     // I is the identity matrix, q_des is the desired joint set, q_curr is the current joint set
@@ -38,27 +38,37 @@ void mtsVFFollow::FillInTableauRefs(const CONTROLLERMODE mode, const double Tick
     }
 
     // pointers to kinematics
-    CurrentKinematics = (prmDaVinciKinematicsState *)(&Kinematics.at(0));
-    DesiredKinematics = (prmDaVinciKinematicsState *)(&Kinematics.at(1));
+    CurrentKinematics = (prmDaVinciKinematicsState *)(Kinematics.at(0));
+    DesiredKinematics = (prmDaVinciKinematicsState *)(Kinematics.at(1));
 
     // current kinematics gives us current joint set
     CurrentJointSet = CurrentKinematics->Joints;
 
+    std::cout << "C Joint " << CurrentJointSet << std::endl;
+
     // desired kinematics gives us desired frame
     DesiredFrame = DesiredKinematics->Frame * DesiredKinematics->Frame6to7Inverse;
-    DesiredFrame4x4.From(DesiredFrame);
+    DesiredFrame4x4.FromNormalized(DesiredFrame);
 
     // use desired frame to solve for desired joint set
     DesiredJointSet.SetSize(6);
     DesiredJointSet.SetAll(0.0);
+
     if(DesiredKinematics->Manipulator.InverseKinematics(DesiredJointSet, DesiredFrame4x4))
     {
         DesiredJointSet.resize(7);
         DesiredJointSet[6] = DesiredKinematics->DesiredOpenAngle;
 
+
+        std::cout << "D Joint " << DesiredJointSet << std::endl;
+
         ObjectiveMatrixRef.Diagonal().SetAll(1.0);
 
+        std::cout << "Matrix  " << ObjectiveMatrixRef << std::endl;
+
         ObjectiveVectorRef.Assign(DesiredJointSet - CurrentJointSet);
+
+        std::cout << "Vector  " << ObjectiveVectorRef << std::endl;
 
         ConvertRefs(mode,TickTime);
     }

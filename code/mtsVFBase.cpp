@@ -31,7 +31,12 @@ mtsVFBase::mtsVFBase(const std::string & name, mtsVFDataBase * data)
     Data = data;
     Kinematics.clear();
     Sensors.clear();
-    data->KinNames.push_back(DefaultKinematicsName);
+
+/*
+    @TODO
+    If no data coming coming
+*/
+//    data->KinNames.push_back(DefaultKinematicsName);
 }
 
 //! Reserves space in the control optimizer.
@@ -55,9 +60,12 @@ void mtsVFBase::LookupStateData(const std::map<std::string,prmKinematicsState *>
     std::map<std::string,prmKinematicsState *>::const_iterator itKin;
     std::map<std::string,prmSensorState *>::const_iterator itSen;
 
+    std::cout << "Size of Kins " <<  Data->KinNames.size() << std::endl;
+
     //find kinematics objects by name, update pointers
     for(size_t i = 0; i < Data->KinNames.size(); i++)
     {
+        std::cout << "Name " << i << " - " << Data->KinNames.at(i) << std::endl;
         itKin = k.find(Data->KinNames.at(i));
         if(itKin != k.end())
         {
@@ -65,7 +73,7 @@ void mtsVFBase::LookupStateData(const std::map<std::string,prmKinematicsState *>
         }
         else
         {
-            CMN_LOG_CLASS_RUN_ERROR << "LookupStateData: Kinematics object \"" << Data->KinNames.at(i) << "\" not found" << std::endl;
+            CMN_LOG_CLASS_RUN_ERROR << "LookupStateData: Kinematics object \"" << Data->KinNames.at(i) << " - "  << i << "\" not found" << std::endl;
             cmnThrow("LookupStateData: Kinematics object \"" + Data->KinNames.at(i) + "\" not found");
         }
     }
