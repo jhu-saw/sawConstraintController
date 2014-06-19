@@ -58,14 +58,11 @@ void mtsVFBase::LookupStateData(const std::map<std::string,prmKinematicsState *>
     //update pointers to state data
     Kinematics.clear();
     std::map<std::string,prmKinematicsState *>::const_iterator itKin;
-    std::map<std::string,prmSensorState *>::const_iterator itSen;
-
-    std::cout << "Size of Kins " <<  Data->KinNames.size() << std::endl;
+    std::map<std::string,prmSensorState *>::const_iterator itSen;    
 
     //find kinematics objects by name, update pointers
     for(size_t i = 0; i < Data->KinNames.size(); i++)
-    {
-        std::cout << "Name " << i << " - " << Data->KinNames.at(i) << std::endl;
+    {        
         itKin = k.find(Data->KinNames.at(i));
         if(itKin != k.end())
         {

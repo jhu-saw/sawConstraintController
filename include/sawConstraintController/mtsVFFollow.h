@@ -24,10 +24,10 @@
 #include <cisstVector/vctDynamicVectorTypes.h>
 #include <cisstVector/vctDynamicMatrixTypes.h>
 #include <sawConstraintController/prmSensorState.h>
-#include <sawConstraintController/mtsVFDataBase.h>
+#include <sawConstraintController/mtsVFDataFollow.h>
 #include <sawConstraintController/mtsVFBase.h>
 #include <sawConstraintController/mtsVFJointPos.h>
-#include <sawConstraintController/prmDaVinciKinematicsState.h>
+#include <cisstRobot/robManipulator.h>
 
 //! This is the base class for all virtual fixture objects
 /*! \brief mtsVFFollow: A class that contains logic for the implementation of virtual fixtures
@@ -38,12 +38,12 @@ class mtsVFFollow : public mtsVFJointPosition
 
 public:
 
-    prmDaVinciKinematicsState * CurrentKinematics;
-    prmDaVinciKinematicsState * DesiredKinematics;
+    prmKinematicsState * CurrentKinematics;
+    prmKinematicsState * DesiredKinematics;
     vctDoubleVec CurrentJointSet;
-    vctFrm3 DesiredFrame;
-    vctFrm4x4 DesiredFrame4x4;
+    vctFrm4x4 DesiredFrame;
     vctDoubleVec DesiredJointSet;
+    robManipulator * Manipulator;
 
     /*! Constructor
     */
@@ -58,6 +58,8 @@ public:
     /*! FillInTableauRefs
     */
     void FillInTableauRefs(const mtsVFBase::CONTROLLERMODE mode, const double TickTime);
+
+    void SetManipulator(robManipulator * rm);
 
 };
 
