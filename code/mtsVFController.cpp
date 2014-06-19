@@ -70,6 +70,30 @@ bool mtsVFController::SetVFDataSensorCompliance(const mtsVFDataSensorCompliance 
     return false;
 }
 
+bool mtsVFController::SetVFDataPlane(const mtsVFDataPlane &data, const std::type_info &type)
+{
+    // find vf by data.Name
+    std::map<std::string, mtsVFBase *>::iterator itVF;
+    itVF = VFMap.find(data.Name);
+
+    // if not found, return false
+    if(itVF == VFMap.end())
+    {
+        return false;
+    }
+
+    // if found, get std::typeid(iter->second) and compare to type
+    // if same type, just update iter->second->Data and return true
+    if(typeid(itVF->second) == type)
+    {
+        DecrementUsers(itVF->second->Data->KinNames,itVF->second->Data->SensorNames);
+        itVF->second->Data = new mtsVFDataPlane(data);
+        IncrementUsers(itVF->second->Data->KinNames,itVF->second->Data->SensorNames);
+        return true;
+    }
+    return false;
+}
+
 //! Adds/updates a basic virtual fixture that uses joint velocity control in the map and increments users of kinematics and sensors
 /*! SetVFJointVel
 @param vf virtual fixture to be added
@@ -162,6 +186,22 @@ void mtsVFController::AddVFFollow(const mtsVFDataBase & vf)
     {
         // Adds a new virtual fixture to the active vector
         VFMap.insert(std::pair<std::string,mtsVFFollow *>(vf.Name,new mtsVFFollow(vf.Name,new mtsVFDataBase(vf))));
+        // Increment users of each kinematics and sensor object found
+        IncrementUsers(vf.KinNames,vf.SensorNames);
+    }
+}
+
+//! Adds/updates a sensor compliance virtual fixture in the map and increments users of kinematics and sensors
+/*! AddVFPlane
+@param vf virtual fixture to be added
+*/
+void mtsVFController::AddVFPlane(const mtsVFDataPlane & vf)
+{
+    // If we can find the VF, only change its data. Otherwise, create a new VF object.
+    if (!SetVFDataPlane(vf, typeid(mtsVFPlane)))
+    {
+        // Adds a new virtual fixture to the active vector
+        VFMap.insert(std::pair<std::string,mtsVFPlane *>(vf.Name, new mtsVFPlane(vf.Name,new mtsVFDataPlane(vf))));
         // Increment users of each kinematics and sensor object found
         IncrementUsers(vf.KinNames,vf.SensorNames);
     }

@@ -33,6 +33,7 @@
 #include <sawConstraintController/mtsVFCartVel.h>
 #include <sawConstraintController/mtsVFCartOrientationVel.h>
 #include <sawConstraintController/mtsVFFollow.h>
+#include <sawConstraintController/mtsVFPlane.h>
 
 /*! \brief mtsVFController: A class that is responsible for managing the virtual fixtures, relevant state data, and the control optimizer
  */
@@ -91,6 +92,9 @@ public:
     //! Adds/Updates a vf data object
     void AddVFFollow(const mtsVFDataBase & vf);
 
+    //! Adds/Updates a vf plane object
+    void AddVFPlane(const mtsVFDataPlane &vf);
+
     void AddVFSideview(const mtsVFDataSideview & vf);
 
     //! Adds/Updates a kinematics object to the map
@@ -129,6 +133,7 @@ private:
     bool SetVFData(const mtsVFDataBase & data, const std::type_info & type);
 
     bool SetVFDataSensorCompliance(const mtsVFDataSensorCompliance & data, const std::type_info & type);
+    bool SetVFDataPlane(const mtsVFDataPlane & data, const std::type_info & type);
 
 };
 

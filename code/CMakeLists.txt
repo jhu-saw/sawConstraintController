@@ -46,7 +46,8 @@ if (cisst_FOUND)
 			mtsVFDataSideview.cdg
 			mtsVFDataCartesianTranslation.cdg
                         prmJointState.cdg
-                        mtsVFDataFollow.cdg)
+                        mtsVFDataFollow.cdg
+                        mtsVFDataPlane.cdg)
 
   include_directories (${sawConstraintController_INCLUDE_DIR})
   set (sawConstraintController_HEADER_DIR "${sawConstraintController_INCLUDE_DIR}/sawConstraintController")
@@ -62,6 +63,7 @@ if (cisst_FOUND)
        ${sawConstraintController_HEADER_DIR}/mtsVFController.h
        ${sawConstraintController_HEADER_DIR}/mtsVFSideview.h
        ${sawConstraintController_HEADER_DIR}/mtsVFFollow.h
+       ${sawConstraintController_HEADER_DIR}/mtsVFPlane.h
        )
 
   set (SOURCE_FILES
@@ -75,6 +77,7 @@ if (cisst_FOUND)
        mtsVFController.cpp
        mtsVFSideview.cpp
        mtsVFFollow.cpp
+       mtsVFPlane.cpp
        )
 
   add_library (sawConstraintController
