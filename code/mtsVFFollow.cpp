@@ -36,8 +36,6 @@ void mtsVFFollow::FillInTableauRefs(const CONTROLLERMODE mode, const double Tick
         cmnThrow("FillInTableauRefs: Follow VF given improper input");
     }
 
-    mtsVFDataFollow * FollowData = (mtsVFDataFollow *)(Data);
-
     // pointers to kinematics
     CurrentKinematics = Kinematics.at(0);
     DesiredKinematics = Kinematics.at(1);
@@ -55,30 +53,16 @@ void mtsVFFollow::FillInTableauRefs(const CONTROLLERMODE mode, const double Tick
 
     if(Manipulator)
     {
-        std::cout << "Outer If Loop " << std::endl;
         if(Manipulator->InverseKinematics(DesiredJointSet, DesiredFrame) == robManipulator::ESUCCESS)
         {
-            std::cout << "Inside If Loop " << std::endl;
-
             DesiredJointSet.resize(7);
             DesiredJointSet[6] = CurrentJointSet[6];
-//            const double difference = CurrentJointSet[3] - DesiredJointSet[3];
-//            const double differenceInTurns = nearbyint(difference / (2.0 * cmnPI));
-//            DesiredJointSet[3] = DesiredJointSet[3] + differenceInTurns * 2.0 * cmnPI;
-
-            std::cout << "Current " << CurrentJointSet << std::endl;
-            std::cout << "Desired " << DesiredJointSet << std::endl;
 
             ObjectiveMatrixRef.Diagonal().SetAll(1.0);
 
             ObjectiveVectorRef.Assign(DesiredJointSet - CurrentJointSet);
 
-            CMN_LOG_CLASS_INIT_WARNING << "Matrix (size " << ObjectiveMatrixRef.sizes() << " )" << std::endl << ObjectiveMatrixRef << std::endl;
-
-            CMN_LOG_CLASS_INIT_WARNING << "Vector " << ObjectiveVectorRef << std::endl;
-
-            //ConvertRefs(mode,TickTime);
-
+            ConvertRefs(mode,TickTime);
         }
     }
     else
@@ -86,10 +70,4 @@ void mtsVFFollow::FillInTableauRefs(const CONTROLLERMODE mode, const double Tick
         cmnThrow("FillInTableauRefs: Inverse Kinematics failed");
     }
 
-}
-
-
-void mtsVFFollow::SetManipulator(robManipulator * rm)
-{
-    Manipulator = rm;
 }

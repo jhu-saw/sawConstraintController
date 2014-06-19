@@ -24,7 +24,6 @@
 #include <cisstVector/vctDynamicVectorTypes.h>
 #include <cisstVector/vctDynamicMatrixTypes.h>
 #include <sawConstraintController/prmSensorState.h>
-#include <sawConstraintController/mtsVFDataFollow.h>
 #include <sawConstraintController/mtsVFBase.h>
 #include <sawConstraintController/mtsVFJointPos.h>
 #include <cisstRobot/robManipulator.h>
@@ -59,7 +58,7 @@ public:
     */
     void FillInTableauRefs(const mtsVFBase::CONTROLLERMODE mode, const double TickTime);
 
-    void SetManipulator(robManipulator * rm);
+    void SetManipulator(robManipulator * rm){ Manipulator = rm;}
 
 };
 
