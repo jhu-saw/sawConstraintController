@@ -4,7 +4,7 @@
 /*
  $Id: $
 
- Author(s):  Paul Wilkening
+ Author(s):  Preetham Chalasani
  Created on:
 
  (C) Copyright 2013 Johns Hopkins University (JHU), All Rights Reserved.
@@ -27,8 +27,7 @@
 #include <sawConstraintController/mtsVFJointPos.h>
 #include <sawConstraintController/mtsVFDataPlane.h>
 
-//! This is the base class for all virtual fixture objects
-/*! \brief mtsVFPlane: A class that contains logic for the implementation of virtual fixtures
+/*! \brief mtsVFPlane: A class that contains logic for the implementation of  Plane virtual fixtures
  */
 class mtsVFPlane : public mtsVFJointPosition
 {
@@ -43,13 +42,23 @@ public:
     /*! Constructor
     \param name String name of object
     */
-    mtsVFPlane(const std::string & name, mtsVFDataPlane * data) : mtsVFJointPosition(name,data){}
+    mtsVFPlane(const std::string & name, mtsVFDataPlane * data) : mtsVFJointPosition(name,data)
+    {
+        IsFrameSet = false;
+    }
 
     //! Updates co with virtual fixture data.
     /*! FillInTableauRefs
     */
-    void FillInTableauRefs(const mtsVFBase::CONTROLLERMODE mode, const double TickTime);    
+    void FillInTableauRefs(const mtsVFBase::CONTROLLERMODE mode, const double TickTime);        
 
+    void SetFrame(const vctFrame4x4<double>& Frame);
+
+    prmKinematicsState * CurrentKinematics;
+
+private:
+    bool IsFrameSet;
+    vctFrame4x4<double> frame;
 };
 
 CMN_DECLARE_SERVICES_INSTANTIATION(mtsVFPlane)

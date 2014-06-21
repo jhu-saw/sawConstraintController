@@ -2,7 +2,7 @@
 /* ex: set filetype=cpp softtabstop=4 shiftwidth=4 tabstop=4 cindent expandtab: */
 
 /*
-  Author(s):  Paul Wilkening
+  Author(s):  Preetham Chalasani
   Created on: 2014
 
   (C) Copyright 2014 Johns Hopkins University (JHU), All Rights Reserved.
@@ -25,25 +25,67 @@ CMN_IMPLEMENT_SERVICES(mtsVFPlane)
 */
 void mtsVFPlane::FillInTableauRefs(const CONTROLLERMODE mode, const double TickTime)
 {
-    // fill in refs
-    // min || I*dq - (q_des - q_curr) ||
-    // I is the identity matrix, q_des is the desired joint set, q_curr is the current joint set
+    /*
+         Fill in refs
+         Plane equation : ax + by + cz = d
+         [a,b,c].[x,y,z] = d, where [a,b,c] is the normal of the plane and [x,y,z] is a point on the plane
+         d = vctDotProduct(Normal, PointOnPlane)
 
-    //check desired frame, current frame dependencies
+         min || N.(x+dx) - d|| => min || N.dx - (d - N.x)||
+         where,
+            N is the normal vector represented as 1x3 matrix
+            x is the current position
+            d is the constant calculated using above formula
+    */
+
+    if(Kinematics.size() < 1)
+    {
+        CMN_LOG_CLASS_RUN_ERROR << "FillInTableauRefs: Plane VF given improper input" << std::endl;
+        cmnThrow("FillInTableauRefs: Plane VF given improper input");
+    }
+
+    // Pointer to kinematics
+    CurrentKinematics = Kinematics.at(0);
+    vct3 CurrentPos(CurrentKinematics->Frame.Translation());
 
     mtsVFDataPlane *planeData = (mtsVFDataPlane*)(Data);
 
-    vct1 d(vctDotProduct(planeData->Normal, planeData->PointOnPlane));
+    if(!planeData)
+    {
+        CMN_LOG_CLASS_RUN_ERROR << "Plane data object not set" << std::endl;
+        return;
+    }
 
     vctDynamicMatrix<double> N( 1, 3, VCT_COL_MAJOR );
-    N[0][0] = planeData->Normal[0];
-    N[0][1] = planeData->Normal[1];
-    N[0][2] = planeData->Normal[2];
+    vct1 d;
+    if(IsFrameSet)
+    {
+        vctFixedSizeVector<double,3> xyz = frame.Translation();
+        N[0][0] = frame[0][2];
+        N[0][1] = frame[1][2];
+        N[0][2] = frame[2][2];
+        d = vct1( N[0][0]*xyz[0] + N[0][1]*xyz[1] + N[0][2]*xyz[2] );
+        IsFrameSet = false;
+    }
 
-    ObjectiveVectorRef.Assign(d);
+    else
+    {
+        N[0][0] = planeData->Normal[0];
+        N[0][1] = planeData->Normal[1];
+        N[0][2] = planeData->Normal[2];
+        d = vct1(vctDotProduct(planeData->Normal, planeData->PointOnPlane));
+    }
+
+    ObjectiveVectorRef.Assign(d - vct1(vctDotProduct(planeData->Normal, CurrentPos)));
     ObjectiveMatrixRef.Assign(N);
 
     ConvertRefs(mode,TickTime);
 
 
+}
+
+void mtsVFPlane::SetFrame(const vctFrame4x4<double> &Frame)
+{
+    IsFrameSet = true;
+    frame = Frame;
 }
