@@ -51,17 +51,22 @@ void mtsVFFollow::FillInTableauRefs(const CONTROLLERMODE mode, const double Tick
     DesiredJointSet.SetSize(6);
     DesiredJointSet.Assign(CurrentJointSet,6);
 
+    // make sure manipulator object exists
     if(Manipulator)
     {
+        // make sure inverse kinematics call has succeeded
         if(Manipulator->InverseKinematics(DesiredJointSet, DesiredFrame) == robManipulator::ESUCCESS)
         {
             DesiredJointSet.resize(7);
             DesiredJointSet[6] = CurrentJointSet[6];
 
+            // Identity matrix
             ObjectiveMatrixRef.Diagonal().SetAll(1.0);
 
+            // q_des - q_curr
             ObjectiveVectorRef.Assign(DesiredJointSet - CurrentJointSet);
 
+            // make conversion, if necessary
             ConvertRefs(mode,TickTime);
         }
     }

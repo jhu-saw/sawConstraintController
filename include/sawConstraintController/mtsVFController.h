@@ -70,9 +70,11 @@ public:
 
     /*! Constructor
     */
-    mtsVFController(size_t num_joints):
+    mtsVFController(size_t num_joints, mtsVFBase::CONTROLLERMODE cm):
         Optimizer(num_joints)
-    {}
+    {
+        ControllerMode = cm;
+    }
 
     //! Adds/Updates a vf data object
     void AddVFJointVelocity(const mtsVFDataBase & vf);
