@@ -24,12 +24,12 @@
 #include <cisstVector/vctDynamicVectorTypes.h>
 #include <cisstVector/vctDynamicMatrixTypes.h>
 #include <sawConstraintController/mtsVFBase.h>
-#include <sawConstraintController/mtsVFJointPos.h>
+#include <sawConstraintController/mtsVFCartVel.h>
 #include <sawConstraintController/mtsVFDataPlane.h>
 
 /*! \brief mtsVFPlane: A class that contains logic for the implementation of  Plane virtual fixtures
  */
-class mtsVFPlane : public mtsVFJointPosition
+class mtsVFPlane : public mtsVFCartesianTranslation
 {
     CMN_DECLARE_SERVICES(CMN_DYNAMIC_CREATION, CMN_LOG_LOD_RUN_VERBOSE)
 
@@ -37,12 +37,12 @@ public:
 
     /*! Constructor
     */
-    mtsVFPlane() : mtsVFJointPosition(){}
+    mtsVFPlane() : mtsVFCartesianTranslation(){}
 
     /*! Constructor
     \param name String name of object
     */
-    mtsVFPlane(const std::string & name, mtsVFDataPlane * data) : mtsVFJointPosition(name,data)
+    mtsVFPlane(const std::string & name, mtsVFDataPlane * data) : mtsVFCartesianTranslation(name,data)
     {
         IsFrameSet = false;
     }

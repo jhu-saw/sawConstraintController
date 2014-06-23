@@ -96,11 +96,19 @@ void mtsVFCartesianTranslation::ConvertRefs(const mtsVFBase::CONTROLLERMODE mode
     {
         Scale = TickTime;
     }
-    ObjectiveMatrixRef.Assign((ObjectiveMatrixRef*Scale)*Kinematics.at(0)->Jacobian);
+//    std::cout << "ObjeMatr Size : " << ObjectiveMatrixRef.sizes() << std::endl;
+//    std::cout << "ObjeVec  Size : " << ObjectiveVectorRef.size() << std::endl;
+//    std::cout << "Jacobia  Size : " << Kinematics.at(0)->Jacobian.sizes() << std::endl;
+//    std::cout << "InqObj   Size : " << IneqConstraintMatrixRef.sizes() << std::endl;
+//    std::cout << "InqVec   Size : " << IneqConstraintVectorRef.size() << std::endl;
+//    std::cout << "EqObj    Size : " << EqConstraintMatrixRef.sizes() << std::endl;
+//    std::cout << "EqVec    Size : " << EqConstraintVectorRef.size() << std::endl;
+
+    ObjectiveMatrixRef.Assign((ObjectiveMatrixRef.Multiply(Scale))*Kinematics.at(0)->Jacobian);
     ObjectiveVectorRef.Assign(ObjectiveVectorRef*Scale);
-    IneqConstraintMatrixRef.Assign((IneqConstraintMatrixRef*Scale)*Kinematics.at(0)->Jacobian);
-    IneqConstraintVectorRef.Assign(IneqConstraintVectorRef*Scale);
-    EqConstraintMatrixRef.Assign((EqConstraintMatrixRef*Scale)*Kinematics.at(0)->Jacobian);
-    EqConstraintVectorRef.Assign(EqConstraintVectorRef*Scale);
+    IneqConstraintMatrixRef.Assign((IneqConstraintMatrixRef.Multiply(Scale))*Kinematics.at(0)->Jacobian);
+    IneqConstraintVectorRef.Assign(IneqConstraintVectorRef * Scale);
+//    EqConstraintVectorRef.Assign(EqConstraintVectorRef * Scale);
+//    EqConstraintMatrixRef.Assign((EqConstraintMatrixRef.Multiply(Scale))*Kinematics.at(0)->Jacobian);
 
 }
