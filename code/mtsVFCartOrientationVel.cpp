@@ -19,7 +19,7 @@
 #include <sawConstraintController/mtsVFCartOrientationVel.h>
 #include <sawConstraintController/mtsVFDataCartesianTranslation.h>
 
-CMN_IMPLEMENT_SERVICES(mtsVFCartesianOrientation);
+CMN_IMPLEMENT_SERVICES(mtsVFCartesianOrientation)
 
 //! Updates co with virtual fixture data.
 /*! FillInTableauRefs

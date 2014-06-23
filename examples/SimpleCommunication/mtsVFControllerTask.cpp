@@ -28,7 +28,7 @@ mtsVFControllerTask::mtsVFControllerTask(const std::string & taskName, double pe
 
     //CO variables
     TaskMode = JVEL;
-    CO_Controller = mtsVFController(NB_Joints);
+    CO_Controller = mtsVFController(NB_Joints,mtsVFBase::JVEL);
     ControllerOutput.SetSize(NB_Joints);
 
 	//Kinematics objects	
@@ -42,7 +42,7 @@ mtsVFControllerTask::mtsVFControllerTask(const std::string & taskName, double pe
     pedal.Values.SetSize(1);
     CO_Controller.Sensors.insert(std::pair<std::string, prmSensorState *>(pedal.Name,&pedal));
 
-    CO_Controller.ControllerMode = mtsVFBase::JVEL;
+    //CO_Controller.ControllerMode = mtsVFBase::JVEL;
 
 }
 

@@ -26,15 +26,53 @@ CMN_IMPLEMENT_SERVICES(mtsVFFollow)
 void mtsVFFollow::FillInTableauRefs(const CONTROLLERMODE mode, const double TickTime)
 {
     // fill in refs
-    // min || I*dx - d ||
-    // I is the identity matrix
-    // d is the objective vector, which stores the desired cartesian position for the slave
+    // min || I*dq - (q_des - q_curr) ||
+    // I is the identity matrix, q_des is the desired joint set, q_curr is the current joint set
 
-    //now set reference to the left hand side of the above equation, the identity matrix
-    ObjectiveMatrixRef.Diagonal().SetAll(1.0);
+    //check desired frame, current frame dependencies
+    if(Kinematics.size() < 2)
+    {
+        CMN_LOG_CLASS_RUN_ERROR << "FillInTableauRefs: Follow VF given improper input" << std::endl;
+        cmnThrow("FillInTableauRefs: Follow VF given improper input");
+    }
 
-    //set the reference to the right hand side of the above equation (d)
-    ObjectiveVectorRef.Assign(Data->ObjectiveVector);
+    // pointers to kinematics
+    CurrentKinematics = Kinematics.at(0);
+    DesiredKinematics = Kinematics.at(1);
 
-    ConvertRefs(mode,TickTime);
+    // current kinematics gives us current joint set
+    CurrentJointSet.SetSize(7);
+    CurrentJointSet.Assign(CurrentKinematics->JointState->JointPosition);
+
+    // desired kinematics gives us desired frame
+    DesiredFrame.FromNormalized(DesiredKinematics->Frame);
+
+    // use desired frame to solve for desired joint set
+    DesiredJointSet.SetSize(6);
+    DesiredJointSet.Assign(CurrentJointSet,6);
+
+    // make sure manipulator object exists
+    if(Manipulator)
+    {
+        // make sure inverse kinematics call has succeeded
+        if(Manipulator->InverseKinematics(DesiredJointSet, DesiredFrame) == robManipulator::ESUCCESS)
+        {
+            DesiredJointSet.resize(7);
+            DesiredJointSet[6] = CurrentJointSet[6];
+
+            // Identity matrix
+            ObjectiveMatrixRef.Diagonal().SetAll(1.0);
+
+            // q_des - q_curr
+            ObjectiveVectorRef.Assign(DesiredJointSet - CurrentJointSet);
+
+            // make conversion, if necessary
+            ConvertRefs(mode,TickTime);
+        }
+    }
+    else
+    {
+        cmnThrow("FillInTableauRefs: Inverse Kinematics failed");
+    }
+
 }
