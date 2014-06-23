@@ -1,0 +1,35 @@
+inline-header {
+#include <sawConstraintController/mtsVFDataBase.h>
+}
+
+class {
+
+    name mtsVFDataPlane;
+
+    // All VF data objects are subclasses of mtsVFDataBase
+    base-class {
+      type mtsVFDataBase;
+    }
+
+    // This vct3 object represents a point in the central axis of the cochlea that we want the probe to stick close to
+    member {    
+      name Normal;
+      type vct3;      
+      default vct3(0.0,0.0,1.0);
+      visibility public;
+    }
+     
+    member {    
+      name PointOnPlane;
+      type vct3;      
+      default vct3(0.0,0.0,0.0);
+      visibility public;
+    }  
+
+    member {
+        name CurrentPos;
+        type vct3;
+        visibility public;
+    }
+}
+
