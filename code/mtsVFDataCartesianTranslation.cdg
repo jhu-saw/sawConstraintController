@@ -1,18 +1,21 @@
 inline-header {
 #include <sawConstraintController/mtsVFDataBase.h>
+// Always include last!
+#include <sawConstraintController/sawConstraintControllerExport.h>
 }
 
 class {
     name mtsVFDataCartesian;
+    attribute CISST_EXPORT;
 
-    //All VF data objects are subclasses of mtsVFDataBase
+    // All VF data objects are subclasses of mtsVFDataBase
     base-class {
       type mtsVFDataBase;
     }
 
     // We have one extra member, which is the offset from the kinematics frame being used
     // The corresponding VF will center around F*v, where F is the kinematics frame and v is this offset vector
-    member {    
+    member {
       name OffsetVector;
       type vct3;
       visibility public;

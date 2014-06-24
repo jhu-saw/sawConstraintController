@@ -1,11 +1,14 @@
 inline-header {
 #include <cisstVector/vctDynamicVectorTypes.h>
 #include <cisstVector/vctDynamicMatrixTypes.h>
+// Always include last!
+#include <sawConstraintController/sawConstraintControllerExport.h>
 }
 class {
     name mtsVFDataBase;
+    attribute CISST_EXPORT;
 
-    member {    
+    member {
       name Name;
       type std::string;
       visibility public;
@@ -22,22 +25,22 @@ class {
       type bool;
       visibility public;
     }
-    member {    
+    member {
       name KinNames;
       type std::vector<std::string>;
       visibility public;
     }
-    member {    
+    member {
       name SensorNames;
       type std::vector<std::string>;
       visibility public;
     }
-    member {     
+    member {
       name SlackLimits;
       type vctDynamicVector<double>;
       visibility public;
     }
-    member {      
+    member {
       name SlackCosts;
       type vctDynamicVector<double>;
       visibility public;
@@ -49,7 +52,7 @@ class {
       type size_t;
       visibility public;
     }
-    member {      
+    member {
       name DOFSelections;
       type vctDynamicVector<size_t>;
       visibility public;
@@ -75,32 +78,32 @@ class {
       type size_t;
       visibility public;
     }
-    member {      
+    member {
       name ObjectiveMatrix;
       type vctDynamicMatrix<double>;
       visibility public;
     }
-    member {      
+    member {
       name ObjectiveVector;
       type vctDynamicVector<double>;
       visibility public;
     }
-    member {      
+    member {
       name IneqConstraintMatrix;
       type vctDynamicMatrix<double>;
       visibility public;
     }
-    member {      
+    member {
       name IneqConstraintVector;
       type vctDynamicVector<double>;
       visibility public;
     }
-    member {      
+    member {
       name EqConstraintMatrix;
       type vctDynamicMatrix<double>;
       visibility public;
     }
-    member {     
+    member {
       name EqConstraintVector;
       type vctDynamicVector<double>;
       visibility public;

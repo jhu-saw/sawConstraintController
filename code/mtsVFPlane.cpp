@@ -56,7 +56,8 @@ void mtsVFPlane::FillInTableauRefs(const CONTROLLERMODE mode, const double TickT
         return;
     }
 
-    vctDynamicMatrix<double> N( 1, 3, VCT_COL_MAJOR );
+    vctDynamicMatrix<double> N( 1, 7, VCT_COL_MAJOR );
+    N.SetAll(0);
     vct1 d;
     if(IsFrameSet)
     {
@@ -74,14 +75,13 @@ void mtsVFPlane::FillInTableauRefs(const CONTROLLERMODE mode, const double TickT
         N[0][1] = planeData->Normal[1];
         N[0][2] = planeData->Normal[2];
         d = vct1(vctDotProduct(planeData->Normal, planeData->PointOnPlane));
-    }
+    }    
 
-    ObjectiveVectorRef.Assign(d - vct1(vctDotProduct(planeData->Normal, CurrentPos)));
-    ObjectiveMatrixRef.Assign(N);
+
+    IneqConstraintVectorRef.Assign(vct1(d - vct1(vctDotProduct(planeData->Normal, CurrentPos))));
+    IneqConstraintMatrixRef.Assign(N);
 
     ConvertRefs(mode,TickTime);
-
-
 }
 
 void mtsVFPlane::SetFrame(const vctFrame4x4<double> &Frame)

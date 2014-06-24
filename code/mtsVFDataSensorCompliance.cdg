@@ -1,20 +1,23 @@
 inline-header {
 #include <sawConstraintController/mtsVFDataBase.h>
+// Always include last!
+#include <sawConstraintController/sawConstraintControllerExport.h>
 }
 
 class {
     name mtsVFDataSensorCompliance;
+    attribute CISST_EXPORT;
 
     base-class {
       type mtsVFDataBase;
     }
 
-    member {    
+    member {
       name Gain;
       type vctDoubleMat;
       visibility public;
     }
-    member {      
+    member {
       name SensorSelections;
       type vctDynamicVector<size_t>;
       visibility public;
@@ -23,7 +26,7 @@ class {
         mtsVFDataSensorCompliance(const std::string & name, const std::string & kinName,
                                   const std::string & forceSensorName, const std::string & overallGainName,
                                   const vctDoubleMat & g, const vctDoubleVec & selections = vctDoubleVec(0));
-    }   
+    }
 }
 
 //TODO can create new cpp file

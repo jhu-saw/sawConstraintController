@@ -22,7 +22,7 @@
 #include <cisstVector/vctDynamicVectorTypes.h>
 #include <cisstVector/vctDynamicMatrixTypes.h>
 #include <sawConstraintController/mtsVFBase.h>
-#include <sawConstraintController/mtsVFJointPos.h>
+#include <sawConstraintController/mtsVFCartVel.h>
 #include <sawConstraintController/mtsVFDataPlane.h>
 
 // Always include last!
@@ -30,7 +30,7 @@
 
 /*! \brief mtsVFPlane: A class that contains logic for the implementation of  Plane virtual fixtures
  */
-class CISST_EXPORT mtsVFPlane : public mtsVFJointPosition
+class CISST_EXPORT mtsVFPlane : public mtsVFCartesianTranslation
 {
     CMN_DECLARE_SERVICES(CMN_DYNAMIC_CREATION, CMN_LOG_LOD_RUN_VERBOSE);
 
@@ -38,12 +38,12 @@ public:
 
     /*! Constructor
     */
-    mtsVFPlane() : mtsVFJointPosition(){}
+    mtsVFPlane() : mtsVFCartesianTranslation(){}
 
     /*! Constructor
     \param name String name of object
     */
-    mtsVFPlane(const std::string & name, mtsVFDataPlane * data) : mtsVFJointPosition(name,data)
+    mtsVFPlane(const std::string & name, mtsVFDataPlane * data) : mtsVFCartesianTranslation(name,data)
     {
         IsFrameSet = false;
     }

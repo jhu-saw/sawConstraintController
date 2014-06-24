@@ -1,29 +1,32 @@
 inline-header {
 #include <cisstVector/vctDynamicVectorTypes.h>
 #include <cisstVector/vctDynamicMatrixTypes.h>
+// Always include last!
+#include <sawConstraintController/sawConstraintControllerExport.h>
 }
 class {
     name prmSensorState;
+    attribute CISST_EXPORT;
 
-    member {    
+    member {
       name Name;
       type std::string;
       visibility public;
     }
 
-    member {    
+    member {
       name Values;
       type vctDynamicVector<double>;
       visibility public;
     }
 
-    member {    
+    member {
       name UserCount;
       type int;
       visibility public;
     }
 
-    member {    
+    member {
       name NeedsBase;
       type bool;
       visibility public;

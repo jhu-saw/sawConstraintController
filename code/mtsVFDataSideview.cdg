@@ -1,10 +1,13 @@
 inline-header {
 #include <sawConstraintController/mtsVFDataBase.h>
+// Always include last!
+#include <sawConstraintController/sawConstraintControllerExport.h>
 }
 
 class {
 
     name mtsVFDataSideview;
+    attribute CISST_EXPORT;
 
     // All VF data objects are subclasses of mtsVFDataBase
     base-class {
@@ -12,7 +15,7 @@ class {
     }
 
     // This vct3 object represents a point in the central axis of the cochlea that we want the probe to stick close to
-    member {    
+    member {
       name VFPoint;
       type vct3;
       default vct3(0.0,0.0,0.0);
@@ -23,7 +26,7 @@ class {
     inline-header {
         mtsVFDataSideview(const std::string & name, const std::string & kinName,
                                   const vct3 & point);
-    }   
+    }
 }
 
 inline-code {

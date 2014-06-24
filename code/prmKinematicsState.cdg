@@ -1,29 +1,32 @@
 inline-header {
 #include <sawConstraintController/prmJointState.h>
 #include <cisstVector/vctDynamicMatrixTypes.h>
+// Always include last!
+#include <sawConstraintController/sawConstraintControllerExport.h>
 }
 class {
     name prmKinematicsState;
+    attribute CISST_EXPORT;
 
-    member {    
+    member {
       name Frame;
       type vctFrm3;
       visibility public;
     }
 
-    member {    
+    member {
       name CartesianVelocity;
       type vct3;
       visibility public;
     }
 
-    member {    
+    member {
       name AngularVelocity;
       type vct3;
       visibility public;
     }
 
-    member {    
+    member {
       name Jacobian;
       type vctDoubleMat;
       visibility public;
@@ -35,25 +38,25 @@ class {
       visibility public;
     }
 
-    member {    
+    member {
       name UserCount;
       type int;
       visibility public;
     }
 
-    member {    
+    member {
       name Name;
       type std::string;
       visibility public;
     }
 
-    member {    
+    member {
       name NeedsBase;
       type bool;
       visibility public;
     }
 
-    member {    
+    member {
       name JointState;
       type prmJointState*;
       visibility public;
