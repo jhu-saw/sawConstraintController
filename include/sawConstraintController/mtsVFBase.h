@@ -24,10 +24,13 @@
 #include <sawConstraintController/mtsVFDataBase.h>
 #include <cisstNumerical/nmrConstraintOptimizer.h>
 
+// Always include last!
+#include <sawConstraintController/sawConstraintControllerExport.h>
+
 //! This is the base class for all virtual fixture objects
 /*! \brief mtsVFBase: A class that contains logic for the implementation of virtual fixtures
  */
-class mtsVFBase: public mtsGenericObject
+class CISST_EXPORT mtsVFBase: public mtsGenericObject
 {
     CMN_DECLARE_SERVICES(CMN_NO_DYNAMIC_CREATION, CMN_LOG_LOD_RUN_VERBOSE);
 

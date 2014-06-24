@@ -2,12 +2,10 @@
 /* ex: set filetype=cpp softtabstop=4 shiftwidth=4 tabstop=4 cindent expandtab: */
 
 /*
- $Id: $
-
  Author(s):  Paul Wilkening
- Created on:
+ Created on: 2014
 
- (C) Copyright 2013 Johns Hopkins University (JHU), All Rights Reserved.
+ (C) Copyright 2014 Johns Hopkins University (JHU), All Rights Reserved.
 
  --- begin cisst license - do not edit ---
 
@@ -28,12 +26,15 @@
 #include <sawConstraintController/mtsVFJointPos.h>
 #include <cisstRobot/robManipulator.h>
 
+// Always include last!
+#include <sawConstraintController/sawConstraintControllerExport.h>
+
 //! This is the base class for all virtual fixture objects
 /*! \brief mtsVFFollow: A class that contains logic for the implementation of virtual fixtures
  */
-class mtsVFFollow : public mtsVFJointPosition
+class CISST_EXPORT mtsVFFollow: public mtsVFJointPosition
 {
-    CMN_DECLARE_SERVICES(CMN_DYNAMIC_CREATION, CMN_LOG_LOD_RUN_VERBOSE)
+    CMN_DECLARE_SERVICES(CMN_DYNAMIC_CREATION, CMN_LOG_LOD_RUN_VERBOSE);
 
 public:
 
@@ -62,6 +63,6 @@ public:
 
 };
 
-CMN_DECLARE_SERVICES_INSTANTIATION(mtsVFFollow)
+CMN_DECLARE_SERVICES_INSTANTIATION(mtsVFFollow);
 
-#endif
+#endif // _mtsVFFollow_h

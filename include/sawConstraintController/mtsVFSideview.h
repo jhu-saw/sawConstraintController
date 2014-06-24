@@ -23,12 +23,15 @@
 #include <sawConstraintController/mtsVFDataSideview.h>
 #include <sawConstraintController/mtsVFDataSensorCompliance.h>
 
+// Always include last!
+#include <sawConstraintController/sawConstraintControllerExport.h>
+
 //! This is the base class for all virtual fixture objects
 /*! \brief mtsVFSideview: A class that contains logic for the implementation of virtual fixtures
  */
-class mtsVFSideview: public mtsVFJointVelocity
+class CISST_EXPORT mtsVFSideview: public mtsVFJointVelocity
 {
-    CMN_DECLARE_SERVICES(CMN_DYNAMIC_CREATION, CMN_LOG_LOD_RUN_VERBOSE)
+    CMN_DECLARE_SERVICES(CMN_DYNAMIC_CREATION, CMN_LOG_LOD_RUN_VERBOSE);
 
 private:
 
@@ -73,6 +76,6 @@ public:
 
 };
 
-CMN_DECLARE_SERVICES_INSTANTIATION(mtsVFSideview)
+CMN_DECLARE_SERVICES_INSTANTIATION(mtsVFSideview);
 
-#endif
+#endif // _mtsVFSideview_h

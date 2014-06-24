@@ -2,12 +2,10 @@
 /* ex: set filetype=cpp softtabstop=4 shiftwidth=4 tabstop=4 cindent expandtab: */
 
 /*
- $Id: $
-
  Author(s):  Preetham Chalasani
- Created on:
+ Created on: 2014
 
- (C) Copyright 2013 Johns Hopkins University (JHU), All Rights Reserved.
+ (C) Copyright 2014 Johns Hopkins University (JHU), All Rights Reserved.
 
  --- begin cisst license - do not edit ---
 
@@ -27,13 +25,16 @@
 #include <sawConstraintController/mtsVFJointPos.h>
 #include <sawConstraintController/mtsVFDataPlane.h>
 
+// Always include last!
+#include <sawConstraintController/sawConstraintControllerExport.h>
+
 /*! \brief mtsVFPlane: A class that contains logic for the implementation of  Plane virtual fixtures
  */
-class mtsVFPlane : public mtsVFJointPosition
+class CISST_EXPORT mtsVFPlane : public mtsVFJointPosition
 {
-    CMN_DECLARE_SERVICES(CMN_DYNAMIC_CREATION, CMN_LOG_LOD_RUN_VERBOSE)
+    CMN_DECLARE_SERVICES(CMN_DYNAMIC_CREATION, CMN_LOG_LOD_RUN_VERBOSE);
 
-public:    
+public:
 
     /*! Constructor
     */
@@ -50,7 +51,7 @@ public:
     //! Updates co with virtual fixture data.
     /*! FillInTableauRefs
     */
-    void FillInTableauRefs(const mtsVFBase::CONTROLLERMODE mode, const double TickTime);        
+    void FillInTableauRefs(const mtsVFBase::CONTROLLERMODE mode, const double TickTime);
 
     void SetFrame(const vctFrame4x4<double>& Frame);
 
@@ -61,6 +62,6 @@ private:
     vctFrame4x4<double> frame;
 };
 
-CMN_DECLARE_SERVICES_INSTANTIATION(mtsVFPlane)
+CMN_DECLARE_SERVICES_INSTANTIATION(mtsVFPlane);
 
-#endif
+#endif // _mtsVFPlane_h

@@ -16,7 +16,6 @@ http://www.cisst.org/cisst/license.txt.
 --- end cisst license ---
 */
 
-
 // check if this module is build as a DLL
 #ifdef sawConstraintController_EXPORTS
 #define CISST_THIS_LIBRARY_AS_DLL
@@ -27,4 +26,3 @@ http://www.cisst.org/cisst/license.txt.
 
 // avoid impact on other modules
 #undef CISST_THIS_LIBRARY_AS_DLL
-
