@@ -78,12 +78,17 @@ void mtsVFPlane::FillInTableauRefs(const CONTROLLERMODE mode, const double TickT
     }    
 
 
+    vctDynamicMatrix<double> Jacobian3x7( 3, 7, VCT_COL_MAJOR );
+    for (int i = 0; i < Jacobian3x7.rows(); ++i)
+        for (int j = 0; j < Jacobian3x7.cols(); ++j)
+            Jacobian3x7.at(i,j) = CurrentKinematics->Jacobian.at(i,j);
+
     IneqConstraintVectorRef.Assign(vct1(d - vct1(vctDotProduct(planeData->Normal, CurrentPos))));
-    IneqConstraintMatrixRef.Assign(N * CurrentKinematics->Jacobian);
+    IneqConstraintMatrixRef.Assign(N * Jacobian3x7);
 
 
-    std::cout << "Vec Ine \n" << IneqConstraintVectorRef << std::endl;
-    std::cout << "Mat Ine \n" << IneqConstraintMatrixRef << std::endl;
+//    std::cout << "Vec Ine \n" << IneqConstraintVectorRef << std::endl;
+//    std::cout << "Mat Ine \n" << IneqConstraintMatrixRef << std::endl;
 //    @TODO Fix convert Refs
 //    ConvertRefs(mode,TickTime);
 }
