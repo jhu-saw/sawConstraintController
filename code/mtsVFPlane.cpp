@@ -24,7 +24,7 @@ CMN_IMPLEMENT_SERVICES(mtsVFPlane)
 /*! FillInTableauRefs
 */
 void mtsVFPlane::FillInTableauRefs(const CONTROLLERMODE mode, const double TickTime)
-{
+{    
     /*
          Fill in refs
          Plane equation : ax + by + cz = d
@@ -56,7 +56,7 @@ void mtsVFPlane::FillInTableauRefs(const CONTROLLERMODE mode, const double TickT
         return;
     }
 
-    vctDynamicMatrix<double> N( 1, 7, VCT_COL_MAJOR );
+    vctDynamicMatrix<double> N( 1, 3, VCT_COL_MAJOR );
     N.SetAll(0);
     vct1 d;
     if(IsFrameSet)
@@ -79,9 +79,13 @@ void mtsVFPlane::FillInTableauRefs(const CONTROLLERMODE mode, const double TickT
 
 
     IneqConstraintVectorRef.Assign(vct1(d - vct1(vctDotProduct(planeData->Normal, CurrentPos))));
-    IneqConstraintMatrixRef.Assign(N);
+    IneqConstraintMatrixRef.Assign(N * CurrentKinematics->Jacobian);
 
-    ConvertRefs(mode,TickTime);
+
+    std::cout << "Vec Ine \n" << IneqConstraintVectorRef << std::endl;
+    std::cout << "Mat Ine \n" << IneqConstraintMatrixRef << std::endl;
+//    @TODO Fix convert Refs
+//    ConvertRefs(mode,TickTime);
 }
 
 void mtsVFPlane::SetFrame(const vctFrame4x4<double> &Frame)

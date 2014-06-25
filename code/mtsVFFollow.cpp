@@ -34,7 +34,7 @@ void mtsVFFollow::FillInTableauRefs(const CONTROLLERMODE mode, const double Tick
     {
         CMN_LOG_CLASS_RUN_ERROR << "FillInTableauRefs: Follow VF given improper input" << std::endl;
         cmnThrow("FillInTableauRefs: Follow VF given improper input");
-    }
+    }    
 
     // pointers to kinematics
     CurrentKinematics = Kinematics.at(0);
