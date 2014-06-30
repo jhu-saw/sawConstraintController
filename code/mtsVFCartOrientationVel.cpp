@@ -92,3 +92,26 @@ void mtsVFCartesianOrientation::ConvertRefs(const mtsVFBase::CONTROLLERMODE mode
     EqConstraintVectorRef.Assign(EqConstraintVectorRef*Scale);
 
 }
+
+void mtsVFCartesianOrientation::AssignRefs(const mtsVFBase::CONTROLLERMODE mode, const double TickTime, const vctDoubleVec & DOFSelections, vctDoubleMat & C, vctDoubleVec & d, vctDoubleMat & A, vctDoubleVec & b, vctDoubleMat & E, vctDoubleVec & f)
+{
+    double Scale = 1.0;
+    if(mode == JVEL)
+    {
+        Scale = TickTime;
+    }
+
+    vctDoubleMat JacMat;
+    JacMat.SetSize(DOFSelections.size(),C.cols());
+    for(size_t i = 0; i < DOFSelections.size(); i++)
+    {
+        JacMat.Row(i).Assign(Kinematics.at(0)->Jacobian.Row(DOFSelections.at(i)));
+    }
+
+    ObjectiveMatrixRef.Assign((C*Scale)*JacMat);
+    ObjectiveVectorRef.Assign(d*Scale);
+    IneqConstraintMatrixRef.Assign((A*Scale)*JacMat);
+    IneqConstraintVectorRef.Assign(b*Scale);
+    EqConstraintMatrixRef.Assign((E*Scale)*JacMat);
+    EqConstraintVectorRef.Assign(f*Scale);
+}
