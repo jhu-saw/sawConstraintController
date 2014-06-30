@@ -63,6 +63,7 @@ if (cisst_FOUND)
        ${sawConstraintController_HEADER_DIR}/mtsVFController.h
        ${sawConstraintController_HEADER_DIR}/mtsVFSideview.h
        ${sawConstraintController_HEADER_DIR}/mtsVFFollow.h
+       ${sawConstraintController_HEADER_DIR}/mtsVFFollowJacobian.h
        ${sawConstraintController_HEADER_DIR}/mtsVFPlane.h
        )
 
@@ -77,6 +78,7 @@ if (cisst_FOUND)
        mtsVFController.cpp
        mtsVFSideview.cpp
        mtsVFFollow.cpp
+       mtsVFFollowJacobian.cpp
        mtsVFPlane.cpp
        )
 

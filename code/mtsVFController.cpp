@@ -182,10 +182,10 @@ void mtsVFController::AddVFSensorCompliance(const mtsVFDataSensorCompliance & vf
 void mtsVFController::AddVFFollow(const mtsVFDataBase & vf)
 {
     // If we can find the VF, only change its data. Otherwise, create a new VF object.
-    if (!SetVFData(vf, typeid(mtsVFFollow)))
+    if (!SetVFData(vf, typeid(mtsVFFollowJacobian)))
     {
         // Adds a new virtual fixture to the active vector
-        VFMap.insert(std::pair<std::string,mtsVFFollow *>(vf.Name,new mtsVFFollow(vf.Name,new mtsVFDataBase(vf))));
+        VFMap.insert(std::pair<std::string,mtsVFFollowJacobian *>(vf.Name,new mtsVFFollowJacobian(vf.Name,new mtsVFDataBase(vf))));
         // Increment users of each kinematics and sensor object found
         IncrementUsers(vf.KinNames,vf.SensorNames);
     }

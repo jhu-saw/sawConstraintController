@@ -18,8 +18,8 @@
  --- end cisst license ---
  */
 
-#ifndef _mtsVFFollow_h
-#define _mtsVFFollow_h
+#ifndef _mtsVFFollowJacobian_h
+#define _mtsVFFollowJacobian_h
 
 #include <cisstVector/vctDynamicVectorTypes.h>
 #include <cisstVector/vctDynamicMatrixTypes.h>
@@ -31,7 +31,7 @@
 //! This is the base class for all virtual fixture objects
 /*! \brief mtsVFFollow: A class that contains logic for the implementation of virtual fixtures
  */
-class mtsVFFollow : public mtsVFJointPosition
+class mtsVFFollowJacobian : public mtsVFJointPosition
 {
     CMN_DECLARE_SERVICES(CMN_DYNAMIC_CREATION, CMN_LOG_LOD_RUN_VERBOSE)
 
@@ -46,12 +46,12 @@ public:
 
     /*! Constructor
     */
-    mtsVFFollow() : mtsVFJointPosition(){}
+    mtsVFFollowJacobian() : mtsVFJointPosition(){}
 
     /*! Constructor
     \param name String name of object
     */
-    mtsVFFollow(const std::string & name, mtsVFDataBase * data) : mtsVFJointPosition(name,data){}
+    mtsVFFollowJacobian(const std::string & name, mtsVFDataBase * data) : mtsVFJointPosition(name,data){}
 
     //! Updates co with virtual fixture data.
     /*! FillInTableauRefs
@@ -60,6 +60,6 @@ public:
 
 };
 
-CMN_DECLARE_SERVICES_INSTANTIATION(mtsVFFollow)
+CMN_DECLARE_SERVICES_INSTANTIATION(mtsVFFollowJacobian)
 
 #endif

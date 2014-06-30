@@ -32,7 +32,7 @@
 #include <sawConstraintController/mtsVFDataSideview.h>
 #include <sawConstraintController/mtsVFCartVel.h>
 #include <sawConstraintController/mtsVFCartOrientationVel.h>
-#include <sawConstraintController/mtsVFFollow.h>
+#include <sawConstraintController/mtsVFFollowJacobian.h>
 #include <sawConstraintController/mtsVFPlane.h>
 
 // Always include last!

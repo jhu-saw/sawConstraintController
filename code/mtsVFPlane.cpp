@@ -85,12 +85,12 @@ void mtsVFPlane::FillInTableauRefs(const CONTROLLERMODE mode, const double TickT
 
     IneqConstraintVectorRef.Assign(vct1(d - vct1(vctDotProduct(planeData->Normal, CurrentPos))));
 
-//    IneqConstraintMatrixRef.Assign(N * Jacobian3x6);
-    IneqConstraintMatrixRef.Assign(N);
+    IneqConstraintMatrixRef.Assign(N * Jacobian3x6);
+//    IneqConstraintMatrixRef.Assign(N);
 
 
-//    std::cout << "Vec Ine \n" << IneqConstraintVectorRef << std::endl;
-//    std::cout << "Mat Ine \n" << IneqConstraintMatrixRef << std::endl;
+    std::cout << "Mat Ine \n" << IneqConstraintMatrixRef << std::endl;
+    std::cout << "Vec Ine \n" << IneqConstraintVectorRef << std::endl;
 //    @TODO Fix convert Refs
 //    ConvertRefs(mode,TickTime);
 }

@@ -16,16 +16,16 @@
  --- end cisst license ---
  */
 
-#include <sawConstraintController/mtsVFFollow.h>
+#include <sawConstraintController/mtsVFFollowJacobian.h>
 #include <stdlib.h>
 #include <cisstNumerical/nmrInverse.h>
 
-CMN_IMPLEMENT_SERVICES(mtsVFFollow)
+CMN_IMPLEMENT_SERVICES(mtsVFFollowJacobian)
 
 //! Updates co with virtual fixture data.
 /*! FillInTableauRefs
 */
-void mtsVFFollow::FillInTableauRefs(const CONTROLLERMODE mode, const double TickTime)
+void mtsVFFollowJacobian::FillInTableauRefs(const CONTROLLERMODE mode, const double TickTime)
 {
     // fill in refs
     // min || J*dq - [v_T ; v_R] ||
@@ -70,12 +70,14 @@ void mtsVFFollow::FillInTableauRefs(const CONTROLLERMODE mode, const double Tick
 
     // Jacobian
     std::cout << "Obj Mat Ref " << ObjectiveMatrixRef.sizes() << std::endl;
-    std::cout << "Jac " << CurrentKinematics->Jacobian.sizes() << std::endl;
+    std::cout << "Jac " << CurrentKinematics->Jacobian << std::endl;
     ObjectiveMatrixRef.Assign(CurrentKinematics->Jacobian);
 
     // p_des - R_des * R^(-1)_cur * p_cur
     TranslationObjectiveVector.SetSize(3);
-    TranslationObjectiveVector.Assign(DesiredFrame.Translation() - DesiredFrame.Rotation() * CurrentFrame.Rotation().Inverse() * CurrentFrame.Translation());
+    TranslationObjectiveVector.Assign(DesiredFrame.Translation() - DesiredFrame.Rotation()*CurrentFrame.Rotation().Inverse()*CurrentFrame.Translation());
+    std::cout << "dx: " << TranslationObjectiveVector << std::endl;
+
     // sk(A)^(-1) * A - sk(A)^(-1) * R_des * R^(-1)_cur * A
     RotationObjectiveVector.SetSize(3);
     RotationObjectiveVector.Assign(skewAInverse * A - skewAInverse * vctDoubleMat(DesiredFrame.Rotation()) * vctDoubleMat(CurrentFrame.Rotation().Inverse()) * A);
@@ -84,15 +86,18 @@ void mtsVFFollow::FillInTableauRefs(const CONTROLLERMODE mode, const double Tick
     {
         ObjectiveVectorRef[i] = TranslationObjectiveVector[i];
     }
-    for(size_t i = 3; i < 7; i++)
+
+    for(size_t i = 3; i < 6; i++)
     {
         ObjectiveVectorRef[i] = RotationObjectiveVector[i-3];
     }
+    ObjectiveVectorRef[6] = 0;
+
 
     // make conversion, if necessary
     ConvertRefs(mode,TickTime);
 
-    std::cout << "Vec Obj \n" << ObjectiveVectorRef << std::endl;
     std::cout << "Mat Obj \n" << ObjectiveMatrixRef << std::endl;
+    std::cout << "Vec Obj \n" << ObjectiveVectorRef << std::endl;    
 
 }

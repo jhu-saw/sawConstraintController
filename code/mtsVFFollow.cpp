@@ -34,7 +34,7 @@ void mtsVFFollow::FillInTableauRefs(const CONTROLLERMODE mode, const double Tick
     {
         CMN_LOG_CLASS_RUN_ERROR << "FillInTableauRefs: Follow VF given improper input" << std::endl;
         cmnThrow("FillInTableauRefs: Follow VF given improper input");
-    }    
+    }
 
     // pointers to kinematics
     CurrentKinematics = Kinematics.at(0);
@@ -61,11 +61,11 @@ void mtsVFFollow::FillInTableauRefs(const CONTROLLERMODE mode, const double Tick
             DesiredJointSet[6] = CurrentJointSet[6];
 
             // Identity matrix
-            ObjectiveMatrixRef.Diagonal().SetAll(1.0);            
+            ObjectiveMatrixRef.Diagonal().SetAll(1.0);
             // q_des - q_curr
-//            ObjectiveVectorRef.Assign(DesiredJointSet - CurrentJointSet);
+            ObjectiveVectorRef.Assign(DesiredJointSet - CurrentJointSet);
 
-            ObjectiveVectorRef.Assign(DesiredKinematics->Frame.Translation() - CurrentKinematics->Frame.Translation());
+//            ObjectiveVectorRef.Assign(DesiredKinematics->Frame.Translation() - CurrentKinematics->Frame.Translation());
 
             // make conversion, if necessary
             ConvertRefs(mode,TickTime);
