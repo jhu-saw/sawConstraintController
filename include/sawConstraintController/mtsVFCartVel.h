@@ -56,6 +56,8 @@ public:
 
     void ConvertRefs(const mtsVFBase::CONTROLLERMODE mode, const double TickTime);
 
+    void AssignRefs(const mtsVFBase::CONTROLLERMODE, const double, const vctDoubleVec & ,vctDoubleMat &, vctDoubleVec &, vctDoubleMat &, vctDoubleVec &, vctDoubleMat &, vctDoubleVec &);
+
 };
 
 CMN_DECLARE_SERVICES_INSTANTIATION(mtsVFCartesianTranslation)

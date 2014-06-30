@@ -101,7 +101,30 @@ void mtsVFCartesianTranslation::ConvertRefs(const mtsVFBase::CONTROLLERMODE mode
     ObjectiveVectorRef.Assign(ObjectiveVectorRef*Scale);
     IneqConstraintMatrixRef.Assign((IneqConstraintMatrixRef.Multiply(Scale))*Kinematics.at(0)->Jacobian);
     IneqConstraintVectorRef.Assign(IneqConstraintVectorRef * Scale);
-//    EqConstraintVectorRef.Assign(EqConstraintVectorRef * Scale);
 //    EqConstraintMatrixRef.Assign((EqConstraintMatrixRef.Multiply(Scale))*Kinematics.at(0)->Jacobian);
+//    EqConstraintVectorRef.Assign(EqConstraintVectorRef * Scale);
 
+}
+
+void mtsVFCartesianTranslation::AssignRefs(const mtsVFBase::CONTROLLERMODE mode, const double TickTime, const vctDoubleVec & DOFSelections, vctDoubleMat & C, vctDoubleVec & d, vctDoubleMat & A, vctDoubleVec & b, vctDoubleMat & E, vctDoubleVec & f)
+{
+    double Scale = 1.0;
+    if(mode == JVEL)
+    {
+        Scale = TickTime;
+    }
+
+    vctDoubleMat JacMat;
+    JacMat.SetSize(DOFSelections.size(),C.cols());
+    for(size_t i = 0; i < DOFSelections.size(); i++)
+    {
+        JacMat.Row(i).Assign(Kinematics.at(0)->Jacobian.Row(DOFSelections.at(i)));
+    }
+
+    ObjectiveMatrixRef.Assign((C.Multiply(Scale))*JacMat);
+    ObjectiveVectorRef.Assign(d*Scale);
+    IneqConstraintMatrixRef.Assign((A.Multiply(Scale))*JacMat);
+    IneqConstraintVectorRef.Assign(b * Scale);
+    EqConstraintMatrixRef.Assign((E.Multiply(Scale))*JacMat);
+    EqConstraintVectorRef.Assign(f * Scale);
 }

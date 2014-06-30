@@ -18,7 +18,7 @@
 
 #include <sawConstraintController/mtsVFBase.h>
 
-CMN_IMPLEMENT_SERVICES(mtsVFBase);
+CMN_IMPLEMENT_SERVICES(mtsVFBase)
 
 std::string mtsVFBase::DefaultKinematicsName = "";
 
@@ -30,11 +30,11 @@ mtsVFBase::mtsVFBase(const std::string & name, mtsVFDataBase * data)
     Name = name;
     Data = data;
     Kinematics.clear();
-    Sensors.clear();
+    Sensors.clear();    
 
 /*
     @TODO
-    If no data coming coming
+    If no kinematics specified
 */
 //    data->KinNames.push_back(DefaultKinematicsName);
 }
