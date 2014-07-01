@@ -182,10 +182,10 @@ void mtsVFController::AddVFSensorCompliance(const mtsVFDataSensorCompliance & vf
 void mtsVFController::AddVFFollow(const mtsVFDataBase & vf)
 {
     // If we can find the VF, only change its data. Otherwise, create a new VF object.
-    if (!SetVFData(vf, typeid(mtsVFFollow)))
+    if (!SetVFData(vf, typeid(mtsVFFollowJacobian)))
     {
         // Adds a new virtual fixture to the active vector
-        VFMap.insert(std::pair<std::string,mtsVFFollow *>(vf.Name,new mtsVFFollow(vf.Name,new mtsVFDataBase(vf))));
+        VFMap.insert(std::pair<std::string,mtsVFFollowJacobian *>(vf.Name,new mtsVFFollowJacobian(vf.Name,new mtsVFDataBase(vf))));
         // Increment users of each kinematics and sensor object found
         IncrementUsers(vf.KinNames,vf.SensorNames);
     }
@@ -281,16 +281,20 @@ void mtsVFController::RemoveSensorFromMap(const std::string & senName)
 */
 void mtsVFController::UpdateOptimizer(double TickTime)
 {
+
+
     // use VFVector to find the space needed in the control optimizer tableau
     Optimizer.ResetIndices();
+
     std::map<std::string,mtsVFBase *>::iterator itVF;
     for(itVF = VFMap.begin(); itVF != VFMap.end(); itVF++)
-    {
+    {       
         if(itVF->second->Data->Active)
         {
             itVF->second->ReserveSpace(Optimizer);
         }
     }
+
 
     //allocate the control optimizer matrices and vectors according to its indices
     Optimizer.Allocate();
@@ -312,6 +316,7 @@ void mtsVFController::UpdateOptimizer(double TickTime)
 
             //fills in the tableau (subclasses of mtsVFData override this method with their own logic)
             tempVFData->FillInTableauRefs(ControllerMode,TickTime);
+
         }
     }
 }

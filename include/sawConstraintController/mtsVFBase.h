@@ -125,7 +125,7 @@ public:
      */
     virtual void FillInTableauRefs(const mtsVFBase::CONTROLLERMODE Mode, const double TickTime) = 0;
 
-    void Skew(const vctDoubleVec & in, vctDoubleMat & out);
+    vctDoubleMat Skew(const vctDoubleVec & in);
 
     virtual void ConvertRefs(const mtsVFBase::CONTROLLERMODE mode, const double TickTime) = 0;
 

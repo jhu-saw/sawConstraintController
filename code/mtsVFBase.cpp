@@ -105,12 +105,15 @@ void mtsVFBase::SetTableauRefs(nmrConstraintOptimizer & co)
 			   EqConstraintMatrixRef,EqConstraintMatrixSlackRef,EqConstraintVectorRef);
 }
 
-void mtsVFBase::Skew(const vctDoubleVec &in, vctDoubleMat &out)
+vctDoubleMat mtsVFBase::Skew(const vctDoubleVec &in)
 {
+    vctDoubleMat out(3,3);
+    out.SetAll(0.0);
     out[0][1] = -in[2];
     out[0][2] = in[1];
     out[1][0] = in[2];
     out[1][2] = -in[0];
     out[2][0] = -in[1];
     out[2][1] = in[0];
+    return out;
 }

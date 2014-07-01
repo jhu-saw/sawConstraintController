@@ -44,23 +44,18 @@ void mtsVFFollowJacobian::FillInTableauRefs(const CONTROLLERMODE mode, const dou
 
     // set arbitrary vector
     A.SetSize(3);
-    A.Assign(rand() % 100 + 1, rand() % 100 + 1, rand() % 100 + 1);
-    A = A.NormalizedSelf();
+    A.Assign(0, 0, 1);
 
     // set inverse skew matrix of A
-    skewAInverse.SetSize(3,3);
-    skewAInverse.SetAll(0.0);
-    skewAInverse(0,1) = -A[2];
-    skewAInverse(0,2) = A[1];
-    skewAInverse(1,0) = A[2];
-    skewAInverse(1,2) = -A[0];
-    skewAInverse(2,0) = -A[1];
-    skewAInverse(2,1) = A[0];
+    skewAInverse = Skew(A);
     nmrInverse(skewAInverse);
 
     // pointers to kinematics
     CurrentKinematics = Kinematics.at(0);
     DesiredKinematics = Kinematics.at(1);
+
+    std::cout << "Current Translation: " << CurrentKinematics->Frame.Translation() << std::endl;
+    std::cout << "Desired Translation: " << DesiredKinematics->Frame.Translation() << std::endl;
 
     // current kinematics gives us current frame
     CurrentFrame = CurrentKinematics->Frame;
@@ -68,30 +63,28 @@ void mtsVFFollowJacobian::FillInTableauRefs(const CONTROLLERMODE mode, const dou
     // desired kinematics gives us desired frame
     DesiredFrame = DesiredKinematics->Frame;
 
-    // Jacobian
-    std::cout << "Obj Mat Ref " << ObjectiveMatrixRef.sizes() << std::endl;
-    std::cout << "Jac " << CurrentKinematics->Jacobian << std::endl;
+    // Put Jacobian into matrix ref
     ObjectiveMatrixRef.Assign(CurrentKinematics->Jacobian);
 
     // p_des - R_des * R^(-1)_cur * p_cur
     TranslationObjectiveVector.SetSize(3);
-    TranslationObjectiveVector.Assign(DesiredFrame.Translation() - DesiredFrame.Rotation()*CurrentFrame.Rotation().Inverse()*CurrentFrame.Translation());
-    std::cout << "dx: " << TranslationObjectiveVector << std::endl;
+//    TranslationObjectiveVector.Assign(DesiredFrame.Translation() - DesiredFrame.Rotation()*CurrentFrame.Rotation().Inverse()*CurrentFrame.Translation());
+    TranslationObjectiveVector.Assign(DesiredFrame.Translation() - CurrentFrame.Translation());
 
     // sk(A)^(-1) * A - sk(A)^(-1) * R_des * R^(-1)_cur * A
     RotationObjectiveVector.SetSize(3);
     RotationObjectiveVector.Assign(skewAInverse * A - skewAInverse * vctDoubleMat(DesiredFrame.Rotation()) * vctDoubleMat(CurrentFrame.Rotation().Inverse()) * A);
 
+    // fill v_T and v_R into vector ref
     for(size_t i = 0; i < 3; i++)
     {
         ObjectiveVectorRef[i] = TranslationObjectiveVector[i];
     }
-
     for(size_t i = 3; i < 6; i++)
     {
         ObjectiveVectorRef[i] = RotationObjectiveVector[i-3];
     }
-    ObjectiveVectorRef[6] = 0;
+    ObjectiveVectorRef[6] = CurrentKinematics->JointState->JointPosition[6];
 
 
     // make conversion, if necessary
