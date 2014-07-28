@@ -117,6 +117,7 @@ public:
     //! Removes a sensor from the map
     void RemoveSensorFromMap(const std::string & senName);
 
+    //! Changes the variable the optimizer is solving for
     void SetMode(const mtsVFBase::CONTROLLERMODE & m);
 
     //! Updates the robot state data and control optimizer
@@ -125,6 +126,7 @@ public:
     //! Solves the constraint optimization problem and fills the result into the parameter
     nmrConstraintOptimizer::STATUS Solve(vctDoubleVec & dq);
 
+    //! Finds the "base" object for kinematics and sensor data that has an offset
     void LookupBaseData(void);
 
 private:

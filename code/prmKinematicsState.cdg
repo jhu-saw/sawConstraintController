@@ -8,54 +8,63 @@ class {
     name prmKinematicsState;
     attribute CISST_EXPORT;
 
+    //! The cartesian frame of the kinematics object
     member {
       name Frame;
       type vctFrm3;
       visibility public;
     }
 
+    //! The cartesian velocity of the kinematics frame
     member {
       name CartesianVelocity;
       type vct3;
       visibility public;
     }
 
+    //! The angular velocity of the kinematics frame
     member {
       name AngularVelocity;
       type vct3;
       visibility public;
     }
 
+    //! The jacobian matrix associated with the kinematics frame
     member {
       name Jacobian;
       type vctDoubleMat;
       visibility public;
     }
 
+    //! The inverse jacobian matrix associated with the kinematics frame
     member {
       name InverseJacobian;
       type vctDoubleMat;
       visibility public;
     }
 
+    //! The number of virtual fixtures with pointers to the kinematics object
     member {
       name UserCount;
       type int;
       visibility public;
     }
 
+    //! The name of the kinematics frame
     member {
       name Name;
       type std::string;
       visibility public;
     }
 
+    //! If this object needs a "base", or if it has an offset from another kinematics object
     member {
       name NeedsBase;
       type bool;
       visibility public;
     }
 
+    //! A pointer to the joint values associated with the kinematics frame
     member {
       name JointState;
       type prmJointState*;
