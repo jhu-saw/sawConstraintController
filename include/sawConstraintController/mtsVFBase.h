@@ -127,6 +127,7 @@ public:
 
     vctDoubleMat Skew(const vctDoubleVec & in);
 
+    //! Converts the data in the references if a change in mode is needed
     virtual void ConvertRefs(const mtsVFBase::CONTROLLERMODE mode, const double TickTime) = 0;
 
     virtual void AssignRefs(const mtsVFBase::CONTROLLERMODE, const double, const vctDoubleVec & ,vctDoubleMat &, vctDoubleVec &, vctDoubleMat &, vctDoubleVec &, vctDoubleMat &, vctDoubleVec &){}

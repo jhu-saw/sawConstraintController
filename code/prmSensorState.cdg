@@ -8,24 +8,28 @@ class {
     name prmSensorState;
     attribute CISST_EXPORT;
 
+    //! The name of the sensor object
     member {
       name Name;
       type std::string;
       visibility public;
     }
 
+    //! The current values read from the associated sensor
     member {
       name Values;
       type vctDynamicVector<double>;
       visibility public;
     }
 
+    //! The number of virtual fixtures with pointers to this sensor object
     member {
       name UserCount;
       type int;
       visibility public;
     }
 
+    //! If this object needs a "base", or if it has an offset from another sensor object
     member {
       name NeedsBase;
       type bool;
