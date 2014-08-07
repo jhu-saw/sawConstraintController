@@ -58,6 +58,11 @@ public:
     */
     void FillInTableauRefs(const mtsVFBase::CONTROLLERMODE mode, const double TickTime);
 
+    vctDoubleVec GetAxisAngle(const vctDoubleMat &m);
+
+    vctDoubleVec GetEulerAngle(const vctDoubleMat &m);
+
+    vctDoubleVec GetRPY(const vctDoubleMat &m);
 };
 
 CMN_DECLARE_SERVICES_INSTANTIATION(mtsVFFollowJacobian)

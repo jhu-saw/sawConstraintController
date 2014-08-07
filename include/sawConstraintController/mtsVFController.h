@@ -33,6 +33,7 @@
 #include <sawConstraintController/mtsVFCartVel.h>
 #include <sawConstraintController/mtsVFCartOrientationVel.h>
 #include <sawConstraintController/mtsVFFollowJacobian.h>
+#include <sawConstraintController/mtsVFFollow.h>
 #include <sawConstraintController/mtsVFPlane.h>
 
 // Always include last!
@@ -96,6 +97,9 @@ public:
 
     //! Adds/Updates a vf data object
     void AddVFFollow(const mtsVFDataBase & vf);
+
+    //! Adds/Updates a vf data object
+    void AddVFFollowJacobian(const mtsVFDataBase & vf);
 
     //! Adds/Updates a vf plane object
     void AddVFPlane(const mtsVFDataPlane &vf);

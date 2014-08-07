@@ -78,7 +78,7 @@ void mtsVFPlane::FillInTableauRefs(const CONTROLLERMODE mode, const double TickT
     }    
 
 
-    vctDynamicMatrix<double> Jacobian3x6( 3, 7, VCT_COL_MAJOR );
+    vctDynamicMatrix<double> Jacobian3x6( 3, 6, VCT_COL_MAJOR );
     for (int i = 0; i < Jacobian3x6.rows(); ++i)
         for (int j = 0; j < Jacobian3x6.cols(); ++j)
             Jacobian3x6.at(i,j) = CurrentKinematics->Jacobian.at(i,j);
@@ -89,8 +89,8 @@ void mtsVFPlane::FillInTableauRefs(const CONTROLLERMODE mode, const double TickT
 //    IneqConstraintMatrixRef.Assign(N);
 
 
-    std::cout << "Mat Ine \n" << IneqConstraintMatrixRef << std::endl;
-    std::cout << "Vec Ine \n" << IneqConstraintVectorRef << std::endl;
+//    std::cout << "Mat Ine \n" << IneqConstraintMatrixRef << std::endl;
+//    std::cout << "Vec Ine \n" << IneqConstraintVectorRef << std::endl;
 //    @TODO Fix convert Refs
 //    ConvertRefs(mode,TickTime);
 }

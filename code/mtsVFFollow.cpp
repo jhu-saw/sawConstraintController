@@ -41,15 +41,16 @@ void mtsVFFollow::FillInTableauRefs(const CONTROLLERMODE mode, const double Tick
     DesiredKinematics = Kinematics.at(1);
 
     // current kinematics gives us current joint set
-    CurrentJointSet.SetSize(7);
-    CurrentJointSet.Assign(CurrentKinematics->JointState->JointPosition);
+    int nJoints = CurrentKinematics->Jacobian.cols();
+    CurrentJointSet.SetSize(nJoints);
+    CurrentJointSet.Assign(CurrentKinematics->JointState->JointPosition, nJoints);    
 
     // desired kinematics gives us desired frame
     DesiredFrame.FromNormalized(DesiredKinematics->Frame);
 
     // use desired frame to solve for desired joint set
-    DesiredJointSet.SetSize(6);
-    DesiredJointSet.Assign(CurrentJointSet,6);
+    DesiredJointSet.SetSize(nJoints);
+    DesiredJointSet.Assign(CurrentJointSet,nJoints);    
 
     // make sure manipulator object exists
     if(Manipulator)
@@ -57,8 +58,6 @@ void mtsVFFollow::FillInTableauRefs(const CONTROLLERMODE mode, const double Tick
         // make sure inverse kinematics call has succeeded
         if(Manipulator->InverseKinematics(DesiredJointSet, DesiredFrame) == robManipulator::ESUCCESS)
         {
-            DesiredJointSet.resize(7);
-            DesiredJointSet[6] = CurrentJointSet[6];
 
             // Identity matrix
             ObjectiveMatrixRef.Diagonal().SetAll(1.0);
@@ -70,6 +69,7 @@ void mtsVFFollow::FillInTableauRefs(const CONTROLLERMODE mode, const double Tick
             // make conversion, if necessary
             ConvertRefs(mode,TickTime);
         }
+
     }
     else
     {
