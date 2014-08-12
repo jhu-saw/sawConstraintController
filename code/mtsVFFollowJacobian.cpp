@@ -22,58 +22,6 @@
 
 CMN_IMPLEMENT_SERVICES(mtsVFFollowJacobian)
 
-// evaluate the body velocity from a motion increment
-vctDynamicVector<double> BodyVelocitys( const vctFrame4x4<double>& Rt, double tick ){
-
-    vctDynamicVector<double> vw( 6, 0.0 );
-
-    // linear velocity
-    vw[0] = Rt[0][3];
-    vw[1] = Rt[1][3];
-    vw[2] = Rt[2][3];
-
-    // angular velocity
-    // for this we assume that (I - R) is skew symmetric (...or almost)
-    vw[3] = Rt[2][1];
-    vw[4] = Rt[0][2];
-    vw[5] = Rt[1][0];
-
-    return vw;
-
-}
-
-vctDynamicMatrix<double> AdjointMatrixs( const vctFrame4x4<double>& Rt ){
-
-    vctDynamicMatrix<double> Ad( 6, 6, 0.0 );
-
-    // upper left block
-    Ad[0][0] = Rt[0][0];     Ad[0][1] = Rt[0][1];     Ad[0][2] = Rt[0][2];
-    Ad[1][0] = Rt[1][0];     Ad[1][1] = Rt[1][1];     Ad[1][2] = Rt[1][2];
-    Ad[2][0] = Rt[2][0];     Ad[2][1] = Rt[2][1];     Ad[2][2] = Rt[2][2];
-
-    // upper right block
-    Ad[0][3] = -Rt[2][3]*Rt[1][0] + Rt[1][3]*Rt[2][0];
-    Ad[0][4] = -Rt[2][3]*Rt[1][1] + Rt[1][3]*Rt[2][1];
-    Ad[0][5] = -Rt[2][3]*Rt[1][2] + Rt[1][3]*Rt[2][2];
-
-    Ad[1][3] =  Rt[2][3]*Rt[0][0] - Rt[0][3]*Rt[2][0];
-    Ad[1][4] =  Rt[2][3]*Rt[0][1] - Rt[0][3]*Rt[2][1];
-    Ad[1][5] =  Rt[2][3]*Rt[0][2] - Rt[0][3]*Rt[2][2];
-
-    Ad[2][3] = -Rt[1][3]*Rt[0][0] + Rt[0][3]*Rt[1][0];
-    Ad[2][4] = -Rt[1][3]*Rt[0][1] + Rt[0][3]*Rt[1][1];
-    Ad[2][5] = -Rt[1][3]*Rt[0][2] + Rt[0][3]*Rt[1][2];
-
-    // lower right block
-    Ad[3][3] = Rt[0][0];     Ad[3][4] = Rt[0][1];     Ad[3][5] = Rt[0][2];
-    Ad[4][3] = Rt[1][0];     Ad[4][4] = Rt[1][1];     Ad[4][5] = Rt[1][2];
-    Ad[5][3] = Rt[2][0];     Ad[5][4] = Rt[2][1];     Ad[5][5] = Rt[2][2];
-
-    return Ad;
-
-}
-
-
 //! Updates co with virtual fixture data.
 /*! FillInTableauRefs
 */
@@ -98,140 +46,50 @@ void mtsVFFollowJacobian::FillInTableauRefs(const CONTROLLERMODE mode, const dou
     CurrentKinematics = Kinematics.at(0);
     DesiredKinematics = Kinematics.at(1);
 
-    vctDoubleMat CurrentFrameInverse(3,3);
-    CurrentFrameInverse.Assign(CurrentFrame.Rotation());
-    nmrInverse(CurrentFrameInverse);
+    // Current Frame
+    vctFrm4x4 CurrentFrame;
+    CurrentFrame.FromNormalized(CurrentKinematics->Frame);
 
-    // current kinematics gives us current frame
-    CurrentFrame = CurrentKinematics->Frame;
-    vctFrm4x4 Rtw1;
-    Rtw1.FromNormalized(CurrentFrame);
+    // Desired Frame
+    vctFrm4x4 DesiredFrame;
+    DesiredFrame.FromNormalized(DesiredKinematics->Frame);
 
-    // desired kinematics gives us desired frame
-    DesiredFrame = DesiredKinematics->Frame;
-    vctFrm4x4 Rtw2;
-    Rtw2.FromNormalized(DesiredFrame);
-
-//    std::cout << "CurrentFrame \n" << CurrentFrame << std::endl;
-//    std::cout << "DesiredFrame \n" << DesiredFrame << std::endl;
+    // Incremental Frame
+    vctFrm4x4 Pose_dx = CurrentFrame.Inverse() * DesiredFrame;
 
 
-    std::cout << "Rtw1 \n" << Rtw1 << std::endl;
-    std::cout << "Rtw2 \n" << Rtw2 << std::endl;
+    vct3 dx_translation, dx_rotation;
 
-    // This is the measured body velocity
-    vctDynamicVector<double> vwb = BodyVelocitys( Rtw1.Inverse()*Rtw2, TickTime );
+    // Translation Part
+    dx_translation[0] = Pose_dx.Translation().X();
+    dx_translation[1] = Pose_dx.Translation().Y();
+    dx_translation[2] = Pose_dx.Translation().Z();
+    dx_translation = CurrentFrame.Rotation() * dx_translation;
 
-    // This is the measured spatial velocity
-    vctDynamicVector<double> vws = AdjointMatrixs( Rtw1 ) * vwb;
+    // Rotation part
+    vctAxAnRot3 dxRot;
+    vct3 dxRotVec;
+    dxRot.FromNormalized(Pose_dx.Rotation());
+    dxRotVec = dxRot.Axis() * dxRot.Angle();
+    dx_rotation[0] = dxRotVec[0];
+    dx_rotation[1] = dxRotVec[1];
+    dx_rotation[2] = dxRotVec[2];
+    dx_rotation = CurrentFrame.Rotation() * dx_rotation;
 
+    // Constructing the dx parameter
+    vctDoubleVec dx(6);
+    std::copy(dx_translation.begin(), dx_translation.end(), dx.begin()  );
+    std::copy(dx_rotation.begin()   , dx_rotation.end()   , dx.begin()+3);
+
+    // Delta x
+    ObjectiveVectorRef.Assign(dx);
 
     // Put Jacobian into matrix ref
     ObjectiveMatrixRef.Assign(CurrentKinematics->Jacobian);
 
-    ObjectiveVectorRef.Assign(vws);
 
     // make conversion, if necessary
-//    ConvertRefs(mode,TickTime);
-
-    std::cout << "vwb      " << vwb << std::endl;
-    std::cout << "vws      " << vws << std::endl;
-//    std::cout << "Vec Obj  " << ObjectiveVectorRef << std::endl;
-//    std::cout << "Mat Obj \n" << ObjectiveMatrixRef << std::endl;
-
-}
-
-vctDoubleVec mtsVFFollowJacobian::GetAxisAngle(const vctDoubleMat &m)
-{
-    vctDoubleVec axis;
-    axis.SetSize(3);
-
-    std::cout << "cos value " << (m.at(0,0) + m.at(1,1) + m.at(2,2) - 1.0 )/2.0 << std::endl;
-
-    double angle = acos((m.at(0,0) + m.at(1,1) + m.at(2,2) - 1.0 )/2.0);
-    axis[0] = (m.at(2,1) - m.at(1,2))/ sqrt(pow((m.at(2,1) - m.at(1,2)),2) + pow((m.at(0,2) - m.at(2,0)),2) + pow((m.at(1,0) - m.at(0,1)),2));
-    axis[1] = (m.at(0,2) - m.at(2,0))/ sqrt(pow((m.at(2,1) - m.at(1,2)),2) + pow((m.at(0,2) - m.at(2,0)),2) + pow((m.at(1,0) - m.at(0,1)),2));
-    axis[2] = (m.at(1,0) - m.at(0,1))/ sqrt(pow((m.at(2,1) - m.at(1,2)),2) + pow((m.at(0,2) - m.at(2,0)),2) + pow((m.at(1,0) - m.at(0,1)),2));
-
-    axis = axis.NormalizedSelf();
-
-    std::cout << "Axis " << axis << std::endl;
-    std::cout << "Angle " << angle << std::endl;
-
-    axis.Multiply(angle);
-
-    std::cout << "AxisAngle " << axis << std::endl;
-
-    return axis;
-}
-
-vctDoubleVec mtsVFFollowJacobian::GetEulerAngle(const vctDoubleMat &m)
-{
-    vctDoubleVec angles;
-    angles.SetSize(3);
-
-    angles[0] = acos(-m[2][1]/(sqrt(1 - pow(m[2][2],2))));
-    angles[1] = acos(m[2][2]);
-    angles[2] = acos(m[1][2]/(sqrt(1 - pow(m[2][2],2))));
-
-    std::cout << "Angles " << angles << std::endl;
-    return angles;
-}
+    ConvertRefs(mode,TickTime);
 
 
-vctDoubleVec mtsVFFollowJacobian::GetRPY(const vctDoubleMat &m)
-{
-//    vctDoubleVec angles;
-//    angles.SetSize(3);
-
-////    angles[0] = atan(m[1][0]/m[0][0]);
-////    angles[1] = atan(-m[2][0]/sqrt(pow(m[2][1],2) + pow(m[2][2],2)));
-////    angles[2] = atan(m[2][1]/ m[2][2]);
-//    double roll, pitch, yaw;
-
-
-//    roll = atan2(m[2][1], m[2][2]);
-//    yaw = atan2(m[1][0], m[0][0]);
-
-//    pitch = atan2(-m[2][0], cos(yaw)*m[0][0] + sin(yaw) * m[1][0] );
-
-//    angles[0] = roll;
-//    angles[1] = pitch;
-//    angles[2] = yaw;
-
-//    std::cout << "Angles " << angles << std::endl;
-
-//    return angles;
-
-    vctDoubleVec angles;
-    angles.SetSize(3);
-    double beta, alpha, gamma;
-
-    beta = atan2(-m[2][0], sqrt( pow(m[0][0], 2) + pow(m[1][0], 2)));
-
-    if (beta == cmnPI_2)
-    {
-        alpha = 0;
-        gamma = atan2(m[0][1], m[1][1]);
-    }
-    else if (beta == -cmnPI_2)
-    {
-        alpha = 0;
-        gamma = -atan2(m[0][1], m[1][1]);
-    }
-    else
-    {
-        alpha = atan2(m[1][0], m[0][0]);
-        gamma = atan2(m[2][1], m[2][2]);
-    }
-
-//    roll = gamma;
-//    pitch = beta;
-//    yaw = alpha;
-
-    angles[0] = gamma;
-    angles[1] = beta;
-    angles[2] = alpha;
-
-    return angles;
 }
