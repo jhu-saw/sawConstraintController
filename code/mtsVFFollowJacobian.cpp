@@ -22,6 +22,58 @@
 
 CMN_IMPLEMENT_SERVICES(mtsVFFollowJacobian)
 
+// evaluate the body velocity from a motion increment
+vctDynamicVector<double> BodyVelocitys( const vctFrame4x4<double>& Rt, double tick ){
+
+    vctDynamicVector<double> vw( 6, 0.0 );
+
+    // linear velocity
+    vw[0] = Rt[0][3];
+    vw[1] = Rt[1][3];
+    vw[2] = Rt[2][3];
+
+    // angular velocity
+    // for this we assume that (I - R) is skew symmetric (...or almost)
+    vw[3] = Rt[2][1];
+    vw[4] = Rt[0][2];
+    vw[5] = Rt[1][0];
+
+    return vw;
+
+}
+
+vctDynamicMatrix<double> AdjointMatrixs( const vctFrame4x4<double>& Rt ){
+
+    vctDynamicMatrix<double> Ad( 6, 6, 0.0 );
+
+    // upper left block
+    Ad[0][0] = Rt[0][0];     Ad[0][1] = Rt[0][1];     Ad[0][2] = Rt[0][2];
+    Ad[1][0] = Rt[1][0];     Ad[1][1] = Rt[1][1];     Ad[1][2] = Rt[1][2];
+    Ad[2][0] = Rt[2][0];     Ad[2][1] = Rt[2][1];     Ad[2][2] = Rt[2][2];
+
+    // upper right block
+    Ad[0][3] = -Rt[2][3]*Rt[1][0] + Rt[1][3]*Rt[2][0];
+    Ad[0][4] = -Rt[2][3]*Rt[1][1] + Rt[1][3]*Rt[2][1];
+    Ad[0][5] = -Rt[2][3]*Rt[1][2] + Rt[1][3]*Rt[2][2];
+
+    Ad[1][3] =  Rt[2][3]*Rt[0][0] - Rt[0][3]*Rt[2][0];
+    Ad[1][4] =  Rt[2][3]*Rt[0][1] - Rt[0][3]*Rt[2][1];
+    Ad[1][5] =  Rt[2][3]*Rt[0][2] - Rt[0][3]*Rt[2][2];
+
+    Ad[2][3] = -Rt[1][3]*Rt[0][0] + Rt[0][3]*Rt[1][0];
+    Ad[2][4] = -Rt[1][3]*Rt[0][1] + Rt[0][3]*Rt[1][1];
+    Ad[2][5] = -Rt[1][3]*Rt[0][2] + Rt[0][3]*Rt[1][2];
+
+    // lower right block
+    Ad[3][3] = Rt[0][0];     Ad[3][4] = Rt[0][1];     Ad[3][5] = Rt[0][2];
+    Ad[4][3] = Rt[1][0];     Ad[4][4] = Rt[1][1];     Ad[4][5] = Rt[1][2];
+    Ad[5][3] = Rt[2][0];     Ad[5][4] = Rt[2][1];     Ad[5][5] = Rt[2][2];
+
+    return Ad;
+
+}
+
+
 //! Updates co with virtual fixture data.
 /*! FillInTableauRefs
 */
@@ -42,21 +94,9 @@ void mtsVFFollowJacobian::FillInTableauRefs(const CONTROLLERMODE mode, const dou
         cmnThrow("FillInTableauRefs: Follow VF given improper input");
     }
 
-    // set arbitrary vector
-    A.SetSize(3);
-    A.SetAll(0.0);
-    A[2] = 1;
-
-    // set inverse skew matrix of A
-    skewAInverse = Skew(A);
-    nmrInverse(skewAInverse);
-
     // pointers to kinematics
     CurrentKinematics = Kinematics.at(0);
     DesiredKinematics = Kinematics.at(1);
-
-//    std::cout << "Current Translation: " << CurrentFrame.Translation() << std::endl;
-//    std::cout << "Desired Translation: " << DesiredKinematics->Frame.Translation() << std::endl;
 
     vctDoubleMat CurrentFrameInverse(3,3);
     CurrentFrameInverse.Assign(CurrentFrame.Rotation());
@@ -64,63 +104,40 @@ void mtsVFFollowJacobian::FillInTableauRefs(const CONTROLLERMODE mode, const dou
 
     // current kinematics gives us current frame
     CurrentFrame = CurrentKinematics->Frame;
+    vctFrm4x4 Rtw1;
+    Rtw1.FromNormalized(CurrentFrame);
 
     // desired kinematics gives us desired frame
     DesiredFrame = DesiredKinematics->Frame;
+    vctFrm4x4 Rtw2;
+    Rtw2.FromNormalized(DesiredFrame);
+
+//    std::cout << "CurrentFrame \n" << CurrentFrame << std::endl;
+//    std::cout << "DesiredFrame \n" << DesiredFrame << std::endl;
+
+
+    std::cout << "Rtw1 \n" << Rtw1 << std::endl;
+    std::cout << "Rtw2 \n" << Rtw2 << std::endl;
+
+    // This is the measured body velocity
+    vctDynamicVector<double> vwb = BodyVelocitys( Rtw1.Inverse()*Rtw2, TickTime );
+
+    // This is the measured spatial velocity
+    vctDynamicVector<double> vws = AdjointMatrixs( Rtw1 ) * vwb;
+
 
     // Put Jacobian into matrix ref
     ObjectiveMatrixRef.Assign(CurrentKinematics->Jacobian);
 
-    // p_des - p_cur
-    TranslationObjectiveVector.SetSize(3);
-    TranslationObjectiveVector.Assign(DesiredFrame.Translation() - CurrentFrame.Translation());
-
-    TranslationObjectiveVector.SetAll(0.0);
-//    TranslationObjectiveVector.at(0) = 0.001;
-
-    vctDoubleVec Alpha;
-    Alpha.SetSize(3);
-
-    RotationObjectiveVector.SetSize(3);
-
-    vctDoubleMat rMatrix(3,3);
-    rMatrix.Assign(CurrentFrameInverse * vctDoubleMat(DesiredFrame.Rotation()));
-
-
-//    // TESTING
-//    vctDoubleVec rotCurrent = GetRPY(vctDoubleMat(CurrentFrame.Rotation()));
-//    vctDoubleVec rotDesired = GetRPY(vctDoubleMat(DesiredFrame.Rotation()));
-
-//    RotationObjectiveVector = rotDesired - rotCurrent;
-
-//    /////////
-
-//    std::cout << "Matrix \n" << rMatrix << std::endl;
-//    RotationObjectiveVector = GetAxisAngle(rMatrix);
-//    RotationObjectiveVector = GetEulerAngle(rMatrix);
-    RotationObjectiveVector = GetRPY(rMatrix);
-
-
-//    RotationObjectiveVector.SetAll(0);  // Test
-//    RotationObjectiveVector.at(0) = 0.4;
-
-    // fill v_T and v_R into vector ref
-    for(size_t i = 0; i < 3; i++)
-    {
-        ObjectiveVectorRef[i] = TranslationObjectiveVector[i];
-    }
-    for(size_t i = 3; i < 6; i++)
-    {
-        ObjectiveVectorRef[i] = RotationObjectiveVector[i-3];
-    }
-    ObjectiveVectorRef[6] = CurrentKinematics->JointState->JointPosition[6];
-
+    ObjectiveVectorRef.Assign(vws);
 
     // make conversion, if necessary
-    ConvertRefs(mode,TickTime);
+//    ConvertRefs(mode,TickTime);
 
+    std::cout << "vwb      " << vwb << std::endl;
+    std::cout << "vws      " << vws << std::endl;
+//    std::cout << "Vec Obj  " << ObjectiveVectorRef << std::endl;
 //    std::cout << "Mat Obj \n" << ObjectiveMatrixRef << std::endl;
-//    std::cout << "Vec Obj \n" << ObjectiveVectorRef << std::endl;
 
 }
 
