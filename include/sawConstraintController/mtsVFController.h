@@ -42,7 +42,7 @@ class CISST_EXPORT mtsVFController: public cmnGenericObject
 {
     CMN_DECLARE_SERVICES(CMN_NO_DYNAMIC_CREATION, CMN_LOG_LOD_RUN_VERBOSE);
 
-public:
+private:
 
     //map between string names and pointers to virtual fixtures
     std::map<std::string, mtsVFBase *> VFMap;
@@ -65,6 +65,8 @@ public:
     //2. Treating controllerOutput as an incremental cartesian position
     mtsVFBase::CONTROLLERMODE ControllerMode;
 
+public:
+
     /*! Constructor
     */
     mtsVFController(){}
@@ -76,6 +78,10 @@ public:
     {
         ControllerMode = cm;
     }
+
+    nmrConstraintOptimizer GetOptimizer(){return Optimizer;}
+
+protected:
 
     //! Adds/Updates a vf data object
     void AddVFJointVelocity(const mtsVFDataBase & vf);
@@ -93,13 +99,7 @@ public:
     void AddVFSensorCompliance(const mtsVFDataSensorCompliance & vf);
 
     //! Adds/Updates a vf plane object
-    void AddVFPlane(const mtsVFDataPlane &vf);    
-
-    //! Adds/Updates a kinematics object to the map
-    void SetKinematics(const prmKinematicsState & kin);
-
-    //! Removes a kinematics object from the map
-    void RemoveKinematicsFromMap(const std::string & kinName);
+    void AddVFPlane(const mtsVFDataPlane &vf);        
 
     //! Adds/Updates a sensor to the map
     void SetSensor(const prmSensorState & sen);
@@ -113,16 +113,20 @@ public:
     //! Changes the variable the optimizer is solving for
     void SetMode(const mtsVFBase::CONTROLLERMODE & m);
 
+    //! Finds the "base" object for kinematics and sensor data that has an offset
+    void LookupBaseData(void);
+
+    //! Adds/Updates a kinematics object to the map
+    void SetKinematics(const prmKinematicsState & kin);
+
+    //! Removes a kinematics object from the map
+    void RemoveKinematicsFromMap(const std::string & kinName);
+
     //! Updates the robot state data and control optimizer
     void UpdateOptimizer(double TickTime);
 
     //! Solves the constraint optimization problem and fills the result into the parameter
     nmrConstraintOptimizer::STATUS Solve(vctDoubleVec & dq);
-
-    //! Finds the "base" object for kinematics and sensor data that has an offset
-    void LookupBaseData(void);
-
-protected:
 
     //! Helper function that increments users of new vf
     void IncrementUsers(const std::vector<std::string> kin_names, const std::vector<std::string> sensor_names);
@@ -130,9 +134,12 @@ protected:
     //! Helper function that decrements users of new data in an old vf
     void DecrementUsers(const std::vector<std::string> kin_names, const std::vector<std::string> sensor_names);
 
+private:
+
     bool SetVFData(const mtsVFDataBase & data, const std::type_info & type);
 
     bool SetVFDataSensorCompliance(const mtsVFDataSensorCompliance & data, const std::type_info & type);
+
     bool SetVFDataPlane(const mtsVFDataPlane & data, const std::type_info & type);
 
 };

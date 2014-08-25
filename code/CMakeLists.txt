@@ -58,7 +58,7 @@ if (cisst_FOUND)
        ${sawConstraintController_HEADER_DIR}/mtsVFCartVel.h
        ${sawConstraintController_HEADER_DIR}/mtsVFCartOrientationVel.h
        ${sawConstraintController_HEADER_DIR}/mtsVFSensorCompliance.h
-       ${sawConstraintController_HEADER_DIR}/mtsRobotTask.h
+#       ${sawConstraintController_HEADER_DIR}/mtsRobotTask.h
        ${sawConstraintController_HEADER_DIR}/mtsVFController.h              
        ${sawConstraintController_HEADER_DIR}/mtsVFPlane.h
        ${sawConstraintController_HEADER_DIR}/mtsVFJointLimits.h
@@ -71,7 +71,7 @@ if (cisst_FOUND)
        mtsVFCartVel.cpp
        mtsVFCartOrientationVel.cpp
        mtsVFSensorCompliance.cpp
-       mtsRobotTask.cpp
+#       mtsRobotTask.cpp
        mtsVFController.cpp             
        mtsVFPlane.cpp
        mtsVFJointLimits.cpp
