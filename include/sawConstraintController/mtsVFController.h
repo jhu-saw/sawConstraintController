@@ -42,7 +42,7 @@ class CISST_EXPORT mtsVFController: public cmnGenericObject
 {
     CMN_DECLARE_SERVICES(CMN_NO_DYNAMIC_CREATION, CMN_LOG_LOD_RUN_VERBOSE);
 
-private:
+protected:
 
     //map between string names and pointers to virtual fixtures
     std::map<std::string, mtsVFBase *> VFMap;
@@ -133,8 +133,6 @@ protected:
 
     //! Helper function that decrements users of new data in an old vf
     void DecrementUsers(const std::vector<std::string> kin_names, const std::vector<std::string> sensor_names);
-
-private:
 
     bool SetVFData(const mtsVFDataBase & data, const std::type_info & type);
 
