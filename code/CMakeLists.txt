@@ -42,11 +42,9 @@ if (cisst_FOUND)
                         prmForceOffsetState.cdg
                         prmKinematicsState.cdg
                         prmOffsetState.cdg
-                        prmSensorState.cdg
-			mtsVFDataSideview.cdg
+                        prmSensorState.cdg			
 			mtsVFDataCartesianTranslation.cdg
-                        prmJointState.cdg
-                        mtsVFDataFollow.cdg
+                        prmJointState.cdg                        
                         mtsVFDataPlane.cdg
                         mtsVFDataJointLimits.cdg)
 
@@ -61,10 +59,7 @@ if (cisst_FOUND)
        ${sawConstraintController_HEADER_DIR}/mtsVFCartOrientationVel.h
        ${sawConstraintController_HEADER_DIR}/mtsVFSensorCompliance.h
        ${sawConstraintController_HEADER_DIR}/mtsRobotTask.h
-       ${sawConstraintController_HEADER_DIR}/mtsVFController.h
-       ${sawConstraintController_HEADER_DIR}/mtsVFSideview.h
-       ${sawConstraintController_HEADER_DIR}/mtsVFFollow.h
-       ${sawConstraintController_HEADER_DIR}/mtsVFFollowJacobian.h
+       ${sawConstraintController_HEADER_DIR}/mtsVFController.h              
        ${sawConstraintController_HEADER_DIR}/mtsVFPlane.h
        ${sawConstraintController_HEADER_DIR}/mtsVFJointLimits.h
        )
@@ -77,10 +72,7 @@ if (cisst_FOUND)
        mtsVFCartOrientationVel.cpp
        mtsVFSensorCompliance.cpp
        mtsRobotTask.cpp
-       mtsVFController.cpp
-       mtsVFSideview.cpp
-       mtsVFFollow.cpp
-       mtsVFFollowJacobian.cpp
+       mtsVFController.cpp             
        mtsVFPlane.cpp
        mtsVFJointLimits.cpp
        )

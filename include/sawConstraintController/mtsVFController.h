@@ -29,11 +29,8 @@
 #include <sawConstraintController/prmKinematicsState.h>
 #include <sawConstraintController/prmSensorState.h>
 #include <sawConstraintController/prmOffsetState.h>
-#include <sawConstraintController/mtsVFDataSideview.h>
 #include <sawConstraintController/mtsVFCartVel.h>
 #include <sawConstraintController/mtsVFCartOrientationVel.h>
-#include <sawConstraintController/mtsVFFollowJacobian.h>
-#include <sawConstraintController/mtsVFFollow.h>
 #include <sawConstraintController/mtsVFPlane.h>
 
 // Always include last!
@@ -95,16 +92,8 @@ public:
     //! Adds/Updates a vf data object
     void AddVFSensorCompliance(const mtsVFDataSensorCompliance & vf);
 
-    //! Adds/Updates a vf data object
-    void AddVFFollow(const mtsVFDataBase & vf);
-
-    //! Adds/Updates a vf data object
-    void AddVFFollowJacobian(const mtsVFDataBase & vf);
-
     //! Adds/Updates a vf plane object
-    void AddVFPlane(const mtsVFDataPlane &vf);
-
-    void AddVFSideview(const mtsVFDataSideview & vf);
+    void AddVFPlane(const mtsVFDataPlane &vf);    
 
     //! Adds/Updates a kinematics object to the map
     void SetKinematics(const prmKinematicsState & kin);
@@ -133,7 +122,7 @@ public:
     //! Finds the "base" object for kinematics and sensor data that has an offset
     void LookupBaseData(void);
 
-private:
+protected:
 
     //! Helper function that increments users of new vf
     void IncrementUsers(const std::vector<std::string> kin_names, const std::vector<std::string> sensor_names);
