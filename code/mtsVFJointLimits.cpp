@@ -35,9 +35,10 @@ void mtsVFJointLimits::FillInTableauRefs(const CONTROLLERMODE mode, const double
 
     size_t numJoints = limitData->LowerLimits.size();
 
+    IneqConstraintMatrixRef.SetAll(0.0);
+
     for(size_t i = 0; i < numJoints; i++)
-    {
-        IneqConstraintMatrixRef.SetAll(0.0);
+    {        
         IneqConstraintMatrixRef.at(i,i) = 1.0;
         IneqConstraintMatrixRef.at(i+numJoints,i) = -1.0;
         IneqConstraintVectorRef.at(i) = limitData->LowerLimits.at(i);
