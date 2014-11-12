@@ -45,9 +45,9 @@ void mtsVFJointLimits::FillInTableauRefs(const CONTROLLERMODE mode, const double
     {
         IneqConstraintMatrixRef.SetAll(0.0);
         IneqConstraintMatrixRef.at(i,i) = 1.0;
-        IneqConstraintMatrixRef.at(i+numJoints,i+numJoints) = -1.0;
+        IneqConstraintMatrixRef.at(i+numJoints,i) = -1.0;
         IneqConstraintVectorRef.at(i) = limitData->LowerLimits.at(i);
-        IneqConstraintVectorRef.at(i+numJoints) = limitData->UpperLimits.at(i);
+        IneqConstraintVectorRef.at(i+numJoints) = -limitData->UpperLimits.at(i);
     }
 
 //    std::cout << "Mat Ine \n" << IneqConstraintMatrixRef << std::endl;
