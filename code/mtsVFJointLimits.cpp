@@ -31,12 +31,6 @@ void mtsVFJointLimits::FillInTableauRefs(const CONTROLLERMODE mode, const double
          -I*dq >= -U
     */
 
-    if(Kinematics.size() < 1)
-    {
-        CMN_LOG_CLASS_RUN_ERROR << "FillInTableauRefs: Joint Limit VF given improper input" << std::endl;
-        cmnThrow("FillInTableauRefs: Joint Limit VF given improper input");
-    }
-
     mtsVFDataJointLimits * limitData = (mtsVFDataJointLimits*)(Data);
 
     size_t numJoints = limitData->LowerLimits.size();
