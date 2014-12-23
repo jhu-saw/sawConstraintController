@@ -21,6 +21,7 @@
 
 #include <cisstNumerical/nmrConstraintOptimizer.h>
 
+#include <sawConstraintController/sawConstraintControllerRevision.h>
 #include <sawConstraintController/mtsVFBase.h>
 #include <sawConstraintController/mtsVFJointVel.h>
 #include <sawConstraintController/mtsVFJointPos.h>

@@ -1,6 +1,5 @@
 #
-# (C) Copyright 2014 Johns Hopkins University (JHU), All Rights
-# Reserved.
+# (C) Copyright 2014 Johns Hopkins University (JHU), All Rights Reserved.
 #
 # --- begin cisst license - do not edit ---
 #
@@ -28,9 +27,20 @@ if (cisst_FOUND)
   include (${CISST_USE_FILE})
 
   # create/configure file for find_package (sawConstraintController)
-  set (sawConstraintController_INCLUDE_DIR "${sawConstraintController_SOURCE_DIR}/include")
+  set (sawConstraintController_INCLUDE_DIR "${sawConstraintController_SOURCE_DIR}/include"
+                                           "${sawConstraintController_BINARY_DIR}/include")
   set (sawConstraintController_LIBRARY_DIR "${LIBRARY_OUTPUT_PATH}")
   set (sawConstraintController_LIBRARIES sawConstraintController)
+
+  # Set the version number
+  set (sawConstraintController_VERSION_MAJOR "1")
+  set (sawConstraintController_VERSION_MINOR "0")
+  set (sawConstraintController_VERSION_PATCH "0")
+  set (sawConstraintController_VERSION "${sawConstraintController_VERSION_MAJOR}.${sawConstraintController_VERSION_MINOR}.${sawConstraintController_VERSION_PATCH}")
+
+  # Generate sawConstraintControllerRevision.h
+  configure_file ("${sawConstraintController_SOURCE_DIR}/code/sawConstraintControllerRevision.h.in"
+                  "${sawConstraintController_BINARY_DIR}/include/sawConstraintController/sawConstraintControllerRevision.h")
 
   # create data type using the data generator
   cisst_data_generator (sawConstraintController
@@ -49,7 +59,7 @@ if (cisst_FOUND)
                         mtsVFDataJointLimits.cdg)
 
   include_directories (${sawConstraintController_INCLUDE_DIR})
-  set (sawConstraintController_HEADER_DIR "${sawConstraintController_INCLUDE_DIR}/sawConstraintController")
+  set (sawConstraintController_HEADER_DIR "${sawConstraintController_SOURCE_DIR}/include/sawConstraintController")
 
   set (HEADER_FILES
        ${sawConstraintController_HEADER_DIR}/mtsVFBase.h
@@ -58,7 +68,6 @@ if (cisst_FOUND)
        ${sawConstraintController_HEADER_DIR}/mtsVFCartVel.h
        ${sawConstraintController_HEADER_DIR}/mtsVFCartOrientationVel.h
        ${sawConstraintController_HEADER_DIR}/mtsVFSensorCompliance.h
-#       ${sawConstraintController_HEADER_DIR}/mtsRobotTask.h
        ${sawConstraintController_HEADER_DIR}/mtsVFController.h              
        ${sawConstraintController_HEADER_DIR}/mtsVFPlane.h
        ${sawConstraintController_HEADER_DIR}/mtsVFJointLimits.h
@@ -71,7 +80,6 @@ if (cisst_FOUND)
        mtsVFCartVel.cpp
        mtsVFCartOrientationVel.cpp
        mtsVFSensorCompliance.cpp
-#       mtsRobotTask.cpp
        mtsVFController.cpp             
        mtsVFPlane.cpp
        mtsVFJointLimits.cpp
@@ -89,9 +97,15 @@ if (cisst_FOUND)
                   "${sawConstraintController_BINARY_DIR}/sawConstraintControllerConfig.cmake"
                   @ONLY@)
 
+  cisst_add_config_version ("${sawConstraintController_BINARY_DIR}/sawConstraintControllerConfigVersion.cmake"
+                            VERSION ${sawConstraintController_VERSION}
+                            DESTINATION ${CISST_CMAKE_INSTALL_SUFFIX}/saw
+                            COMPONENT sawConstraintController)
+
   # Install targets for headers and library
   install (DIRECTORY
-           ${sawConstraintController_INCLUDE_DIR}/sawConstraintController
+           "${sawConstraintController_SOURCE_DIR}/include/sawConstraintController"
+           "${sawConstraintController_BINARY_DIR}/include/sawConstraintController"
            DESTINATION include
            PATTERN .svn EXCLUDE)
 
