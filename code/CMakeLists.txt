@@ -93,11 +93,18 @@ if (cisst_FOUND)
   cisst_target_link_libraries (sawConstraintController ${REQUIRED_CISST_LIBRARIES})
   set_property (TARGET sawConstraintController PROPERTY FOLDER "sawConstraintController")
 
+  cisst_is_catkin_build (sawConstraintController_IS_CATKIN_BUILT)
+  if (sawConstraintController_IS_CATKIN_BUILT)
+    set (sawConstraintController_CONFIG_FILE_DIR "${CATKIN_DEVEL_PREFIX}/cmake")
+  else ()
+    set (sawConstraintController_CONFIG_FILE_DIR "${sawConstraintController_BINARY_DIR}")
+  endif ()
+
   configure_file ("${CMAKE_CURRENT_SOURCE_DIR}/sawConstraintControllerConfig.cmake.in"
-                  "${sawConstraintController_BINARY_DIR}/sawConstraintControllerConfig.cmake"
+                  "${sawConstraintController_CONFIG_FILE_DIR}/sawConstraintControllerConfig.cmake"
                   @ONLY@)
 
-  cisst_add_config_version ("${sawConstraintController_BINARY_DIR}/sawConstraintControllerConfigVersion.cmake"
+  cisst_add_config_version ("${sawConstraintController_CONFIG_FILE_DIR}/sawConstraintControllerConfigVersion.cmake"
                             VERSION ${sawConstraintController_VERSION}
                             DESTINATION ${CISST_CMAKE_INSTALL_SUFFIX}/saw
                             COMPONENT sawConstraintController)
