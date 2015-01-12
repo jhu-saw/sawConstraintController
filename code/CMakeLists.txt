@@ -1,5 +1,5 @@
 #
-# (C) Copyright 2014 Johns Hopkins University (JHU), All Rights Reserved.
+# (C) Copyright 2014-2015 Johns Hopkins University (JHU), All Rights Reserved.
 #
 # --- begin cisst license - do not edit ---
 #
@@ -25,6 +25,11 @@ if (cisst_FOUND)
 
   # load cisst configuration
   include (${CISST_USE_FILE})
+
+  # where to save the libraries
+  if (NOT DEFINED LIBRARY_OUTPUT_PATH)
+    set (LIBRARY_OUTPUT_PATH "${sawConstraintController_BINARY_DIR}/lib")
+  endif ()
 
   # create/configure file for find_package (sawConstraintController)
   set (sawConstraintController_INCLUDE_DIR "${sawConstraintController_SOURCE_DIR}/include"
