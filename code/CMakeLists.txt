@@ -61,7 +61,9 @@ if (cisst_FOUND)
 			mtsVFDataCartesianTranslation.cdg
                         prmJointState.cdg                        
                         mtsVFDataPlane.cdg
-                        mtsVFDataJointLimits.cdg)
+                        mtsVFDataJointLimits.cdg
+			mtsVFDataAbsoluteJointLimits.cdg
+			mtsVFDataRCM.cdg)
 
   include_directories (${sawConstraintController_INCLUDE_DIR})
   set (sawConstraintController_HEADER_DIR "${sawConstraintController_SOURCE_DIR}/include/sawConstraintController")
@@ -76,6 +78,9 @@ if (cisst_FOUND)
        ${sawConstraintController_HEADER_DIR}/mtsVFController.h              
        ${sawConstraintController_HEADER_DIR}/mtsVFPlane.h
        ${sawConstraintController_HEADER_DIR}/mtsVFJointLimits.h
+       ${sawConstraintController_HEADER_DIR}/mtsVFAbsoluteJointLimits.h
+       ${sawConstraintController_HEADER_DIR}/mtsVFFollow.h
+       ${sawConstraintController_HEADER_DIR}/mtsVF_RCM.h
        )
 
   set (SOURCE_FILES
@@ -88,6 +93,9 @@ if (cisst_FOUND)
        mtsVFController.cpp             
        mtsVFPlane.cpp
        mtsVFJointLimits.cpp
+       mtsVFAbsoluteJointLimits.cpp
+       mtsVFFollow.cpp
+       mtsVF_RCM.cpp
        )
 
   add_library (sawConstraintController
