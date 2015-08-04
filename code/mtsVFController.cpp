@@ -16,7 +16,6 @@
  --- end cisst license ---
  */
 
-#include <typeinfo>
 #include <sawConstraintController/mtsVFController.h>
 
 CMN_IMPLEMENT_SERVICES(mtsVFController)
