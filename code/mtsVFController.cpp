@@ -194,7 +194,7 @@ void mtsVFController::AddVFPlane(const mtsVFDataPlane & vf)
 /*! AddVFFollowPath
 @param vf virtual fixture to be added
 */
-void mtsSnakeController::AddVFFollowPath(const mtsVFDataBase & vf)
+void mtsConstraintController::AddVFFollowPath(const mtsVFDataBase & vf)
 {
     // If we can find the VF, only change its data. Otherwise, create a new VF object.
    if (!SetVFData(vf, typeid(mtsVFFollow)))
