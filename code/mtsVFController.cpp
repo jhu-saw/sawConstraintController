@@ -190,6 +190,22 @@ void mtsVFController::AddVFPlane(const mtsVFDataPlane & vf)
     }
 }
 
+//! Adds/updates a path-following virtual fixture in the map and increments users of kinematics and sensors
+/*! AddVFFollowPath
+@param vf virtual fixture to be added
+*/
+void mtsSnakeController::AddVFFollowPath(const mtsVFDataBase & vf)
+{
+    // If we can find the VF, only change its data. Otherwise, create a new VF object.
+   if (!SetVFData(vf, typeid(mtsVFFollow)))
+   {
+       // Adds a new virtual fixture to the active vector
+       VFMap.insert(std::pair<std::string,mtsVFFollow *>(vf.Name,new mtsVFFollow(vf.Name,new mtsVFDataBase(vf))));
+       // Increment users of each kinematics and sensor object found
+       IncrementUsers(vf.KinNames,vf.SensorNames);
+   }
+}
+
 //! Adds/updates a kinematics in the map
 /*! SetKinematics
 @param kin kinematics object to be added

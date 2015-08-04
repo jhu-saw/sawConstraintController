@@ -33,6 +33,7 @@
 #include <sawConstraintController/mtsVFCartVel.h>
 #include <sawConstraintController/mtsVFCartOrientationVel.h>
 #include <sawConstraintController/mtsVFPlane.h>
+#include <sawConstraintController/mtsVFFollow.h>
 
 // Always include last!
 #include <sawConstraintController/sawConstraintControllerExport.h>
@@ -101,6 +102,8 @@ protected:
 
     //! Adds/Updates a vf plane object
     void AddVFPlane(const mtsVFDataPlane &vf);        
+
+    void AddVFFollowPath(const mtsVFDataBase & vf);
 
     //! Adds/Updates a sensor to the map
     void SetSensor(const prmSensorState & sen);
