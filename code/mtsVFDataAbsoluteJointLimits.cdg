@@ -1,0 +1,38 @@
+inline-header {
+#include <sawConstraintController/mtsVFDataBase.h>
+// Always include last!
+#include <sawConstraintController/sawConstraintControllerExport.h>
+}
+
+class {
+
+    name mtsVFDataAbsoluteJointLimits;
+    attribute CISST_EXPORT;
+
+    // All VF data objects are subclasses of mtsVFDataBase
+    base-class {
+      type mtsVFDataBase;
+    }
+
+    // This vector represents the upper joint limits (-I*dq >= -U + q)
+    member {
+      name CurrentJoints;
+      type vctDoubleVec;
+      visibility public;
+    }    
+
+    // This vector represents the lower joint limits (I*dq >= L - q)
+    member {
+      name LowerLimits;
+      type vctDoubleVec;
+      visibility public;
+    }
+
+    // This vector represents the upper joint limits (-I*dq >= -U + q)
+    member {
+      name UpperLimits;
+      type vctDoubleVec;
+      visibility public;
+    }    
+}
+
