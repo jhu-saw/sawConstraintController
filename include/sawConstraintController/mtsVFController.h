@@ -34,6 +34,7 @@
 #include <sawConstraintController/mtsVFCartOrientationVel.h>
 #include <sawConstraintController/mtsVFPlane.h>
 #include <sawConstraintController/mtsVFFollow.h>
+#include <typeinfo>
 
 // Always include last!
 #include <sawConstraintController/sawConstraintControllerExport.h>
