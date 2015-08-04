@@ -21,7 +21,6 @@
 
 #include <cisstNumerical/nmrConstraintOptimizer.h>
 
-#include <sawConstraintController/sawConstraintControllerRevision.h>
 #include <sawConstraintController/mtsVFBase.h>
 #include <sawConstraintController/mtsVFJointVel.h>
 #include <sawConstraintController/mtsVFJointPos.h>
@@ -34,6 +33,7 @@
 #include <sawConstraintController/mtsVFCartOrientationVel.h>
 #include <sawConstraintController/mtsVFPlane.h>
 #include <sawConstraintController/mtsVFFollow.h>
+#include <typeinfo>
 
 // Always include last!
 #include <sawConstraintController/sawConstraintControllerExport.h>
