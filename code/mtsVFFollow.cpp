@@ -62,21 +62,11 @@ void mtsVFFollow::FillInTableauRefs(const CONTROLLERMODE mode, const double Tick
     // Translation Part
     dx_translation = DesiredFrame.Translation() - CurrentFrame.Translation();
 
-    //dx_translation = vct3(0.421444,0.252093,0.0673298) - CurrentFrame.Translation();
-    //dx_translation = vct3(0.423517,0.268144,0.0487406) - CurrentFrame.Translation();
-    //dx_translation = vct3(0.421394,0.270174,0.0476985) - CurrentFrame.Translation();
 
-    vctDoubleMat JacResized = CurrentKinematics->Jacobian;
-    JacResized.resize(3,7);
-    JacResized.Column(6).SetAll(0.0);
-
-
-//std::cout << ObjectiveVectorRef.size() << " " << dx.size() << std::endl;
-//std::cout << ObjectiveMatrixRef.sizes() << " " << JacResized.sizes() << std::endl;
     // Delta x
     ObjectiveVectorRef.Assign(dx_translation);
     // Put Jacobian into matrix ref
-    ObjectiveMatrixRef.Assign(JacResized);
+    ObjectiveMatrixRef.Assign(CurrentKinematics->Jacobian);
 
     // make conversion, if necessary
     ConvertRefs(mode,TickTime);

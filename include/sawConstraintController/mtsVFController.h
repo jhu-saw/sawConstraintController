@@ -81,6 +81,27 @@ public:
         ControllerMode = cm;
     }
 
+    ~mtsVFController()
+    {
+        std::map<std::string,mtsVFBase *>::iterator itVF;
+        for(itVF = VFMap.begin(); itVF != VFMap.end(); itVF++)
+        {       
+            delete itVF->second;
+        }
+
+        std::map<std::string,prmKinematicsState *>::iterator itKin;
+        for(itKin = Kinematics.begin(); itKin != Kinematics.end(); itKin++)
+        {       
+            delete itKin->second;
+        }
+
+        std::map<std::string,prmSensorState *>::iterator itSens;
+        for(itSens = Sensors.begin(); itSens != Sensors.end(); itSens++)
+        {       
+            delete itSens->second;
+        }
+    }
+
     nmrConstraintOptimizer GetOptimizer(){return Optimizer;}
 
 protected:
