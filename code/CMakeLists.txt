@@ -40,7 +40,7 @@ if (cisst_FOUND)
   # Set the version number
   set (sawConstraintController_VERSION_MAJOR "1")
   set (sawConstraintController_VERSION_MINOR "0")
-  set (sawConstraintController_VERSION_PATCH "0")
+  set (sawConstraintController_VERSION_PATCH "1")
   set (sawConstraintController_VERSION "${sawConstraintController_VERSION_MAJOR}.${sawConstraintController_VERSION_MINOR}.${sawConstraintController_VERSION_PATCH}")
 
   # Generate sawConstraintControllerRevision.h
