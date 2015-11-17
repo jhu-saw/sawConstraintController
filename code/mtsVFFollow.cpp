@@ -75,7 +75,7 @@ void mtsVFFollow::FillInTableauRefs(const CONTROLLERMODE mode, const double Tick
     dx_rotation[0] = dxRotVec[0];
     dx_rotation[1] = dxRotVec[1];
     dx_rotation[2] = dxRotVec[2];
-    //dx_rotation = CurrentFrame.Rotation() * dx_rotation;
+    dx_rotation = CurrentFrame.Rotation() * dx_rotation;
 
     // Constructing the dx parameter
     vctDoubleVec dx(6);
