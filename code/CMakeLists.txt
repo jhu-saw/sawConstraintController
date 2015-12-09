@@ -120,7 +120,7 @@ if (cisst_FOUND)
   endif ()
 
   if(NOT "${CMAKE_PROJECT_NAME}" STREQUAL "${PROJECT_NAME}")
-     configure_file ("${sawConstraintController_SOURCE_DIR}/code/sawConstraintControllerConfig.cmake.in"
+     configure_file ("${sawConstraintController_SOURCE_DIR}/cmake/sawConstraintControllerConfig.cmake.in"
                      "${sawConstraintController_CONFIG_FILE_DIR}/sawConstraintControllerConfig.cmake"
                      @ONLY)
   endif()
