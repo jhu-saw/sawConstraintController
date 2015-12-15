@@ -34,6 +34,13 @@
 #include <sawConstraintController/mtsVFPlane.h>
 #include <sawConstraintController/mtsVFFollow.h>
 #include <typeinfo>
+#include <sawConstraintController/mtsVFJointLimits.h>
+#include <sawConstraintController/mtsVFAbsoluteJointLimits.h>
+#include <sawConstraintController/mtsVFDataJointLimits.h>
+#include <sawConstraintController/mtsVFPlane.h>
+#include <sawConstraintController/mtsVFDataRCM.h>
+#include <sawConstraintController/mtsVF_RCM.h>
+#include <sawConstraintController/mtsVFFollow.h>
 
 // Always include last!
 #include <sawConstraintController/sawConstraintControllerExport.h>
@@ -44,7 +51,7 @@ class CISST_EXPORT mtsVFController: public cmnGenericObject
 {
     CMN_DECLARE_SERVICES(CMN_NO_DYNAMIC_CREATION, CMN_LOG_LOD_RUN_VERBOSE);
 
-protected:
+public:
 
     //map between string names and pointers to virtual fixtures
     std::map<std::string, mtsVFBase *> VFMap;
@@ -66,8 +73,6 @@ protected:
     //1. Treating controllerOutput as an incremental joint position
     //2. Treating controllerOutput as an incremental cartesian position
     mtsVFBase::CONTROLLERMODE ControllerMode;
-
-public:
 
     /*! Constructor
     */
@@ -102,7 +107,17 @@ public:
         }
     }
 
+    void UpdateFollowPathVF(const size_t rows, const std::string & vfName, const std::string & CurKinName, const std::string & DesKinName);
+    void UpdateJointLimitsVF(const size_t rows, const std::string vfName, const vctDoubleVec & UpperLimits, const vctDoubleVec & LowerLimits);
+    void UpdateAbsoluteJointLimitsVF(const size_t rows, const std::string vfName, const vctDoubleVec & UpperLimits, const vctDoubleVec & LowerLimits);
+    void UpdatePlaneVF(const size_t rows, const std::string vfName, const std::string curKinName);    
+    void UpdateRCMVF(const size_t rows, const std::string vfName, const std::string curKinName);
+
     nmrConstraintOptimizer GetOptimizer(){return Optimizer;}
+
+    bool ActivateVF(const std::string & s);
+
+    void DeactivateAll(); 
 
 protected:
 
@@ -125,6 +140,12 @@ protected:
     void AddVFPlane(const mtsVFDataPlane &vf);        
 
     void AddVFFollowPath(const mtsVFDataBase & vf);
+
+    void AddVFRCM(const mtsVFDataRCM & vf);
+
+    void AddVFJointLimits(const mtsVFDataJointLimits & vf);
+
+    void AddVFAbsoluteJointLimits(const mtsVFDataAbsoluteJointLimits & vf);     
 
     //! Adds/Updates a sensor to the map
     void SetSensor(const prmSensorState & sen);
@@ -164,6 +185,10 @@ protected:
     bool SetVFDataSensorCompliance(const mtsVFDataSensorCompliance & data, const std::type_info & type);
 
     bool SetVFDataPlane(const mtsVFDataPlane & data, const std::type_info & type);
+
+    bool SetVFDataRCM(const mtsVFDataRCM & data, const std::type_info & type);
+
+    bool SetVFDataAJL(const mtsVFDataAbsoluteJointLimits & data, const std::type_info & type);   
 
 };
 
