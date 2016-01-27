@@ -48,17 +48,16 @@ void mtsVFController::UpdateJointLimitsVF(const size_t rows, const std::string v
     AddVFJointLimits(JLimitsData);
 }
 
-void mtsVFController::UpdateAbsoluteJointLimitsVF(const size_t rows, const std::string vfName, const vctDoubleVec & UpperLimits, const vctDoubleVec & LowerLimits)
-{
-    mtsVFDataAbsoluteJointLimits AJLimitsData;
-
+void mtsVFController::UpdateAbsoluteJointLimitsVF(const std::string vfName, const vctDoubleVec & UpperLimits, const vctDoubleVec & LowerLimits, const vctDoubleVec & CurrentJoints)
+{    
+    // todo assert sizes of upper and lower limits
     AJLimitsData.UpperLimits = UpperLimits;
     AJLimitsData.LowerLimits = LowerLimits;
     AJLimitsData.Name = vfName;
-    AJLimitsData.IneqConstraintRows = rows;
+    AJLimitsData.IneqConstraintRows = UpperLimits.size() + LowerLimits.size();
     AJLimitsData.KinNames.clear();
-    AJLimitsData.CurrentJoints.SetSize(7);
-    AJLimitsData.CurrentJoints.SetAll(0.0);
+    AJLimitsData.CurrentJoints.SetSize(UpperLimits.size());
+    AJLimitsData.CurrentJoints = CurrentJoints;
     AddVFAbsoluteJointLimits(AJLimitsData);
 }
 
