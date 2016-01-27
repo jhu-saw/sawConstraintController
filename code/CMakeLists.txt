@@ -130,14 +130,14 @@ if (cisst_FOUND)
                             DESTINATION ${CISST_CMAKE_INSTALL_SUFFIX}/saw
                             COMPONENT sawConstraintController)
 
-  # Install targets for headers and library
-  install (DIRECTORY
-           "${sawConstraintController_SOURCE_DIR}/include/sawConstraintController"
-           "${sawConstraintController_BINARY_DIR}/include/sawConstraintController"
-           DESTINATION ${INSTALL_INCLUDE_DIR}
-           PATTERN .svn EXCLUDE)
-
   if("${CMAKE_PROJECT_NAME}" STREQUAL "${PROJECT_NAME}")
+  # Install targets for headers and library
+    install (DIRECTORY
+             "${sawConstraintController_SOURCE_DIR}/include/sawConstraintController"
+             "${sawConstraintController_BINARY_DIR}/include/sawConstraintController"
+             DESTINATION ${INSTALL_INCLUDE_DIR}
+             PATTERN .svn EXCLUDE)
+           
     install (TARGETS sawConstraintController
             EXPORT sawConstraintControllerTargets
             RUNTIME DESTINATION ${INSTALL_BIN_DIR}
