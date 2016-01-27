@@ -145,12 +145,12 @@ if (cisst_FOUND)
             ARCHIVE DESTINATION ${INSTALL_LIB_DIR}
             INCLUDES DESTINATION ${INSTALL_INCLUDE_DIR}
       ) 
-      target_include_directories(sawConstraintController INTERFACE
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_PROJECT_DIR}/include>
+      target_include_directories(sawConstraintController PUBLIC
+        $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
         $<INSTALL_INTERFACE:include>  # <prefix>/include/mylib
       )  
       set_property(TARGET sawConstraintController APPEND PROPERTY INTERFACE_INCLUDE_DIRECTORIES
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_PROJECT_DIR}/include>
+        $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
         $<INSTALL_INTERFACE:include>  # <prefix>/include/mylib
       )
       install(EXPORT ${PROJECT_NAME}Targets 
