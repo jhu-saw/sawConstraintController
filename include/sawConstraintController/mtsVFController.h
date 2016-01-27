@@ -110,7 +110,7 @@ public:
     void UpdateFollowPathVF(const std::string & vfName, const std::string & CurKinName, const std::string & DesKinName, const bool & UseRotation = false);
     void UpdateJointVelLimitsVF(const std::string vfName, const vctDoubleVec & UpperLimits, const vctDoubleVec & LowerLimits);
     void UpdateJointPosLimitsVF(const std::string vfName, const vctDoubleVec & UpperLimits, const vctDoubleVec & LowerLimits, const vctDoubleVec & CurrentJoints);
-    void UpdatePlaneVF(const size_t rows, const std::string vfName, const std::string curKinName);    
+    void UpdatePlaneVF(const std::string vfName, const std::string curKinName);    
     void UpdateRCMVF(const size_t rows, const std::string vfName, const std::string curKinName);
 
     nmrConstraintOptimizer GetOptimizer(){return Optimizer;}

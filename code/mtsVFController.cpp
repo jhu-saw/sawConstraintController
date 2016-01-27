@@ -64,9 +64,9 @@ void mtsVFController::UpdateJointPosLimitsVF(const std::string vfName, const vct
     AddVFAbsoluteJointLimits(AJLimitsData);
 }
 
-void mtsVFController::UpdatePlaneVF(const size_t rows, const std::string vfName, const std::string curKinName)
+void mtsVFController::UpdatePlaneVF(const std::string vfName, const std::string curKinName)
 {    
-    PlaneData.IneqConstraintRows = rows;
+    PlaneData.IneqConstraintRows = 1; // is this necessarily true?
     PlaneData.Name = vfName;
     PlaneData.KinNames.clear();
     PlaneData.KinNames.push_back(curKinName);
