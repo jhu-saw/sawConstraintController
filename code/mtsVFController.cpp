@@ -36,14 +36,13 @@ void mtsVFController::UpdateFollowPathVF(const size_t rows,
     AddVFFollowPath(FollowData);
 }
 
-void mtsVFController::UpdateJointLimitsVF(const size_t rows, const std::string vfName, const vctDoubleVec & UpperLimits, const vctDoubleVec & LowerLimits)
+void mtsVFController::UpdateJointLimitsVF(const std::string vfName, const vctDoubleVec & UpperLimits, const vctDoubleVec & LowerLimits)
 {    
-    mtsVFDataJointLimits JLimitsData;
-
+    // todo assert sizes of upper and lower limits    
     JLimitsData.UpperLimits = UpperLimits;
     JLimitsData.LowerLimits = LowerLimits;
     JLimitsData.Name = vfName;
-    JLimitsData.IneqConstraintRows = rows;
+    JLimitsData.IneqConstraintRows = UpperLimits.size() + LowerLimits.size();
     JLimitsData.KinNames.clear();
     AddVFJointLimits(JLimitsData);
 }
