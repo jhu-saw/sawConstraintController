@@ -107,7 +107,7 @@ public:
         }
     }
 
-    void UpdateFollowPathVF(const size_t rows, const std::string & vfName, const std::string & CurKinName, const std::string & DesKinName);
+    void UpdateFollowPathVF(const std::string & vfName, const std::string & CurKinName, const std::string & DesKinName, const bool & UseRotation = false);
     void UpdateJointLimitsVF(const std::string vfName, const vctDoubleVec & UpperLimits, const vctDoubleVec & LowerLimits);
     void UpdateAbsoluteJointLimitsVF(const std::string vfName, const vctDoubleVec & UpperLimits, const vctDoubleVec & LowerLimits, const vctDoubleVec & CurrentJoints);
     void UpdatePlaneVF(const size_t rows, const std::string vfName, const std::string curKinName);    
@@ -190,6 +190,7 @@ protected:
 
     bool SetVFDataAJL(const mtsVFDataAbsoluteJointLimits & data, const std::type_info & type);   
 
+    mtsVFDataBase FollowData;
     mtsVFDataJointLimits JLimitsData;
     mtsVFDataAbsoluteJointLimits AJLimitsData;
 

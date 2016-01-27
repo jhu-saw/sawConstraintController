@@ -20,19 +20,23 @@
 
 CMN_IMPLEMENT_SERVICES(mtsVFController)
 
-void mtsVFController::UpdateFollowPathVF(const size_t rows,
-                                                          const std::string & vfName,
+void mtsVFController::UpdateFollowPathVF(const std::string & vfName,
                                                           const std::string & CurKinName,
-                                                          const std::string & DesKinName)
-{
-    mtsVFDataBase FollowData;
-
+                                                          const std::string & DesKinName,
+                                                          const bool & UseRotation)
+{    
     FollowData.Name = vfName;
-    FollowData.ObjectiveRows = rows;
+    if(!UseRotation)
+    {
+        FollowData.ObjectiveRows = 3;
+    }
+    else
+    {
+        FollowData.ObjectiveRows = 6;
+    }
     FollowData.KinNames.clear();
     FollowData.KinNames.push_back(CurKinName);
     FollowData.KinNames.push_back(DesKinName);
-
     AddVFFollowPath(FollowData);
 }
 
