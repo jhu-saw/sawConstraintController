@@ -193,6 +193,8 @@ protected:
     mtsVFDataBase FollowData;
     mtsVFDataJointLimits JLimitsData;
     mtsVFDataAbsoluteJointLimits AJLimitsData;
+    mtsVFDataPlane PlaneData;
+    mtsVFDataRCM RCM_Data;
 
 };
 

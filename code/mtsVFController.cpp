@@ -65,9 +65,7 @@ void mtsVFController::UpdateAbsoluteJointLimitsVF(const std::string vfName, cons
 }
 
 void mtsVFController::UpdatePlaneVF(const size_t rows, const std::string vfName, const std::string curKinName)
-{
-    mtsVFDataPlane PlaneData;
-
+{    
     PlaneData.IneqConstraintRows = rows;
     PlaneData.Name = vfName;
     PlaneData.KinNames.clear();
@@ -76,14 +74,11 @@ void mtsVFController::UpdatePlaneVF(const size_t rows, const std::string vfName,
 }
 
 void mtsVFController::UpdateRCMVF(const size_t rows, const std::string vfName, const std::string curKinName)
-{
-    mtsVFDataRCM RCM_Data;
-
+{    
     RCM_Data.IneqConstraintRows = rows;
     RCM_Data.Name = vfName;
     RCM_Data.KinNames.clear();      
-    RCM_Data.KinNames.push_back(curKinName);
-    RCM_Data.Importance = 1.0;
+    RCM_Data.KinNames.push_back(curKinName);    
     AddVFRCM(RCM_Data);
 }
 
