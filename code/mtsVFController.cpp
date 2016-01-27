@@ -40,7 +40,7 @@ void mtsVFController::UpdateFollowPathVF(const std::string & vfName,
     AddVFFollowPath(FollowData);
 }
 
-void mtsVFController::UpdateJointLimitsVF(const std::string vfName, const vctDoubleVec & UpperLimits, const vctDoubleVec & LowerLimits)
+void mtsVFController::UpdateJointVelLimitsVF(const std::string vfName, const vctDoubleVec & UpperLimits, const vctDoubleVec & LowerLimits)
 {    
     // todo assert sizes of upper and lower limits    
     JLimitsData.UpperLimits = UpperLimits;
@@ -51,7 +51,7 @@ void mtsVFController::UpdateJointLimitsVF(const std::string vfName, const vctDou
     AddVFJointLimits(JLimitsData);
 }
 
-void mtsVFController::UpdateAbsoluteJointLimitsVF(const std::string vfName, const vctDoubleVec & UpperLimits, const vctDoubleVec & LowerLimits, const vctDoubleVec & CurrentJoints)
+void mtsVFController::UpdateJointPosLimitsVF(const std::string vfName, const vctDoubleVec & UpperLimits, const vctDoubleVec & LowerLimits, const vctDoubleVec & CurrentJoints)
 {    
     // todo assert sizes of upper and lower limits
     AJLimitsData.UpperLimits = UpperLimits;

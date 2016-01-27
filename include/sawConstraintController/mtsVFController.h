@@ -108,8 +108,8 @@ public:
     }
 
     void UpdateFollowPathVF(const std::string & vfName, const std::string & CurKinName, const std::string & DesKinName, const bool & UseRotation = false);
-    void UpdateJointLimitsVF(const std::string vfName, const vctDoubleVec & UpperLimits, const vctDoubleVec & LowerLimits);
-    void UpdateAbsoluteJointLimitsVF(const std::string vfName, const vctDoubleVec & UpperLimits, const vctDoubleVec & LowerLimits, const vctDoubleVec & CurrentJoints);
+    void UpdateJointVelLimitsVF(const std::string vfName, const vctDoubleVec & UpperLimits, const vctDoubleVec & LowerLimits);
+    void UpdateJointPosLimitsVF(const std::string vfName, const vctDoubleVec & UpperLimits, const vctDoubleVec & LowerLimits, const vctDoubleVec & CurrentJoints);
     void UpdatePlaneVF(const size_t rows, const std::string vfName, const std::string curKinName);    
     void UpdateRCMVF(const size_t rows, const std::string vfName, const std::string curKinName);
 
