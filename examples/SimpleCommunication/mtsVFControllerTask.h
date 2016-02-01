@@ -28,7 +28,7 @@
 #include <sawConstraintController/mtsVFController.h>
 #include <cisstParameterTypes/prmVelocityJointSet.h>
 #include <cisstParameterTypes/prmPositionJointSet.h>
-#include <sawConstraintController/mtsRobotTask.h>
+#include "mtsRobotTask.h"
 
 enum {NB_Joints = 2};
 

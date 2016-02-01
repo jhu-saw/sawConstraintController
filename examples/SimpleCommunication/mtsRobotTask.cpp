@@ -16,7 +16,7 @@
  --- end cisst license ---
  */
 
-#include <sawConstraintController/mtsRobotTask.h>
+#include "mtsRobotTask.h"
 #include <cisstMultiTask/mtsInterfaceProvided.h>
 
 CMN_IMPLEMENT_SERVICES(mtsRobotTask);

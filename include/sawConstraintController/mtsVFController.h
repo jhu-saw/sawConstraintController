@@ -119,7 +119,7 @@ public:
 
     void DeactivateAll(); 
 
-protected:
+    // protected:
 
     //! Adds/Updates a vf data object
     void AddVFJointVelocity(const mtsVFDataBase & vf);

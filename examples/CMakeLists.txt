@@ -10,4 +10,4 @@
 #
 # --- end cisst license ---
 
-#add_subdirectory (SimpleCommunication)
+add_subdirectory (SimpleCommunication)

@@ -19,26 +19,28 @@ set (REQUIRED_CISST_LIBRARIES
      cisstNumerical
      )
 
-find_package (cisst REQUIRED ${REQUIRED_CISST_LIBRARIES})
+find_package (cisst 1.0.1 COMPONENTS ${REQUIRED_CISST_LIBRARIES})
 
-if (cisst_FOUND)
+if (cisst_FOUND_AS_REQUIRED)
 
   # load cisst configuration
   include (${CISST_USE_FILE})
 
-  # where to save the libraries
-  if (NOT DEFINED LIBRARY_OUTPUT_PATH)
+  # catkin/ROS paths
+  cisst_is_catkin_build (sawConstraintController_IS_CATKIN_BUILT)
+  if (sawConstraintController_IS_CATKIN_BUILT)
+    set (sawConstraintController_CONFIG_FILE_DIR "${CATKIN_DEVEL_PREFIX}/cmake")
     set (LIBRARY_OUTPUT_PATH "${sawConstraintController_BINARY_DIR}/lib")
+  else ()
+    set (sawConstraintController_CONFIG_FILE_DIR "${sawConstraintController_BINARY_DIR}")
   endif ()
 
   # create/configure file for find_package (sawConstraintController)
-  set (sawConstraintController_INCLUDE_DIR "${sawConstraintController_SOURCE_DIR}/include"
-                                           "${sawConstraintController_BINARY_DIR}/include")
+  set (sawConstraintController_INCLUDE_DIR
+       "${sawConstraintController_SOURCE_DIR}/include"
+       "${sawConstraintController_BINARY_DIR}/include")
   set (sawConstraintController_LIBRARY_DIR "${LIBRARY_OUTPUT_PATH}")
   set (sawConstraintController_LIBRARIES sawConstraintController)
-  
-  set (cisstNetlib_LIBRARIES_SHORT_NAMES
-       ${sawConstraintController_LIBRARIES})
 
   # Set the version number
   set (sawConstraintController_VERSION_MAJOR "1")
@@ -52,7 +54,7 @@ if (cisst_FOUND)
 
   # create data type using the data generator
   cisst_data_generator (sawConstraintController
-                        "${CISST_BINARY_DIR}/include" # where to save the file
+                        "${sawConstraintController_BINARY_DIR}/include" # where to save the file
                         "sawConstraintController/"    # sub directory for include
                         mtsVFDataBase.cdg
                         mtsVFDataSensorCompliance.cdg
@@ -60,9 +62,9 @@ if (cisst_FOUND)
                         prmForceOffsetState.cdg
                         prmKinematicsState.cdg
                         prmOffsetState.cdg
-                        prmSensorState.cdg			
+                        prmSensorState.cdg
 			mtsVFDataCartesianTranslation.cdg
-                        prmJointState.cdg                        
+                        prmJointState.cdg
                         mtsVFDataPlane.cdg
                         mtsVFDataJointLimits.cdg
 			mtsVFDataAbsoluteJointLimits.cdg
@@ -78,7 +80,7 @@ if (cisst_FOUND)
        ${sawConstraintController_HEADER_DIR}/mtsVFCartVel.h
        ${sawConstraintController_HEADER_DIR}/mtsVFCartOrientationVel.h
        ${sawConstraintController_HEADER_DIR}/mtsVFSensorCompliance.h
-       ${sawConstraintController_HEADER_DIR}/mtsVFController.h              
+       ${sawConstraintController_HEADER_DIR}/mtsVFController.h
        ${sawConstraintController_HEADER_DIR}/mtsVFPlane.h
        ${sawConstraintController_HEADER_DIR}/mtsVFJointLimits.h
        ${sawConstraintController_HEADER_DIR}/mtsVFAbsoluteJointLimits.h
@@ -93,7 +95,7 @@ if (cisst_FOUND)
        mtsVFCartVel.cpp
        mtsVFCartOrientationVel.cpp
        mtsVFSensorCompliance.cpp
-       mtsVFController.cpp             
+       mtsVFController.cpp
        mtsVFPlane.cpp
        mtsVFJointLimits.cpp
        mtsVFAbsoluteJointLimits.cpp
@@ -106,59 +108,34 @@ if (cisst_FOUND)
                ${SOURCE_FILES}
                ${sawConstraintController_CISST_DG_SRCS}
                ${sawConstraintController_CISST_DG_HDRS})
-  cisst_target_link_libraries (sawConstraintController ${REQUIRED_CISST_LIBRARIES})
-  if("${CMAKE_PROJECT_NAME}" STREQUAL "${PROJECT_NAME}")
-    add_dependencies(${TARGET_NAME} sawConstraintController)
-  endif()
+
   set_property (TARGET sawConstraintController PROPERTY FOLDER "sawConstraintController")
+  cisst_target_link_libraries (sawConstraintController ${REQUIRED_CISST_LIBRARIES})
 
-  cisst_is_catkin_build (sawConstraintController_IS_CATKIN_BUILT)
-  if (sawConstraintController_IS_CATKIN_BUILT)
-    set (sawConstraintController_CONFIG_FILE_DIR "${CATKIN_DEVEL_PREFIX}/cmake")
-  else ()
-    set (sawConstraintController_CONFIG_FILE_DIR "${sawConstraintController_BINARY_DIR}")
-  endif ()
-
-  if(NOT "${CMAKE_PROJECT_NAME}" STREQUAL "${PROJECT_NAME}")
-     configure_file ("${sawConstraintController_SOURCE_DIR}/cmake/sawConstraintControllerConfig.cmake.in"
-                     "${sawConstraintController_CONFIG_FILE_DIR}/sawConstraintControllerConfig.cmake"
-                     @ONLY)
-  endif()
+  configure_file ("${CMAKE_CURRENT_SOURCE_DIR}/sawConstraintControllerConfig.cmake.in"
+                  "${sawConstraintController_CONFIG_FILE_DIR}/sawConstraintControllerConfig.cmake"
+                  @ONLY)
 
   cisst_add_config_version ("${sawConstraintController_CONFIG_FILE_DIR}/sawConstraintControllerConfigVersion.cmake"
                             VERSION ${sawConstraintController_VERSION}
-                            DESTINATION ${CISST_CMAKE_INSTALL_SUFFIX}/saw
+                            DESTINATION "share/sawConstraintController"
                             COMPONENT sawConstraintController)
 
-  if("${CMAKE_PROJECT_NAME}" STREQUAL "${PROJECT_NAME}")
   # Install targets for headers and library
-    install (DIRECTORY
-             "${sawConstraintController_SOURCE_DIR}/include/sawConstraintController"
-             "${sawConstraintController_BINARY_DIR}/include/sawConstraintController"
-             DESTINATION ${INSTALL_INCLUDE_DIR}
-             PATTERN .svn EXCLUDE)
-           
-    install (TARGETS sawConstraintController
-            EXPORT sawConstraintControllerTargets
-            RUNTIME DESTINATION ${INSTALL_BIN_DIR}
-            LIBRARY DESTINATION ${INSTALL_LIB_DIR}
-            ARCHIVE DESTINATION ${INSTALL_LIB_DIR}
-            INCLUDES DESTINATION ${INSTALL_INCLUDE_DIR}
-      ) 
-      target_include_directories(sawConstraintController PUBLIC
-        $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
-        $<INSTALL_INTERFACE:include>  # <prefix>/include/mylib
-      )  
-      set_property(TARGET sawConstraintController APPEND PROPERTY INTERFACE_INCLUDE_DIRECTORIES
-        $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
-        $<INSTALL_INTERFACE:include>  # <prefix>/include/mylib
-      )
-      install(EXPORT ${PROJECT_NAME}Targets 
-        DESTINATION ${CISST_CMAKE_INSTALL_SUFFIX}/saw
-      )
-  endif()
+  install (DIRECTORY
+           "${sawConstraintController_SOURCE_DIR}/include/sawConstraintController"
+           "${sawConstraintController_BINARY_DIR}/include/sawConstraintController"
+           DESTINATION include
+           PATTERN .svn EXCLUDE)
 
-  install (FILES "${sawConstraintController_BINARY_DIR}/sawConstraintControllerConfig.cmake"
-           DESTINATION "${CISST_CMAKE_INSTALL_SUFFIX}/saw")
+  install (TARGETS sawConstraintController
+           RUNTIME DESTINATION bin
+           LIBRARY DESTINATION lib
+           ARCHIVE DESTINATION lib)
 
-endif (cisst_FOUND)
+  install (FILES "${sawConstraintController_CONFIG_FILE_DIR}/sawConstraintControllerConfig.cmake"
+           DESTINATION "share/sawConstraintController")
+
+else (cisst_FOUND_AS_REQUIRED)
+  message ("Information: code in ${CMAKE_CURRENT_SOURCE_DIR} will not be compiled, it requires ${REQUIRED_CISST_LIBRARIES}")
+endif (cisst_FOUND_AS_REQUIRED)
