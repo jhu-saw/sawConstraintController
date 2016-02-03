@@ -55,7 +55,7 @@ mtsVFSenderTask::mtsVFSenderTask(const std::string & taskName, double period) : 
     forceSensorState = prmSensorState("Force");
     forceSensorState.Values.SetSize(2);
     forceSensorState.Values.SetAll(0);
-    tickNum = 0;
+    tickNum = 1;
 }
 
 void mtsVFSenderTask::Configure(const std::string & CMN_UNUSED(filename))
@@ -65,53 +65,26 @@ void mtsVFSenderTask::Configure(const std::string & CMN_UNUSED(filename))
     if (!required) {
         CMN_LOG_CLASS_RUN_ERROR << "Creating interface failed" << std::endl;
     }
-    if (!(required->AddFunction("AddVFJointVelocity", this->AddVFJointVelocity))) {
-        CMN_LOG_CLASS_RUN_ERROR << "Adding AddVFJointVelocity failed" << std::endl;
-    }
-    if (!(required->AddFunction("AddVFJointPosition", this->AddVFJointPosition))) {
-        CMN_LOG_CLASS_RUN_ERROR << "Adding AddVFJointPosition failed" << std::endl;
-    }
-    if (!(required->AddFunction("AddVFCartesianTranslation", this->AddVFCartesianTranslation))) {
-        CMN_LOG_CLASS_RUN_ERROR << "Adding AddVFCartesianTranslation failed" << std::endl;
-    }
-    if (!(required->AddFunction("AddVFCartesianOrientation", this->AddVFCartesianOrientation))) {
-        CMN_LOG_CLASS_RUN_ERROR << "Adding AddVFCartesianOrientation failed" << std::endl;
-    }
     if (!(required->AddFunction("AddVFSensorCompliance", this->AddVFSensorCompliance))) {
         CMN_LOG_CLASS_RUN_ERROR << "Adding AddVFSensorCompliance failed" << std::endl;
     }
-    if (!(required->AddFunction("AddVFFollow", this->AddVFFollow))) {
-        CMN_LOG_CLASS_RUN_ERROR << "Adding AddVFFollow failed" << std::endl;
-    }
     if (!(required->AddFunction("SetSensor", this->SetSensor))) {
         CMN_LOG_CLASS_RUN_ERROR << "Adding SetSensor failed" << std::endl;
-    }
-    if (!(required->AddFunction("SetSensorOffset", this->SetSensorOffset))) {
-        CMN_LOG_CLASS_RUN_ERROR << "Adding SetSensorOffset failed" << std::endl;
-    }
-    if (!(required->AddFunction("RemoveSensorFromMap", this->RemoveSensorFromMap))) {
-        CMN_LOG_CLASS_RUN_ERROR << "Adding RemoveSensorFromMap failed" << std::endl;
-    }
-    if (!(required->AddFunction("SetKinematics", this->SetKinematics))) {
-        CMN_LOG_CLASS_RUN_ERROR << "Adding SetKinematics failed" << std::endl;
-    }
-    if (!(required->AddFunction("RemoveKinematicsFromMap", this->RemoveKinematicsFromMap))) {
-        CMN_LOG_CLASS_RUN_ERROR << "Adding RemoveKinematicsFromMap failed" << std::endl;
     }
 }
 
 void mtsVFSenderTask::Run()
 {
-	this->ProcessQueuedEvents();
-	this->ProcessQueuedCommands();
-
     tickNum++;
+	this->ProcessQueuedEvents();
+	this->ProcessQueuedCommands();    
 
     UpdateRobotStateData();
 
     SetSensor(forceSensorState);
 
     AddVFSensorCompliance(forceVF);
+
 }
 
 void mtsVFSenderTask::UpdateRobotStateData()

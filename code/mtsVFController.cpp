@@ -497,6 +497,7 @@ void mtsVFController::UpdateOptimizer(double TickTime)
 
         if(tempVFData->Data->Active)
         {
+            
             //updates the virtual fixture's kinematics and sensor objects
             tempVFData->LookupStateData(Kinematics,Sensors);
 
@@ -591,9 +592,4 @@ void mtsVFController::DecrementUsers(const std::vector<std::string> kin_names, c
             itSen->second->UserCount--;
         }
     }
-}
-
-void mtsVFController::SetMode(const mtsVFBase::CONTROLLERMODE & m)
-{
-    ControllerMode = m;
 }

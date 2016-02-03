@@ -21,7 +21,8 @@
 
 #include <cisstMultiTask/mtsTaskPeriodic.h>
 
-#include <sawConstraintController/mtsVFController.h>
+#include "mtsSimpleVFController.h"
+
 #include <sawConstraintController/prmJointState.h>
 
 // Always include last!
@@ -36,7 +37,7 @@ protected:
     enum TASKMODE {JPOS = 1, JVEL = 2};
 
     //VF Controller
-    mtsVFController CO_Controller;
+    mtsSimpleVFController CO_Controller;    
 
     //Joint position and velocities
     prmJointState JointState;

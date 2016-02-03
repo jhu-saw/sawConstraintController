@@ -53,21 +53,6 @@ class CISST_EXPORT mtsVFController: public cmnGenericObject
 
 public:
 
-    //map between string names and pointers to virtual fixtures
-    std::map<std::string, mtsVFBase *> VFMap;
-
-    //map between string names and pointers to kinematics objects
-    std::map<std::string, prmKinematicsState *> Kinematics;
-
-    //map between string names and pointers to sensor objects
-    std::map<std::string, prmSensorState *> Sensors;
-
-    //robot joint state
-    prmJointState JointState;
-
-    //control optimizer variables
-    nmrConstraintOptimizer Optimizer;
-
     //Current mode of controller (what controllerOutput represents)
     //The possible values of MODE refer to:
     //1. Treating controllerOutput as an incremental joint position
@@ -119,8 +104,6 @@ public:
 
     void DeactivateAll(); 
 
-    // protected:
-
     //! Adds/Updates a vf data object
     void AddVFJointVelocity(const mtsVFDataBase & vf);
 
@@ -156,9 +139,6 @@ public:
     //! Removes a sensor from the map
     void RemoveSensorFromMap(const std::string & senName);
 
-    //! Changes the variable the optimizer is solving for
-    void SetMode(const mtsVFBase::CONTROLLERMODE & m);
-
     //! Finds the "base" object for kinematics and sensor data that has an offset
     void LookupBaseData(void);
 
@@ -173,6 +153,23 @@ public:
 
     //! Solves the constraint optimization problem and fills the result into the parameter
     nmrConstraintOptimizer::STATUS Solve(vctDoubleVec & dq);
+
+protected:
+
+    //map between string names and pointers to virtual fixtures
+    std::map<std::string, mtsVFBase *> VFMap;
+
+    //map between string names and pointers to kinematics objects
+    std::map<std::string, prmKinematicsState *> Kinematics;
+
+    //map between string names and pointers to sensor objects
+    std::map<std::string, prmSensorState *> Sensors;
+
+    //robot joint state
+    prmJointState JointState;
+
+    //control optimizer variables
+    nmrConstraintOptimizer Optimizer;
 
     //! Helper function that increments users of new vf
     void IncrementUsers(const std::vector<std::string> kin_names, const std::vector<std::string> sensor_names);

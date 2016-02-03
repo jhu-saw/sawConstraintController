@@ -35,6 +35,8 @@ if (cisst_FOUND)
 
         add_executable (VFSimpleCommunicationExample
                         main.cpp
+                        mtsSimpleVFController.h
+                        mtsSimpleVFController.cpp
                         mtsRobotTask.cpp
                         mtsRobotTask.h
                         mtsVFControllerTask.cpp
@@ -42,7 +44,7 @@ if (cisst_FOUND)
                         mtsVFSenderTask.cpp
                         mtsVFSenderTask.h
                         prmSimpleRobotKinematicsState.cpp
-                        prmSimpleRobotKinematicsState.h
+                        prmSimpleRobotKinematicsState.h                        
                         )
 
         target_link_libraries (VFSimpleCommunicationExample
