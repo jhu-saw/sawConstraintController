@@ -17,9 +17,7 @@ set (REQUIRED_CISST_LIBRARIES
      cisstNumerical
      cisstMultiTask
      cisstParameterTypes
-     cisstRobot
-     cisstNumerical
-     )
+     cisstRobot)
 
 find_package (cisst REQUIRED)
 
