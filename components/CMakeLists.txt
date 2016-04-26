@@ -1,5 +1,5 @@
 #
-# (C) Copyright 2014-2015 Johns Hopkins University (JHU), All Rights Reserved.
+# (C) Copyright 2014-2016 Johns Hopkins University (JHU), All Rights Reserved.
 #
 # --- begin cisst license - do not edit ---
 #
@@ -8,6 +8,8 @@
 # http://www.cisst.org/cisst/license.txt.
 #
 # --- end cisst license ---
+
+project (sawConstraintController)
 
 set (REQUIRED_CISST_LIBRARIES
      cisstCommon
@@ -29,7 +31,7 @@ if (cisst_FOUND_AS_REQUIRED)
   # catkin/ROS paths
   cisst_is_catkin_build (sawConstraintController_IS_CATKIN_BUILT)
   if (sawConstraintController_IS_CATKIN_BUILT)
-    set (sawConstraintController_CONFIG_FILE_DIR "${CATKIN_DEVEL_PREFIX}/cmake")
+    set (sawConstraintController_CONFIG_FILE_DIR "${CATKIN_DEVEL_PREFIX}/share/sawConstraintController/cmake")
     set (LIBRARY_OUTPUT_PATH "${sawConstraintController_BINARY_DIR}/lib")
   else ()
     set (sawConstraintController_CONFIG_FILE_DIR "${sawConstraintController_BINARY_DIR}")
@@ -56,22 +58,22 @@ if (cisst_FOUND_AS_REQUIRED)
   cisst_data_generator (sawConstraintController
                         "${sawConstraintController_BINARY_DIR}/include" # where to save the file
                         "sawConstraintController/"    # sub directory for include
-                        mtsVFDataBase.cdg
-                        mtsVFDataSensorCompliance.cdg
-                        prmKinematicsOffsetState.cdg
-                        prmForceOffsetState.cdg
-                        prmKinematicsState.cdg
-                        prmOffsetState.cdg
-                        prmSensorState.cdg
-			mtsVFDataCartesianTranslation.cdg
-                        prmJointState.cdg
-                        mtsVFDataPlane.cdg
-                        mtsVFDataJointLimits.cdg
-			mtsVFDataAbsoluteJointLimits.cdg
-			mtsVFDataRCM.cdg)
+                        code/mtsVFDataBase.cdg
+                        code/mtsVFDataSensorCompliance.cdg
+                        code/prmKinematicsOffsetState.cdg
+                        code/prmForceOffsetState.cdg
+                        code/prmKinematicsState.cdg
+                        code/prmOffsetState.cdg
+                        code/prmSensorState.cdg
+			code/mtsVFDataCartesianTranslation.cdg
+                        code/prmJointState.cdg
+                        code/mtsVFDataPlane.cdg
+                        code/mtsVFDataJointLimits.cdg
+			code/mtsVFDataAbsoluteJointLimits.cdg
+			code/mtsVFDataRCM.cdg)
 
   include_directories (${sawConstraintController_INCLUDE_DIR})
-  set (sawConstraintController_HEADER_DIR "${sawConstraintController_SOURCE_DIR}/include/sawConstraintController")
+  set (sawConstraintController_HEADER_DIR "include/sawConstraintController")
 
   set (HEADER_FILES
        ${sawConstraintController_HEADER_DIR}/mtsVFBase.h
@@ -89,18 +91,18 @@ if (cisst_FOUND_AS_REQUIRED)
        )
 
   set (SOURCE_FILES
-       mtsVFBase.cpp
-       mtsVFJointVel.cpp
-       mtsVFJointPos.cpp
-       mtsVFCartVel.cpp
-       mtsVFCartOrientationVel.cpp
-       mtsVFSensorCompliance.cpp
-       mtsVFController.cpp
-       mtsVFPlane.cpp
-       mtsVFJointLimits.cpp
-       mtsVFAbsoluteJointLimits.cpp
-       mtsVFFollow.cpp
-       mtsVF_RCM.cpp
+       code/mtsVFBase.cpp
+       code/mtsVFJointVel.cpp
+       code/mtsVFJointPos.cpp
+       code/mtsVFCartVel.cpp
+       code/mtsVFCartOrientationVel.cpp
+       code/mtsVFSensorCompliance.cpp
+       code/mtsVFController.cpp
+       code/mtsVFPlane.cpp
+       code/mtsVFJointLimits.cpp
+       code/mtsVFAbsoluteJointLimits.cpp
+       code/mtsVFFollow.cpp
+       code/mtsVF_RCM.cpp
        )
 
   add_library (sawConstraintController
@@ -112,8 +114,9 @@ if (cisst_FOUND_AS_REQUIRED)
   set_property (TARGET sawConstraintController PROPERTY FOLDER "sawConstraintController")
   cisst_target_link_libraries (sawConstraintController ${REQUIRED_CISST_LIBRARIES})
 
-  configure_file ("${CMAKE_CURRENT_SOURCE_DIR}/sawConstraintControllerConfig.cmake.in"
-                  "${sawConstraintController_CONFIG_FILE_DIR}/sawConstraintControllerConfig.cmake"
+  set (sawConstraintController_CMAKE_CONFIG_FILE "${sawConstraintController_CONFIG_FILE_DIR}/sawConstraintControllerConfig.cmake")
+  configure_file ("${CMAKE_CURRENT_SOURCE_DIR}/cmake/sawConstraintControllerConfig.cmake.in"
+                  "${sawConstraintController_CMAKE_CONFIG_FILE}"
                   @ONLY)
 
   cisst_add_config_version ("${sawConstraintController_CONFIG_FILE_DIR}/sawConstraintControllerConfigVersion.cmake"

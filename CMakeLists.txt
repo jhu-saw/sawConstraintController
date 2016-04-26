@@ -11,10 +11,5 @@
 
 cmake_minimum_required (VERSION 2.8)
 
-project (sawConstraintController)
-add_subdirectory (code)
-option (sawConstraintController_EXAMPLES "Compile sawConstraintController examples")
-
-if (sawConstraintController_EXAMPLES)
-  add_subdirectory (examples)
-endif ()
+add_subdirectory (components)
+add_subdirectory (examples)

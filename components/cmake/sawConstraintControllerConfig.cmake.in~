@@ -18,9 +18,13 @@ set (sawConstraintController_VERSION "@sawConstraintController_VERSION@")
 set (sawConstraintController_CONFIG_FILE_DIR "@sawConstraintController_CONFIG_FILE_DIR@")
 get_filename_component (THIS_FILE_PATH
                         ${CMAKE_CURRENT_LIST_FILE}
-                        PATH)
+                        REALPATH)
+
+message ("--------------- found as ${THIS_FILE_PATH}  ----")
+
 if ("${sawConstraintController_CONFIG_FILE_DIR}" STREQUAL "${THIS_FILE_PATH}")
-  # we're using the build directories		
+  # we're using the build directories
+  message ("--------------------- in build dir:   ${sawConstraintController_INCLUDE_DIR}   ----")
   set (sawConstraintController_INCLUDE_DIR "@sawConstraintController_INCLUDE_DIR@")
   set (sawConstraintController_LIBRARY_DIR "@sawConstraintController_LIBRARY_DIR@")
 else ()

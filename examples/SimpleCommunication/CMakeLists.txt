@@ -1,6 +1,5 @@
 #
-# (C) Copyright 2014 Johns Hopkins University (JHU), All Rights
-# Reserved.
+# (C) Copyright 2014-2016 Johns Hopkins University (JHU), All Rights Reserved.
 #
 # --- begin cisst license - do not edit ---
 #
@@ -30,6 +29,7 @@ if (cisst_FOUND)
     if (sawConstraintController_FOUND)
         include_directories (${VFSimpleCommunicationExample_SOURCE_DIR}
                              ${sawConstraintController_INCLUDE_DIR})
+        link_directories (${sawConstraintController_LIBRARY_DIR})
 
         add_executable (VFSimpleCommunicationExample
                         main.cpp
@@ -42,7 +42,7 @@ if (cisst_FOUND)
                         mtsVFSenderTask.cpp
                         mtsVFSenderTask.h
                         prmSimpleRobotKinematicsState.cpp
-                        prmSimpleRobotKinematicsState.h                        
+                        prmSimpleRobotKinematicsState.h
                         )
 
         target_link_libraries (VFSimpleCommunicationExample
