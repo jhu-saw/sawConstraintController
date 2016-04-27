@@ -11,6 +11,8 @@
 
 project (sawConstraintController)
 
+cmake_minimum_required (VERSION 2.8)
+
 set (REQUIRED_CISST_LIBRARIES
      cisstCommon
      cisstVector
@@ -65,12 +67,12 @@ if (cisst_FOUND_AS_REQUIRED)
                         code/prmKinematicsState.cdg
                         code/prmOffsetState.cdg
                         code/prmSensorState.cdg
-			code/mtsVFDataCartesianTranslation.cdg
+                        code/mtsVFDataCartesianTranslation.cdg
                         code/prmJointState.cdg
                         code/mtsVFDataPlane.cdg
                         code/mtsVFDataJointLimits.cdg
-			code/mtsVFDataAbsoluteJointLimits.cdg
-			code/mtsVFDataRCM.cdg)
+                        code/mtsVFDataAbsoluteJointLimits.cdg
+                        code/mtsVFDataRCM.cdg)
 
   include_directories (${sawConstraintController_INCLUDE_DIR})
   set (sawConstraintController_HEADER_DIR "include/sawConstraintController")

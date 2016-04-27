@@ -20,16 +20,11 @@ get_filename_component (THIS_FILE_PATH
                         ${CMAKE_CURRENT_LIST_FILE}
                         REALPATH)
 
-message ("--------------- found as ${THIS_FILE_PATH}  ----")
-message ("------------------------ ${sawConstraintController_CMAKE_CONFIG_FILE}  ----")
-
 if ("${sawConstraintController_CMAKE_CONFIG_FILE}" STREQUAL "${THIS_FILE_PATH}")
   # we're using the build directories
-  message ("--------------------- in build dir:   ${sawConstraintController_INCLUDE_DIR}   ----")
   set (sawConstraintController_INCLUDE_DIR "@sawConstraintController_INCLUDE_DIR@")
   set (sawConstraintController_LIBRARY_DIR "@sawConstraintController_LIBRARY_DIR@")
 else ()
-  message ("--------------------- in install dir:   ${sawConstraintController_INCLUDE_DIR}   ----")
   # try to find the install dir, we know the install is using
   # share/sawConstraintController so we can go ../..
   set (RELATIVE_INSTALL_DIR "${THIS_FILE_PATH}/../..")
