@@ -138,7 +138,7 @@ if (cisst_FOUND_AS_REQUIRED)
            LIBRARY DESTINATION lib
            ARCHIVE DESTINATION lib)
 
-  install (FILES "${sawConstraintController_CONFIG_FILE_DIR}/sawConstraintControllerConfig.cmake"
+  install (FILES "${sawConstraintController_CMAKE_CONFIG_FILE}"
            DESTINATION "share/sawConstraintController")
 
 else (cisst_FOUND_AS_REQUIRED)
