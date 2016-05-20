@@ -28,7 +28,7 @@ mtsVFControllerTask::mtsVFControllerTask(const std::string & taskName, double pe
 
     //CO variables
     TaskMode = JVEL;
-    CO_Controller = mtsVFController(NB_Joints,mtsVFBase::JVEL);
+    CO_Controller = mtsSimpleVFController(NB_Joints,mtsVFBase::JVEL);
     ControllerOutput.SetSize(NB_Joints);
 
 	//Kinematics objects	
@@ -36,29 +36,33 @@ mtsVFControllerTask::mtsVFControllerTask(const std::string & taskName, double pe
     JointState.JointVelocity.SetSize(NB_Joints);
     JointState.JointPosition.SetAll(0);
     JointState.JointVelocity.SetAll(0);
-    EEKin = prmSimpleRobotKinematicsState("EEKin",&JointState);
-    CO_Controller.Kinematics.insert(std::pair<std::string, prmKinematicsState *>(EEKin.Name,&EEKin));
+    EEKin = prmSimpleRobotKinematicsState("EEKin",&JointState);     
+    CO_Controller.SetSimpleRobotKinematics(EEKin);
     pedal = prmSensorState("Pedal");
     pedal.Values.SetSize(1);
-    CO_Controller.Sensors.insert(std::pair<std::string, prmSensorState *>(pedal.Name,&pedal));
+    CO_Controller.SetSensor(pedal);
 
-    //CO_Controller.ControllerMode = mtsVFBase::JVEL;
+    CO_Controller.ControllerMode = mtsVFBase::JVEL;
+
+    tickNum = 0;    
 
 }
 
 bool mtsVFControllerTask::UpdateRobotStateData()
-{
-    CO_Controller.LookupBaseData();
-
+{    
     //update local sensor/kin data
     if(EEKin.UserCount > 0)
     {
         EEKin.Update();
+        CO_Controller.SetSimpleRobotKinematics(EEKin);
     }
     if(pedal.UserCount > 0)
     {
         pedal.Values[0] = 100;
+        CO_Controller.SetSensor(pedal);
     }
+
+    tickNum++;
 
     return true;
 }

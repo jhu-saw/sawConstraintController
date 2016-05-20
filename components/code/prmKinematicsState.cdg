@@ -7,6 +7,7 @@ inline-header {
 class {
     name prmKinematicsState;
     attribute CISST_EXPORT;
+    virtual-dtor true;
 
     //! The cartesian frame of the kinematics object
     member {
@@ -103,4 +104,3 @@ inline-code {
         NeedsBase = false;
     }
 }
-

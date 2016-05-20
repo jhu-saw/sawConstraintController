@@ -1,6 +1,5 @@
 #
-# (C) Copyright 2014 Johns Hopkins University (JHU), All Rights
-# Reserved.
+# (C) Copyright 2014-2016 Johns Hopkins University (JHU), All Rights Reserved.
 #
 # --- begin cisst license - do not edit ---
 #
@@ -10,6 +9,8 @@
 #
 # --- end cisst license ---
 
+cmake_minimum_required (VERSION 2.8)
+
 set (REQUIRED_CISST_LIBRARIES
      cisstCommon
      cisstVector
@@ -17,9 +18,7 @@ set (REQUIRED_CISST_LIBRARIES
      cisstNumerical
      cisstMultiTask
      cisstParameterTypes
-     cisstRobot
-     cisstNumerical
-     )
+     cisstRobot)
 
 find_package (cisst REQUIRED)
 
@@ -27,16 +26,19 @@ if (cisst_FOUND)
   # Modify CMake configuration to use cisst
   include (${CISST_USE_FILE})
 
-    cisst_find_saw_component (sawConstraintController REQUIRED)
+    find_package (sawConstraintController REQUIRED)
 
     if (sawConstraintController_FOUND)
         include_directories (${VFSimpleCommunicationExample_SOURCE_DIR}
-                             ${sawConstraintController_INCLUDE_DIR}
-                             ${sawConstraintController_HEADER_DIR}
-                             )
+                             ${sawConstraintController_INCLUDE_DIR})
+        link_directories (${sawConstraintController_LIBRARY_DIR})
 
         add_executable (VFSimpleCommunicationExample
                         main.cpp
+                        mtsSimpleVFController.h
+                        mtsSimpleVFController.cpp
+                        mtsRobotTask.cpp
+                        mtsRobotTask.h
                         mtsVFControllerTask.cpp
                         mtsVFControllerTask.h
                         mtsVFSenderTask.cpp

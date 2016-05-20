@@ -28,8 +28,27 @@
 #include <sawConstraintController/mtsVFJointPos.h>
 #include <cisstRobot/robManipulator.h>
 
-//! This is the base class for all virtual fixture objects
-/*! \brief mtsVFFollow: A class that contains logic for the implementation of virtual fixtures
+/*! @brief Calculate joint angles that take the robot from the current position and orientation to a desired one.
+
+    This is useful for having the arm follow a path,
+    particularly one that leads the end effector slightly 
+    at each instant to indicate the new destination.
+
+    fill in refs
+    min || J*dq - [v_T ; v_R] ||
+    v_T = p_des - R_des * R^(-1)_cur * p_cur
+    v_R = sk(A)^(-1) * A - sk(A)^(-1) * R_des * R^(-1)_cur * A
+    J is the jacobian, p_des is the desired frame's translation,
+    R_des is the desired frame's rotation, R^(-1)_cur is the inverse of the current frame's rotation,
+    p_cur is the current frame's translation, A is an arbitrary vector, sk(A)^(-1) is the inverse of the skew matrix of A
+    
+
+   The goal is constructing the dx parameter which contains:
+   [x, y, z, rx*theta, ry*theta, rz*theta]
+   This is the same xdot format output by J*qdot
+   that way we try to make xdot - J*qdot == [0,0,0,0,0,0].transpose()
+   which means that you've found the joint angles that
+   will put you at exactly the desired position and rotation
  */
 class mtsVFFollow : public mtsVFJointPosition
 {

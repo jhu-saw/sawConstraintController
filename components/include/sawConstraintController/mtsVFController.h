@@ -34,6 +34,13 @@
 #include <sawConstraintController/mtsVFPlane.h>
 #include <sawConstraintController/mtsVFFollow.h>
 #include <typeinfo>
+#include <sawConstraintController/mtsVFJointLimits.h>
+#include <sawConstraintController/mtsVFAbsoluteJointLimits.h>
+#include <sawConstraintController/mtsVFDataJointLimits.h>
+#include <sawConstraintController/mtsVFPlane.h>
+#include <sawConstraintController/mtsVFDataRCM.h>
+#include <sawConstraintController/mtsVF_RCM.h>
+#include <sawConstraintController/mtsVFFollow.h>
 
 // Always include last!
 #include <sawConstraintController/sawConstraintControllerExport.h>
@@ -44,30 +51,13 @@ class CISST_EXPORT mtsVFController: public cmnGenericObject
 {
     CMN_DECLARE_SERVICES(CMN_NO_DYNAMIC_CREATION, CMN_LOG_LOD_RUN_VERBOSE);
 
-protected:
-
-    //map between string names and pointers to virtual fixtures
-    std::map<std::string, mtsVFBase *> VFMap;
-
-    //map between string names and pointers to kinematics objects
-    std::map<std::string, prmKinematicsState *> Kinematics;
-
-    //map between string names and pointers to sensor objects
-    std::map<std::string, prmSensorState *> Sensors;
-
-    //robot joint state
-    prmJointState JointState;
-
-    //control optimizer variables
-    nmrConstraintOptimizer Optimizer;
+public:
 
     //Current mode of controller (what controllerOutput represents)
     //The possible values of MODE refer to:
     //1. Treating controllerOutput as an incremental joint position
     //2. Treating controllerOutput as an incremental cartesian position
     mtsVFBase::CONTROLLERMODE ControllerMode;
-
-public:
 
     /*! Constructor
     */
@@ -77,7 +67,7 @@ public:
     */
     mtsVFController(size_t num_joints, mtsVFBase::CONTROLLERMODE cm):
         Optimizer(num_joints)
-    {
+    {        
         ControllerMode = cm;
     }
 
@@ -102,9 +92,17 @@ public:
         }
     }
 
+    void UpdateFollowPathVF(const std::string & vfName, const std::string & CurKinName, const std::string & DesKinName, const bool & UseRotation = false);
+    void UpdateJointVelLimitsVF(const std::string vfName, const vctDoubleVec & UpperLimits, const vctDoubleVec & LowerLimits);
+    void UpdateJointPosLimitsVF(const std::string vfName, const vctDoubleVec & UpperLimits, const vctDoubleVec & LowerLimits, const vctDoubleVec & CurrentJoints);
+    void UpdatePlaneVF(const std::string vfName, const std::string curKinName);    
+    void UpdateRCMVF(const size_t rows, const std::string vfName, const std::string curKinName);
+
     nmrConstraintOptimizer GetOptimizer(){return Optimizer;}
 
-protected:
+    bool ActivateVF(const std::string & s);
+
+    void DeactivateAll(); 
 
     //! Adds/Updates a vf data object
     void AddVFJointVelocity(const mtsVFDataBase & vf);
@@ -126,6 +124,12 @@ protected:
 
     void AddVFFollowPath(const mtsVFDataBase & vf);
 
+    void AddVFRCM(const mtsVFDataRCM & vf);
+
+    void AddVFJointLimits(const mtsVFDataJointLimits & vf);
+
+    void AddVFAbsoluteJointLimits(const mtsVFDataAbsoluteJointLimits & vf);     
+
     //! Adds/Updates a sensor to the map
     void SetSensor(const prmSensorState & sen);
 
@@ -134,9 +138,6 @@ protected:
 
     //! Removes a sensor from the map
     void RemoveSensorFromMap(const std::string & senName);
-
-    //! Changes the variable the optimizer is solving for
-    void SetMode(const mtsVFBase::CONTROLLERMODE & m);
 
     //! Finds the "base" object for kinematics and sensor data that has an offset
     void LookupBaseData(void);
@@ -153,6 +154,23 @@ protected:
     //! Solves the constraint optimization problem and fills the result into the parameter
     nmrConstraintOptimizer::STATUS Solve(vctDoubleVec & dq);
 
+protected:
+
+    //map between string names and pointers to virtual fixtures
+    std::map<std::string, mtsVFBase *> VFMap;
+
+    //map between string names and pointers to kinematics objects
+    std::map<std::string, prmKinematicsState *> Kinematics;
+
+    //map between string names and pointers to sensor objects
+    std::map<std::string, prmSensorState *> Sensors;
+
+    //robot joint state
+    prmJointState JointState;
+
+    //control optimizer variables
+    nmrConstraintOptimizer Optimizer;
+
     //! Helper function that increments users of new vf
     void IncrementUsers(const std::vector<std::string> kin_names, const std::vector<std::string> sensor_names);
 
@@ -164,6 +182,16 @@ protected:
     bool SetVFDataSensorCompliance(const mtsVFDataSensorCompliance & data, const std::type_info & type);
 
     bool SetVFDataPlane(const mtsVFDataPlane & data, const std::type_info & type);
+
+    bool SetVFDataRCM(const mtsVFDataRCM & data, const std::type_info & type);
+
+    bool SetVFDataAJL(const mtsVFDataAbsoluteJointLimits & data, const std::type_info & type);   
+
+    mtsVFDataBase FollowData;
+    mtsVFDataJointLimits JLimitsData;
+    mtsVFDataAbsoluteJointLimits AJLimitsData;
+    mtsVFDataPlane PlaneData;
+    mtsVFDataRCM RCM_Data;
 
 };
 

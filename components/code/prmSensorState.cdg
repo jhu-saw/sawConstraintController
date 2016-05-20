@@ -7,6 +7,7 @@ inline-header {
 class {
     name prmSensorState;
     attribute CISST_EXPORT;
+    virtual-dtor true;
 
     //! The name of the sensor object
     member {

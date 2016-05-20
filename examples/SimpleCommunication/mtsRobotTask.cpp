@@ -16,56 +16,25 @@
  --- end cisst license ---
  */
 
-#include <sawConstraintController/mtsRobotTask.h>
+#include "mtsRobotTask.h"
 #include <cisstMultiTask/mtsInterfaceProvided.h>
 
 CMN_IMPLEMENT_SERVICES(mtsRobotTask);
 
 bool mtsRobotTask::InitializeInterfaces(void)
 {
+    mtsVFController * CO_Controller_Base = dynamic_cast<mtsVFController *>(&CO_Controller);
     mtsInterfaceProvided * provided = this->AddInterfaceProvided("ProvidesVF");
     if (!provided) {
         CMN_LOG_CLASS_RUN_ERROR << "Creating interface failed " << std::endl;
         return false;
     }
-    if (!(provided->AddCommandWrite(&mtsVFController::AddVFJointVelocity, &CO_Controller, "AddVFJointVelocity"))) {
-        CMN_LOG_CLASS_RUN_ERROR << "SetVFJointVel failed" << std::endl;
-        return false;
-    }
-    if (!(provided->AddCommandWrite(&mtsVFController::AddVFJointPosition, &CO_Controller, "AddVFJointPosition"))) {
-        CMN_LOG_CLASS_RUN_ERROR << "SetVFJointPos failed" << std::endl;
-        return false;
-    }
-    if (!(provided->AddCommandWrite(&mtsVFController::AddVFCartesianTranslation, &CO_Controller, "AddVFCartesianTranslation"))) {
-        CMN_LOG_CLASS_RUN_ERROR << "SetVFCartVel failed" << std::endl;
-        return false;
-    }
-    if (!(provided->AddCommandWrite(&mtsVFController::AddVFCartesianOrientation, &CO_Controller, "AddVFCartesianOrientation"))) {
-        CMN_LOG_CLASS_RUN_ERROR << "SetVFCartPos failed" << std::endl;
-        return false;
-    }
-    if (!(provided->AddCommandWrite(&mtsVFController::AddVFSensorCompliance, &CO_Controller, "AddVFSensorCompliance"))) {
+    if (!(provided->AddCommandWrite(&mtsVFController::AddVFSensorCompliance, CO_Controller_Base, "AddVFSensorCompliance"))) {
         CMN_LOG_CLASS_RUN_ERROR << "SetVFSensorCompliance failed" << std::endl;
         return false;
     }    
-    if (!(provided->AddCommandWrite(&mtsVFController::SetSensor, &CO_Controller, "SetSensor"))) {
+    if (!(provided->AddCommandWrite(&mtsVFController::SetSensor, CO_Controller_Base, "SetSensor"))) {
         CMN_LOG_CLASS_RUN_ERROR << "SetSensor failed" << std::endl;
-        return false;
-    }
-    if (!(provided->AddCommandWrite(&mtsVFController::SetSensorOffset, &CO_Controller, "SetSensorOffset"))) {
-        CMN_LOG_CLASS_RUN_ERROR << "SetSensorOffset failed" << std::endl;
-        return false;
-    }
-    if (!(provided->AddCommandWrite(&mtsVFController::RemoveSensorFromMap, &CO_Controller, "RemoveSensorFromMap"))) {
-        CMN_LOG_CLASS_RUN_ERROR << "RemoveSensorFromMap failed" << std::endl;
-        return false;
-    }
-    if (!(provided->AddCommandWrite(&mtsVFController::SetKinematics, &CO_Controller, "SetKinematics"))) {
-        CMN_LOG_CLASS_RUN_ERROR << "SetKinematics failed" << std::endl;
-        return false;
-    }
-    if (!(provided->AddCommandWrite(&mtsVFController::RemoveKinematicsFromMap, &CO_Controller, "RemoveKinematicsFromMap"))) {
-        CMN_LOG_CLASS_RUN_ERROR << "RemoveKinematicsFromMap failed" << std::endl;
         return false;
     }
 

@@ -1,5 +1,5 @@
 #
-# (C) Copyright 2014 Johns Hopkins University (JHU), All Rights Reserved.
+# (C) Copyright 2014-2016 Johns Hopkins University (JHU), All Rights Reserved.
 #
 # --- begin cisst license - do not edit ---
 #
@@ -11,7 +11,5 @@
 
 cmake_minimum_required (VERSION 2.8)
 
-project (sawConstraintController)
-
-add_subdirectory (code)
+add_subdirectory (components)
 add_subdirectory (examples)

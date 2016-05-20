@@ -7,9 +7,9 @@ CMN_IMPLEMENT_SERVICES(prmSimpleRobotKinematicsState)
 */
 void prmSimpleRobotKinematicsState::Update()
 {
-    //Fill in with robot-specific implementation
+    //Fill in with robot-specific implementation    
     Jacobian.SetSize(2,2);
     Jacobian.SetAll(0.0);
     Jacobian[0][0] = 1;
-    Jacobian[1][1] = 1;
+    Jacobian[1][1] = 1;    
 }

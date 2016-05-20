@@ -28,7 +28,7 @@
 #include <sawConstraintController/mtsVFController.h>
 #include <cisstParameterTypes/prmVelocityJointSet.h>
 #include <cisstParameterTypes/prmPositionJointSet.h>
-#include <sawConstraintController/mtsRobotTask.h>
+#include "mtsRobotTask.h"
 
 enum {NB_Joints = 2};
 
@@ -41,6 +41,7 @@ private:
 	// Kinematics, joint state, and sensors
     prmSimpleRobotKinematicsState EEKin;
     prmSensorState pedal;   
+    int tickNum;
 
 public:
 
@@ -53,7 +54,24 @@ public:
 
     bool InitializeInterfaces(void);
     bool UpdateRobotStateData(void);
-    bool ValidMotion(const vctDoubleVec & dq) {std::cout << dq << std::endl;return true;}
+    bool ValidMotion(const vctDoubleVec & dq) 
+    {
+        vctDoubleVec ans(2);
+        ans(0) = cos(2*cmnPI*tickNum/100);
+        ans(1) = sin(2*cmnPI*tickNum/100);
+        // std::cout << "Diff: " << (ans-dq).Norm() << std::endl;
+        //std::cout << dq << std::endl;
+        if((ans-dq).Norm() < 0.1)
+        {
+            std::cout << "CO output matches expected results. Diff = " << (ans-dq).Norm() << std::endl;
+            return true;
+        }
+        else
+        {
+            std::cout << "CO output doesn't match expected results. Diff = " << (ans-dq).Norm() << std::endl;
+            return false;
+        }
+    }
 
     // These are implementations of robot-specific virtual methods
     bool CheckWithinLimits(void) {return true;}

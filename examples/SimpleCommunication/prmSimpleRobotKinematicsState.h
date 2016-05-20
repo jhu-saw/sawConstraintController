@@ -1,7 +1,3 @@
-#ifndef _prmSimpleRobotKinematicsState_h
-#define _prmSimpleRobotKinematicsState_h
-
-
 /* -*- Mode: C++; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-    */
 /* ex: set filetype=cpp softtabstop=4 shiftwidth=4 tabstop=4 cindent expandtab: */
 
@@ -22,6 +18,9 @@
  --- end cisst license ---
  */
 
+#ifndef _prmSimpleRobotKinematicsState_h
+#define _prmSimpleRobotKinematicsState_h
+
 #include <sawConstraintController/prmKinematicsState.h>
 
 //! This is a collection of joint and cartesian data relating to a frame
@@ -35,10 +34,11 @@ public:
 
 	/*! Constructor	
 	*/
-    prmSimpleRobotKinematicsState() : prmKinematicsState(){}
+    prmSimpleRobotKinematicsState() : prmKinematicsState(){Update();}
 	/*! Constructor	
 	*/
-    prmSimpleRobotKinematicsState(std::string n, prmJointState * js) : prmKinematicsState(n,js){}
+    prmSimpleRobotKinematicsState(std::string n, prmJointState * js) : prmKinematicsState(n,js){Update();}    
+
 	//! Updates the kinematics information using the pointer to a joint state. 
 	/*! Update
 	*/
