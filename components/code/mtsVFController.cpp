@@ -251,7 +251,7 @@ void mtsVFController::AddVFPlane(const mtsVFDataPlane & vf)
     }
 }
 
-//! Adds/updates an RCM virtual fixture in the map and increments users of kinematics and sensors
+//! Adds/updates a Remote Center of Motion (RCM) virtual fixture in the map and increments users of kinematics and sensors
 /*! AddVFRCM
 @param vf virtual fixture to be added
 */
