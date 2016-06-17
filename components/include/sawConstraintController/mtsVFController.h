@@ -96,7 +96,7 @@ public:
     void UpdateJointVelLimitsVF(const std::string vfName, const vctDoubleVec & UpperLimits, const vctDoubleVec & LowerLimits);
     void UpdateJointPosLimitsVF(const std::string vfName, const vctDoubleVec & UpperLimits, const vctDoubleVec & LowerLimits, const vctDoubleVec & CurrentJoints);
     void UpdatePlaneVF(const std::string vfName, const std::string curKinName);    
-    void UpdateRCMVF(const size_t rows, const std::string vfName, const std::string curKinName);
+    void UpdateRCMVF(const size_t rows, const std::string vfName, const std::string curKinName, const vct3 & RCMPoint, const vctDoubleMat & JacClosest, const vctFrm3 & TipFrame);
 
     nmrConstraintOptimizer GetOptimizer(){return Optimizer;}
 
