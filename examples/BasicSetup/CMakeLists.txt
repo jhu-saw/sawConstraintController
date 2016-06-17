@@ -29,30 +29,22 @@ if (cisst_FOUND)
     find_package (sawConstraintController REQUIRED)
 
     if (sawConstraintController_FOUND)
-        include_directories (${sawConstraintControllerExampleSimpleCommunication_SOURCE_DIR}
+        include_directories (${sawConstraintControllerExampleBasicSetup_SOURCE_DIR}
                              ${sawConstraintController_INCLUDE_DIR})
         link_directories (${sawConstraintController_LIBRARY_DIR})
 
-        add_executable (sawConstraintControllerExampleSimpleCommunication
+        add_executable (sawConstraintControllerExampleBasicSetup
                         main.cpp
-                        mtsSimpleVFController.h
-                        mtsSimpleVFController.cpp
                         mtsRobotTask.cpp
                         mtsRobotTask.h
-                        mtsVFControllerTask.cpp
-                        mtsVFControllerTask.h
-                        mtsVFSenderTask.cpp
-                        mtsVFSenderTask.h
-                        prmSimpleRobotKinematicsState.cpp
-                        prmSimpleRobotKinematicsState.h
                         )
 
-        target_link_libraries (sawConstraintControllerExampleSimpleCommunication
+        target_link_libraries (sawConstraintControllerExampleBasicSetup
                                ${sawConstraintController_LIBRARIES})
 
-        cisst_target_link_libraries (sawConstraintControllerExampleSimpleCommunication ${REQUIRED_CISST_LIBRARIES})
+        cisst_target_link_libraries (sawConstraintControllerExampleBasicSetup ${REQUIRED_CISST_LIBRARIES})
 
-        set_property (TARGET sawConstraintControllerExampleSimpleCommunication PROPERTY FOLDER "sawConstraintController")
+        set_property (TARGET sawConstraintControllerExampleBasicSetup PROPERTY FOLDER "sawConstraintController")
 
     endif (sawConstraintController_FOUND)
 
