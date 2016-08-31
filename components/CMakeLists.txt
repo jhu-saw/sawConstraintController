@@ -23,7 +23,7 @@ set (REQUIRED_CISST_LIBRARIES
      cisstNumerical
      )
 
-find_package (cisst 1.0.1 COMPONENTS ${REQUIRED_CISST_LIBRARIES})
+find_package (cisst 1.0.8 COMPONENTS ${REQUIRED_CISST_LIBRARIES})
 
 if (cisst_FOUND_AS_REQUIRED)
 
@@ -48,8 +48,8 @@ if (cisst_FOUND_AS_REQUIRED)
 
   # Set the version number
   set (sawConstraintController_VERSION_MAJOR "1")
-  set (sawConstraintController_VERSION_MINOR "0")
-  set (sawConstraintController_VERSION_PATCH "2")
+  set (sawConstraintController_VERSION_MINOR "1")
+  set (sawConstraintController_VERSION_PATCH "0")
   set (sawConstraintController_VERSION "${sawConstraintController_VERSION_MAJOR}.${sawConstraintController_VERSION_MINOR}.${sawConstraintController_VERSION_PATCH}")
 
   # Generate sawConstraintControllerRevision.h
