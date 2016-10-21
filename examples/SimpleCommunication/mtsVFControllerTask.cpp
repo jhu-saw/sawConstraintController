@@ -39,7 +39,9 @@ mtsVFControllerTask::mtsVFControllerTask(const std::string & taskName, double pe
     EEKin = prmSimpleRobotKinematicsState("EEKin",&JointState);     
     CO_Controller.SetSimpleRobotKinematics(EEKin);
     pedal = prmSensorState("Pedal");
+    pedal.UserCount = 0;
     pedal.Values.SetSize(1);
+    pedal.Values.SetAll(100.0);
     CO_Controller.SetSensor(pedal);
 
     CO_Controller.ControllerMode = mtsVFBase::JVEL;

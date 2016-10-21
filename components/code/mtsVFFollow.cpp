@@ -18,7 +18,6 @@
 
 #include <sawConstraintController/mtsVFFollow.h>
 #include <stdlib.h>
-#include <cisstNumerical/nmrInverse.h>
 
 CMN_IMPLEMENT_SERVICES(mtsVFFollow)
 

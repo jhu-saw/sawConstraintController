@@ -33,8 +33,8 @@ int main(int, char **)
     mtsComponentManager * localManager = mtsComponentManager::GetInstance();
 
 	//sets up variables
-    mtsVFControllerTask * eyeRobotTask = new mtsVFControllerTask("EyeRobotTask", 5 * cmn_ms);
-    mtsVFSenderTask * VFUserTask = new mtsVFSenderTask("VFUserTask", 5 * cmn_ms);
+    mtsVFControllerTask * eyeRobotTask = new mtsVFControllerTask("EyeRobotTask", 25 * cmn_ms);
+    mtsVFSenderTask * VFUserTask = new mtsVFSenderTask("VFUserTask", 25 * cmn_ms);
 
 	//adds functions	
 	eyeRobotTask->Configure();

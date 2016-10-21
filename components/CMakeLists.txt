@@ -13,6 +13,9 @@ project (sawConstraintController)
 
 cmake_minimum_required (VERSION 2.8)
 
+set(EIGEN3_INCLUDE_DIR "Eigen include directory" CACHE PATH "")
+include_directories(${EIGEN3_INCLUDE_DIR})
+
 set (REQUIRED_CISST_LIBRARIES
      cisstCommon
      cisstVector
@@ -20,7 +23,6 @@ set (REQUIRED_CISST_LIBRARIES
      cisstMultiTask
      cisstParameterTypes
      cisstRobot
-     cisstNumerical
      )
 
 find_package (cisst 1.0.8 COMPONENTS ${REQUIRED_CISST_LIBRARIES})
@@ -90,6 +92,7 @@ if (cisst_FOUND_AS_REQUIRED)
        ${sawConstraintController_HEADER_DIR}/mtsVFAbsoluteJointLimits.h
        ${sawConstraintController_HEADER_DIR}/mtsVFFollow.h
        ${sawConstraintController_HEADER_DIR}/mtsVF_RCM.h
+       ${sawConstraintController_HEADER_DIR}/constraintOptimizer.h
        )
 
   set (SOURCE_FILES
@@ -105,6 +108,8 @@ if (cisst_FOUND_AS_REQUIRED)
        code/mtsVFAbsoluteJointLimits.cpp
        code/mtsVFFollow.cpp
        code/mtsVF_RCM.cpp
+       code/constraintOptimizer.cpp
+       code/eiquadprog.hpp
        )
 
   add_library (sawConstraintController

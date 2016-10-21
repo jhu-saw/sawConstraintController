@@ -22,7 +22,7 @@
 #include <sawConstraintController/prmKinematicsState.h>
 #include <sawConstraintController/prmSensorState.h>
 #include <sawConstraintController/mtsVFDataBase.h>
-#include <cisstNumerical/nmrConstraintOptimizer.h>
+#include <sawConstraintController/constraintOptimizer.h>
 
 // Always include last!
 #include <sawConstraintController/sawConstraintControllerExport.h>

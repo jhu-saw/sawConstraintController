@@ -6,7 +6,6 @@
 #include <cisstVector/vctFixedSizeVectorTypes.h>
 #include <cisstVector/vctDynamicMatrixTypes.h>
 #include <cisstVector/vctFixedSizeVectorTypes.h>
-#include <cisstNumerical/nmrLSqLin.h>
 #include <sawConstraintController/mtsVFJointPos.h>
 #include <sawConstraintController/mtsVFDataRCM.h>
 #include <sawConstraintController/mtsVFBase.h>
