@@ -29,10 +29,4 @@ class {
       visibility public;
     }
 
-    member {
-        name CurrentPos;
-        type vct3;
-        visibility public;
-    }
 }
-
