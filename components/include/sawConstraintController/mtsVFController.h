@@ -36,6 +36,7 @@
 #include <typeinfo>
 #include <sawConstraintController/mtsVFJointLimits.h>
 #include <sawConstraintController/mtsVFAbsoluteJointLimits.h>
+ #include <sawConstraintController/mtsVFCartesianLimits.h>
 #include <sawConstraintController/mtsVFDataJointLimits.h>
 #include <sawConstraintController/mtsVFPlane.h>
 #include <sawConstraintController/mtsVFDataRCM.h>
@@ -94,8 +95,9 @@ public:
 
     void UpdateFollowPathVF(const std::string & vfName, const std::string & CurKinName, const std::string & DesKinName, const bool & UseRotation = false);
     void UpdateJointVelLimitsVF(const std::string vfName, const vctDoubleVec & UpperLimits, const vctDoubleVec & LowerLimits);
+    void UpdateCartVelLimitsVF(const std::string vfName, const std::string kinName, const vctDoubleVec & UpperLimits, const vctDoubleVec & LowerLimits);
     void UpdateJointPosLimitsVF(const std::string vfName, const vctDoubleVec & UpperLimits, const vctDoubleVec & LowerLimits, const vctDoubleVec & CurrentJoints);
-    void UpdatePlaneVF(const std::string vfName, const std::string curKinName);    
+    void UpdatePlaneVF(const std::string vfName, const std::string curKinName, const vct3 plane_point, const vct3 plane_normal);    
     void UpdateRCMVF(const size_t rows, const std::string vfName, const std::string curKinName, const vct3 & RCMPoint, const vctDoubleMat & JacClosest, const vctFrm3 & TipFrame);
 
     nmrConstraintOptimizer GetOptimizer(){return Optimizer;}
@@ -127,6 +129,8 @@ public:
     void AddVFRCM(const mtsVFDataRCM & vf);
 
     void AddVFJointLimits(const mtsVFDataJointLimits & vf);
+
+    void AddVFCartesianLimits(const mtsVFDataJointLimits & vf);
 
     void AddVFAbsoluteJointLimits(const mtsVFDataAbsoluteJointLimits & vf);     
 
@@ -189,6 +193,7 @@ protected:
 
     mtsVFDataBase FollowData;
     mtsVFDataJointLimits JLimitsData;
+    mtsVFDataJointLimits CLimitsData;
     mtsVFDataAbsoluteJointLimits AJLimitsData;
     mtsVFDataPlane PlaneData;
     mtsVFDataRCM RCM_Data;

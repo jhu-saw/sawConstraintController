@@ -51,6 +51,18 @@ void mtsVFController::UpdateJointVelLimitsVF(const std::string vfName, const vct
     AddVFJointLimits(JLimitsData);
 }
 
+void mtsVFController::UpdateCartVelLimitsVF(const std::string vfName, const std::string kinName, const vctDoubleVec & UpperLimits, const vctDoubleVec & LowerLimits)
+{    
+    // todo assert sizes of upper and lower limits  
+    CLimitsData.UpperLimits = UpperLimits;
+    CLimitsData.LowerLimits = LowerLimits;
+    CLimitsData.Name = vfName;
+    CLimitsData.IneqConstraintRows = UpperLimits.size() + LowerLimits.size();
+    CLimitsData.KinNames.clear();
+    CLimitsData.KinNames.push_back(kinName);
+    AddVFJointLimits(CLimitsData);
+}
+
 void mtsVFController::UpdateJointPosLimitsVF(const std::string vfName, const vctDoubleVec & UpperLimits, const vctDoubleVec & LowerLimits, const vctDoubleVec & CurrentJoints)
 {    
     // todo assert sizes of upper and lower limits
@@ -64,12 +76,14 @@ void mtsVFController::UpdateJointPosLimitsVF(const std::string vfName, const vct
     AddVFAbsoluteJointLimits(AJLimitsData);
 }
 
-void mtsVFController::UpdatePlaneVF(const std::string vfName, const std::string curKinName)
+void mtsVFController::UpdatePlaneVF(const std::string vfName, const std::string curKinName, const vct3 plane_point, const vct3 plane_normal)
 {    
     PlaneData.IneqConstraintRows = 1;
     PlaneData.Name = vfName;
     PlaneData.KinNames.clear();
     PlaneData.KinNames.push_back(curKinName);
+    PlaneData.PointOnPlane = plane_point;
+    PlaneData.Normal = plane_normal;
     AddVFPlane(PlaneData);
 }
 
@@ -81,6 +95,7 @@ void mtsVFController::UpdateRCMVF(const size_t rows, const std::string vfName, c
     RCM_Data.KinNames.push_back(curKinName);    
     RCM_Data.JacClosest = JacClosest;    
     RCM_Data.TipFrame = TipFrame;
+    RCM_Data.RCM_Point = RCMPoint;
     AddVFRCM(RCM_Data);
 }
 
@@ -308,6 +323,22 @@ void mtsVFController::AddVFJointLimits(const mtsVFDataJointLimits & vf)
 }
 
 //! Adds/updates a velocity-limiting virtual fixture in the map and increments users of kinematics and sensors
+/*! AddVFCartesianLimits
+@param vf virtual fixture to be added
+*/
+void mtsVFController::AddVFCartesianLimits(const mtsVFDataJointLimits & vf)
+{
+    // If we can find the VF, only change its data. Otherwise, create a new VF object.
+   // if (!SetVFData(vf, typeid(mtsVFJointLimits)))
+   // {
+       // Adds a new virtual fixture to the active vector
+       VFMap.insert(std::pair<std::string,mtsVFCartesianLimits *>(vf.Name,new mtsVFCartesianLimits(vf.Name,new mtsVFDataJointLimits(vf))));
+       // Increment users of each kinematics and sensor object found
+       IncrementUsers(vf.KinNames,vf.SensorNames);
+   // }
+}
+
+//! Adds/updates a velocity-limiting virtual fixture in the map and increments users of kinematics and sensors
 /*! AddVFAbsoluteJointLimits
 @param vf virtual fixture to be added
 */
@@ -384,10 +415,8 @@ bool mtsVFController::ActivateVF(const std::string & s)
     {
         return false;
     }
-    else
-    {
-        itVF->second->Data->Active = true;
-    }
+    itVF->second->Data->Active = true;
+    return true;    
 }
 
 void mtsVFController::DeactivateAll()

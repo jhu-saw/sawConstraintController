@@ -88,6 +88,7 @@ if (cisst_FOUND_AS_REQUIRED)
        ${sawConstraintController_HEADER_DIR}/mtsVFPlane.h
        ${sawConstraintController_HEADER_DIR}/mtsVFJointLimits.h
        ${sawConstraintController_HEADER_DIR}/mtsVFAbsoluteJointLimits.h
+       ${sawConstraintController_HEADER_DIR}/mtsVFCartesianLimits.h
        ${sawConstraintController_HEADER_DIR}/mtsVFFollow.h
        ${sawConstraintController_HEADER_DIR}/mtsVF_RCM.h
        )
@@ -103,6 +104,7 @@ if (cisst_FOUND_AS_REQUIRED)
        code/mtsVFPlane.cpp
        code/mtsVFJointLimits.cpp
        code/mtsVFAbsoluteJointLimits.cpp
+       code/mtsVFCartesianLimits.cpp
        code/mtsVFFollow.cpp
        code/mtsVF_RCM.cpp
        )
