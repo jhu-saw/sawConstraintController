@@ -21,8 +21,7 @@ set (REQUIRED_CISST_LIBRARIES
      cisstVector
      cisstOSAbstraction
      cisstMultiTask
-     cisstParameterTypes
-     cisstRobot
+     cisstParameterTypes     
      )
 
 find_package (cisst 1.0.8 COMPONENTS ${REQUIRED_CISST_LIBRARIES})
