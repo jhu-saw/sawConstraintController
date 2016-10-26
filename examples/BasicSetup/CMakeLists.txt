@@ -17,8 +17,7 @@ set (REQUIRED_CISST_LIBRARIES
      cisstOSAbstraction
      cisstNumerical
      cisstMultiTask
-     cisstParameterTypes
-     cisstRobot)
+     cisstParameterTypes)
 
 find_package (cisst REQUIRED)
 
