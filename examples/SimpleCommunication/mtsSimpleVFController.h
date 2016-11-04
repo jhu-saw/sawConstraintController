@@ -24,7 +24,7 @@
 
 /*! \brief mtsSimpleVFController: A class that is responsible for managing the virtual fixtures, relevant state data, and the control optimizer
  */
-class CISST_EXPORT mtsSimpleVFController: public mtsVFController
+class mtsSimpleVFController: public mtsVFController
 {
     CMN_DECLARE_SERVICES(CMN_NO_DYNAMIC_CREATION, CMN_LOG_LOD_RUN_VERBOSE);
 

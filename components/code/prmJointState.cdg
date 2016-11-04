@@ -1,8 +1,11 @@
 inline-header {
 #include <cisstVector/vctDynamicVectorTypes.h>
+#include <sawConstraintController/sawConstraintControllerExport.h>
 }
 class {
     name prmJointState;
+
+    attribute CISST_EXPORT;
 
     member {    
       name JointPosition;

@@ -25,10 +25,7 @@
 
 #include <sawConstraintController/prmJointState.h>
 
-// Always include last!
-#include <sawConstraintController/sawConstraintControllerExport.h>
-
-class CISST_EXPORT mtsRobotTask: public mtsTaskPeriodic
+class mtsRobotTask: public mtsTaskPeriodic
 {
     CMN_DECLARE_SERVICES(CMN_NO_DYNAMIC_CREATION, CMN_LOG_LOD_RUN_VERBOSE);
 
