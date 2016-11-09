@@ -66,8 +66,7 @@ if (cisst_FOUND_AS_REQUIRED)
                         code/prmKinematicsState.cdg
                         code/prmOffsetState.cdg
                         code/prmSensorState.cdg
-                        code/mtsVFDataCartesianTranslation.cdg
-                        code/prmJointState.cdg
+                        code/mtsVFDataCartesianTranslation.cdg                        
                         code/mtsVFDataPlane.cdg
                         code/mtsVFDataJointLimits.cdg
                         code/mtsVFDataAbsoluteJointLimits.cdg
@@ -89,7 +88,10 @@ if (cisst_FOUND_AS_REQUIRED)
        ${sawConstraintController_HEADER_DIR}/mtsVFAbsoluteJointLimits.h
        ${sawConstraintController_HEADER_DIR}/mtsVFCartesianLimits.h
        ${sawConstraintController_HEADER_DIR}/mtsVFFollow.h
+       ${sawConstraintController_HEADER_DIR}/mtsVFFollowPath.h
        ${sawConstraintController_HEADER_DIR}/mtsVF_RCM.h
+       ${sawConstraintController_HEADER_DIR}/roPath.h
+       ${sawConstraintController_HEADER_DIR}/roPathSegment.h
        )
 
   set (SOURCE_FILES
@@ -105,7 +107,10 @@ if (cisst_FOUND_AS_REQUIRED)
        code/mtsVFAbsoluteJointLimits.cpp
        code/mtsVFCartesianLimits.cpp
        code/mtsVFFollow.cpp
+       code/mtsVFFollowPath.cpp
        code/mtsVF_RCM.cpp
+       code/roPath.cpp
+       code/roPathSegment.cpp
        )
 
   add_library (sawConstraintController
