@@ -1,5 +1,5 @@
 inline-header {
-#include <sawConstraintController/prmJointState.h>
+#include <cisstParameterTypes/prmStateJoint.h>
 #include <cisstVector/vctDynamicMatrixTypes.h>
 // Always include last!
 #include <sawConstraintController/sawConstraintControllerExport.h>
@@ -68,7 +68,7 @@ class {
     //! A pointer to the joint values associated with the kinematics frame
     member {
       name JointState;
-      type prmJointState*;
+      type prmStateJoint*;
       visibility public;
       default 0;
       is-data false;
@@ -84,7 +84,7 @@ class {
 
             /*! Constructor
             */
-            prmKinematicsState(const std::string & n, prmJointState * js);
+            prmKinematicsState(const std::string & n, prmStateJoint * js);
 
             //! Updates the kinematics information using the pointer to a joint state.
             /*! Update
@@ -96,7 +96,7 @@ class {
 inline-code {
 
     /*! Constructor */
-    prmKinematicsState::prmKinematicsState(const std::string & n, prmJointState * js)
+    prmKinematicsState::prmKinematicsState(const std::string & n, prmStateJoint * js)
     {
         Name = n;
         UserCount = 0;

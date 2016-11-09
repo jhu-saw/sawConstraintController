@@ -31,11 +31,13 @@ mtsVFControllerTask::mtsVFControllerTask(const std::string & taskName, double pe
     CO_Controller = mtsSimpleVFController(NB_Joints,mtsVFBase::JVEL);
     ControllerOutput.SetSize(NB_Joints);
 
-	//Kinematics objects	
-    JointState.JointPosition.SetSize(NB_Joints);
-    JointState.JointVelocity.SetSize(NB_Joints);
-    JointState.JointPosition.SetAll(0);
-    JointState.JointVelocity.SetAll(0);
+	//Kinematics objects
+    vctDoubleVec JP(NB_Joints);
+    JP.SetAll(0.0);
+    JointState.SetPosition(JP);
+    vctDoubleVec JV(NB_Joints);
+    JV.SetAll(0.0);
+    JointState.SetVelocity(JV);
     EEKin = prmSimpleRobotKinematicsState("EEKin",&JointState);     
     CO_Controller.SetSimpleRobotKinematics(EEKin);
     pedal = prmSensorState("Pedal");

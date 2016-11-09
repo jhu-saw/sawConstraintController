@@ -36,12 +36,13 @@
 #include <typeinfo>
 #include <sawConstraintController/mtsVFJointLimits.h>
 #include <sawConstraintController/mtsVFAbsoluteJointLimits.h>
- #include <sawConstraintController/mtsVFCartesianLimits.h>
+#include <sawConstraintController/mtsVFCartesianLimits.h>
 #include <sawConstraintController/mtsVFDataJointLimits.h>
 #include <sawConstraintController/mtsVFPlane.h>
 #include <sawConstraintController/mtsVFDataRCM.h>
 #include <sawConstraintController/mtsVF_RCM.h>
 #include <sawConstraintController/mtsVFFollow.h>
+#include <cisstParameterTypes/prmStateJoint.h>
 
 // Always include last!
 #include <sawConstraintController/sawConstraintControllerExport.h>
@@ -170,7 +171,7 @@ protected:
     std::map<std::string, prmSensorState *> Sensors;
 
     //robot joint state
-    prmJointState JointState;
+    prmStateJoint JointState;
 
     //control optimizer variables
     nmrConstraintOptimizer Optimizer;

@@ -60,13 +60,14 @@ void mtsRobotTask::Run()
 
     // Joint state object that may be used for joint constraints or fed into a kinematics object to construct frame, jacobian, etc
     // That logic not used in this example, numbers are just hard-coded in
-    CurrentJointState.JointPosition = vctDoubleVec(6);
-    CurrentJointState.JointPosition(0) = -1.6007;
-    CurrentJointState.JointPosition(1) = -1.7271;
-    CurrentJointState.JointPosition(2) = -2.203;
-    CurrentJointState.JointPosition(3) = -0.808;
-    CurrentJointState.JointPosition(4) = 1.5951;
-    CurrentJointState.JointPosition(5) = -0.031;
+    vctDoubleVec JP(6);    
+    JP(0) = -1.6007;
+    JP(1) = -1.7271;
+    JP(2) = -2.203;
+    JP(3) = -0.808;
+    JP(4) = 1.5951;
+    JP(5) = -0.031;
+    CurrentJointState.SetPosition(JP);
 
     // The frame for current kinematics is just the EE of the UR5 at the time of the snapshot    
     CurrentKinematics.Frame.Rotation()(0,0) = -0.974038;

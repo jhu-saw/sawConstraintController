@@ -38,8 +38,8 @@ void mtsVFJointPosition::FillInTableauRefs(const mtsVFBase::CONTROLLERMODE mode,
     }
 
     //Current joint position
-    vctDoubleVec * CurrQ = new vctDoubleVec();
-    CurrQ->Assign(Kinematics.at(0)->JointState->JointPosition);
+    vctDoubleVec CurrQ;
+    Kinematics.at(0)->JointState->GetPosition(CurrQ);
 
     double Scale = 1.0;
     if(mode == JVEL)
@@ -50,11 +50,11 @@ void mtsVFJointPosition::FillInTableauRefs(const mtsVFBase::CONTROLLERMODE mode,
     //A(dq + q) >= b
     //A*Scale*dq >= Scale*(b - A*q)
     ObjectiveMatrixRef.Assign(Data->ObjectiveMatrix*Scale*Data->Importance);
-    ObjectiveVectorRef.Assign((Data->ObjectiveVector - Data->ObjectiveMatrix*(*CurrQ))*Scale*Data->Importance);
+    ObjectiveVectorRef.Assign((Data->ObjectiveVector - Data->ObjectiveMatrix*CurrQ)*Scale*Data->Importance);
     IneqConstraintMatrixRef.Assign(Data->IneqConstraintMatrix*Scale);
-    IneqConstraintVectorRef.Assign((Data->IneqConstraintVector - Data->IneqConstraintMatrix*(*CurrQ))*Scale);
+    IneqConstraintVectorRef.Assign((Data->IneqConstraintVector - Data->IneqConstraintMatrix*CurrQ)*Scale);
     EqConstraintMatrixRef.Assign(Data->EqConstraintMatrix*Scale);
-    EqConstraintVectorRef.Assign((Data->EqConstraintVector - Data->EqConstraintMatrix*(*CurrQ))*Scale);
+    EqConstraintVectorRef.Assign((Data->EqConstraintVector - Data->EqConstraintMatrix*CurrQ)*Scale);
 
     for(size_t i = 0; i < Data->NumSlacks; i++)
     {

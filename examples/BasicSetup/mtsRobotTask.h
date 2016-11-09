@@ -21,7 +21,7 @@
 
 #include <cisstMultiTask/mtsTaskPeriodic.h>
 
-#include <sawConstraintController/prmJointState.h>
+#include <cisstParameterTypes/prmStateJoint.h>
 #include <sawConstraintController/mtsVFController.h>
 
 class mtsRobotTask: public mtsTaskPeriodic
@@ -38,7 +38,7 @@ protected:
 
     prmKinematicsState CurrentKinematics, DesiredKinematics;
 
-    prmJointState CurrentJointState; 
+    prmStateJoint CurrentJointState; 
 
     vctDoubleMat Jacobian;    
 

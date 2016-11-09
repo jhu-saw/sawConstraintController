@@ -69,6 +69,9 @@ void mtsRobotTask::Run()
             //Check if the CO output is a valid movement of the robot
             bool valid_velocity = ValidMotion(ControllerOutput);
 
+            vctDoubleVec JS;
+            JointState.GetPosition(JS);
+
             if(valid_velocity && OptimizerStatus == nmrConstraintOptimizer::NMR_OK)
             {
                 switch(CO_Controller.ControllerMode)
@@ -81,8 +84,8 @@ void mtsRobotTask::Run()
                                 JointVelocityMove(ControllerOutput/this->GetPeriodicity());
                                 break;
                             //Incremental joint position mode
-                            case JPOS:
-                                JointPositionMove(ControllerOutput + JointState.JointPosition);
+                            case JPOS:                                
+                                JointPositionMove(ControllerOutput + JS);
                                 break;
                             default:
                                 CMN_LOG_CLASS_RUN_ERROR << "Invalid task mode" << std::endl;
@@ -98,7 +101,7 @@ void mtsRobotTask::Run()
                                 break;
                             //Incremental joint position mode
                             case JPOS:
-                                JointPositionMove(this->GetPeriodicity()*ControllerOutput + JointState.JointPosition);
+                                JointPositionMove(this->GetPeriodicity()*ControllerOutput + JS);
                                 break;
                             default:
                                 CMN_LOG_CLASS_RUN_ERROR << "Invalid task mode" << std::endl;

@@ -37,7 +37,7 @@ public:
     prmSimpleRobotKinematicsState() : prmKinematicsState(){Update();}
 	/*! Constructor	
 	*/
-    prmSimpleRobotKinematicsState(std::string n, prmJointState * js) : prmKinematicsState(n,js){Update();}    
+    prmSimpleRobotKinematicsState(std::string n, prmStateJoint * js) : prmKinematicsState(n,js){Update();}    
 
 	//! Updates the kinematics information using the pointer to a joint state. 
 	/*! Update

@@ -20,10 +20,9 @@
 #define _mtsRobotTask_h
 
 #include <cisstMultiTask/mtsTaskPeriodic.h>
+#include <cisstParameterTypes/prmStateJoint.h>
 
 #include "mtsSimpleVFController.h"
-
-#include <sawConstraintController/prmJointState.h>
 
 class mtsRobotTask: public mtsTaskPeriodic
 {
@@ -37,7 +36,7 @@ protected:
     mtsSimpleVFController CO_Controller;    
 
     //Joint position and velocities
-    prmJointState JointState;
+    prmStateJoint JointState;
 
     //Contains controller output
     vctDoubleVec ControllerOutput;
