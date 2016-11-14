@@ -88,7 +88,7 @@ if (cisst_FOUND_AS_REQUIRED)
        ${sawConstraintController_HEADER_DIR}/mtsVFAbsoluteJointLimits.h
        ${sawConstraintController_HEADER_DIR}/mtsVFCartesianLimits.h
        ${sawConstraintController_HEADER_DIR}/mtsVFFollow.h
-       ${sawConstraintController_HEADER_DIR}/mtsVFFollowPath.h
+#       ${sawConstraintController_HEADER_DIR}/mtsVFFollowPath.h
        ${sawConstraintController_HEADER_DIR}/mtsVF_RCM.h
        ${sawConstraintController_HEADER_DIR}/roPath.h
        ${sawConstraintController_HEADER_DIR}/roPathSegment.h
@@ -107,7 +107,7 @@ if (cisst_FOUND_AS_REQUIRED)
        code/mtsVFAbsoluteJointLimits.cpp
        code/mtsVFCartesianLimits.cpp
        code/mtsVFFollow.cpp
-       code/mtsVFFollowPath.cpp
+#       code/mtsVFFollowPath.cpp
        code/mtsVF_RCM.cpp
        code/roPath.cpp
        code/roPathSegment.cpp
