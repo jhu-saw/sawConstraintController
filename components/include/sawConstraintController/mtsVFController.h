@@ -19,7 +19,11 @@
 #ifndef _mtsVFController_h
 #define _mtsVFController_h
 
+#if sawConstraintController_USE_EIGEN
+#include <sawConstraintController/constraintOptimizer.h>
+#else
 #include <cisstNumerical/nmrConstraintOptimizer.h>
+#endif
 
 #include <sawConstraintController/mtsVFBase.h>
 #include <sawConstraintController/mtsVFJointVel.h>

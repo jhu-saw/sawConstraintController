@@ -13,6 +13,21 @@ project (sawConstraintController)
 
 cmake_minimum_required (VERSION 2.8)
 
+if(SAW_sawConstraintController_USE_EIGEN)
+
+set(EIGEN3_INCLUDE_DIR "Eigen include directory" CACHE PATH "")
+include_directories(${EIGEN3_INCLUDE_DIR})
+
+set (REQUIRED_CISST_LIBRARIES
+     cisstCommon
+     cisstVector
+     cisstOSAbstraction
+     cisstMultiTask
+     cisstParameterTypes     
+     )
+
+else(SAW_sawConstraintController_USE_EIGEN)
+
 set (REQUIRED_CISST_LIBRARIES
      cisstCommon
      cisstVector
@@ -21,6 +36,8 @@ set (REQUIRED_CISST_LIBRARIES
      cisstParameterTypes     
      cisstNumerical
      )
+
+endif(SAW_sawConstraintController_USE_EIGEN)
 
 find_package (cisst 1.0.8 COMPONENTS ${REQUIRED_CISST_LIBRARIES})
 
@@ -75,6 +92,51 @@ if (cisst_FOUND_AS_REQUIRED)
   include_directories (${sawConstraintController_INCLUDE_DIR})
   set (sawConstraintController_HEADER_DIR "include/sawConstraintController")
 
+if(SAW_sawConstraintController_USE_EIGEN)
+
+  set (HEADER_FILES
+       ${sawConstraintController_HEADER_DIR}/mtsVFBase.h
+       ${sawConstraintController_HEADER_DIR}/mtsVFJointVel.h
+       ${sawConstraintController_HEADER_DIR}/mtsVFJointPos.h
+       ${sawConstraintController_HEADER_DIR}/mtsVFCartVel.h
+       ${sawConstraintController_HEADER_DIR}/mtsVFCartOrientationVel.h
+       ${sawConstraintController_HEADER_DIR}/mtsVFSensorCompliance.h
+       ${sawConstraintController_HEADER_DIR}/mtsVFController.h
+       ${sawConstraintController_HEADER_DIR}/mtsVFPlane.h
+       ${sawConstraintController_HEADER_DIR}/mtsVFJointLimits.h
+       ${sawConstraintController_HEADER_DIR}/mtsVFAbsoluteJointLimits.h
+       ${sawConstraintController_HEADER_DIR}/mtsVFCartesianLimits.h
+       ${sawConstraintController_HEADER_DIR}/mtsVFFollow.h
+#       ${sawConstraintController_HEADER_DIR}/mtsVFFollowPath.h
+       ${sawConstraintController_HEADER_DIR}/mtsVF_RCM.h
+       ${sawConstraintController_HEADER_DIR}/roPath.h
+       ${sawConstraintController_HEADER_DIR}/roPathSegment.h
+       ${sawConstraintController_HEADER_DIR}/constraintOptimizer.h
+       )
+
+  set (SOURCE_FILES
+       code/mtsVFBase.cpp
+       code/mtsVFJointVel.cpp
+       code/mtsVFJointPos.cpp
+       code/mtsVFCartVel.cpp
+       code/mtsVFCartOrientationVel.cpp
+       code/mtsVFSensorCompliance.cpp
+       code/mtsVFController.cpp
+       code/mtsVFPlane.cpp
+       code/mtsVFJointLimits.cpp
+       code/mtsVFAbsoluteJointLimits.cpp
+       code/mtsVFCartesianLimits.cpp
+       code/mtsVFFollow.cpp
+#       code/mtsVFFollowPath.cpp
+       code/mtsVF_RCM.cpp
+       code/roPath.cpp
+       code/roPathSegment.cpp
+       code/constraintOptimizer.cpp
+       code/eiquadprog.hpp
+       )
+
+else(SAW_sawConstraintController_USE_EIGEN)
+
   set (HEADER_FILES
        ${sawConstraintController_HEADER_DIR}/mtsVFBase.h
        ${sawConstraintController_HEADER_DIR}/mtsVFJointVel.h
@@ -112,6 +174,8 @@ if (cisst_FOUND_AS_REQUIRED)
        code/roPath.cpp
        code/roPathSegment.cpp
        )
+
+endif(SAW_sawConstraintController_USE_EIGEN)
 
   add_library (sawConstraintController
                ${HEADER_FILES}
