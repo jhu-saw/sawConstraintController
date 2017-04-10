@@ -23,7 +23,7 @@ CMN_IMPLEMENT_SERVICES(mtsVFAbsoluteJointLimits)
 //! Updates co with virtual fixture data.
 /*! FillInTableauRefs
 */
-void mtsVFAbsoluteJointLimits::FillInTableauRefs(const CONTROLLERMODE mode, const double TickTime)
+void mtsVFAbsoluteJointLimits::FillInTableauRefs(const CONTROLLERMODE CMN_UNUSED(mode), const double TickTime)
 {    
 //std::cout << "Absolute JL" << std::endl;
     /*

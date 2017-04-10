@@ -23,7 +23,7 @@ CMN_IMPLEMENT_SERVICES(mtsVFSensorCompliance);
 //! Updates co with virtual fixture data.
 /*! FillInTableauRefs
 */
-void mtsVFSensorCompliance::FillInTableauRefs(const CONTROLLERMODE mode, const double TickTime)
+void mtsVFSensorCompliance::FillInTableauRefs(const CONTROLLERMODE CMN_UNUSED(mode), const double TickTime)
 {
     // fill in refs
     // min || J(q)*dq - gain*overallGain*sensorValues ||

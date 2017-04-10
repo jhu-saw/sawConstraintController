@@ -23,7 +23,7 @@ CMN_IMPLEMENT_SERVICES(mtsVFPlane)
 //! Updates co with virtual fixture data.
 /*! FillInTableauRefs
 */
-void mtsVFPlane::FillInTableauRefs(const CONTROLLERMODE mode, const double TickTime)
+void mtsVFPlane::FillInTableauRefs(const CONTROLLERMODE CMN_UNUSED(mode), const double TickTime)
 {    
     /*
          Fill in refs
@@ -79,8 +79,8 @@ void mtsVFPlane::FillInTableauRefs(const CONTROLLERMODE mode, const double TickT
 
 
     vctDynamicMatrix<double> Jacobian3x6( 3, 6, VCT_COL_MAJOR );
-    for (int i = 0; i < Jacobian3x6.rows(); ++i)
-        for (int j = 0; j < Jacobian3x6.cols(); ++j)
+    for (size_t i = 0; i < Jacobian3x6.rows(); ++i)
+        for (size_t j = 0; j < Jacobian3x6.cols(); ++j)
             Jacobian3x6.at(i,j) = CurrentKinematics->Jacobian.at(i,j);
 
     IneqConstraintVectorRef.Assign(vct1(d - vct1(vctDotProduct(planeData->Normal, CurrentPos))));

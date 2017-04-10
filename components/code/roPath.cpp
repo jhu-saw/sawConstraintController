@@ -129,7 +129,7 @@ vctFrm3 roPath::GetClosestPointOnPath(const vctFrm3 &inFrame, double rotToTransF
 
   for (unsigned int i = 0; i < HeadSegments.size(); ++i)
   {
-    bool r = HeadSegments.at(i)->GetClosestPoint(inPoseVec, rotToTransFactor, poseOnPath, distToPoint, distAlongVecToPoint);
+      // bool r = HeadSegments.at(i)->GetClosestPoint(inPoseVec, rotToTransFactor, poseOnPath, distToPoint, distAlongVecToPoint);
     
     //while(poseOnPath[3] < cmnPI/2.0)
     //{
@@ -463,7 +463,7 @@ bool roPath::GetLastFrame(vctFrm3 &frame) {
 
 void roPath::GetHeadTails(vctDoubleMat &m) const {
     m.resize(HeadPos.size(), 6);
-    typedef vctDynamicMatrix<double> MatrixType;
+//    typedef vctDynamicMatrix<double> MatrixType;
 
     for (unsigned int i = 0; i < HeadPos.size(); ++i)
     {

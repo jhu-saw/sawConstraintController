@@ -2,7 +2,7 @@
 
 CMN_IMPLEMENT_SERVICES(mtsVF_RCM);
 
-void mtsVF_RCM::FillInTableauRefs(const CONTROLLERMODE mode, const double TickTime)
+void mtsVF_RCM::FillInTableauRefs(const CONTROLLERMODE CMN_UNUSED(mode), const double TickTime)
 {
 
     mtsVFDataRCM * RCM_Data = (mtsVFDataRCM*)(Data);
