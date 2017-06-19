@@ -163,8 +163,6 @@ public:
     //! Solves the constraint optimization problem and fills the result into the parameter
     nmrConstraintOptimizer::STATUS Solve(vctDoubleVec & dq);
 
-protected:
-
     //map between string names and pointers to virtual fixtures
     std::map<std::string, mtsVFBase *> VFMap;
 
