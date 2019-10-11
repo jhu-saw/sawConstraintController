@@ -36,7 +36,7 @@ class CISST_EXPORT mtsVFBase: public mtsGenericObject
 
 public:
 
-    enum CONTROLLERMODE {JPOS = 1, JVEL = 2, CARTPOS = 3, CARTVEL = 4};
+    enum CONTROLLERMODE {JPOS = 1, JVEL = 2};
 
     //! Name of the virtual fixture
     std::string Name;
