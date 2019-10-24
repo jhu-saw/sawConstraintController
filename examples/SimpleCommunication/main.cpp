@@ -19,6 +19,7 @@
  */
 
 #include <cisstOSAbstraction/osaSleep.h>
+#include <cisstMultiTask/mtsManagerLocal.h>
 
 #include "mtsVFControllerTask.h"
 #include "mtsVFSenderTask.h"

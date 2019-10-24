@@ -18,8 +18,10 @@
  --- end cisst license ---
  */
 
-#include <cisstOSAbstraction/osaSleep.h>
 #include <cisstCommon/cmnPath.h>
+#include <cisstOSAbstraction/osaSleep.h>
+#include <cisstMultiTask/mtsManagerLocal.h>
+
 #include "mtsRobotTask.h"
 
 int main(int, char **)
