@@ -150,6 +150,7 @@ else(SAW_sawConstraintController_USE_EIGEN)
        ${sawConstraintController_HEADER_DIR}/mtsVFAbsoluteJointLimits.h
        ${sawConstraintController_HEADER_DIR}/mtsVFCartesianLimits.h
        ${sawConstraintController_HEADER_DIR}/mtsVFFollow.h
+       ${sawConstraintController_HEADER_DIR}/mtsVFLimitsConstraint.h
 #       ${sawConstraintController_HEADER_DIR}/mtsVFFollowPath.h
        ${sawConstraintController_HEADER_DIR}/mtsVF_RCM.h
        ${sawConstraintController_HEADER_DIR}/roPath.h
@@ -157,23 +158,24 @@ else(SAW_sawConstraintController_USE_EIGEN)
        )
 
   set (SOURCE_FILES
-       code/mtsVFBase.cpp
-       code/mtsVFJointVel.cpp
-       code/mtsVFJointPos.cpp
-       code/mtsVFCartVel.cpp
-       code/mtsVFCartOrientationVel.cpp
-       code/mtsVFSensorCompliance.cpp
-       code/mtsVFController.cpp
-       code/mtsVFPlane.cpp
-       code/mtsVFJointLimits.cpp
-       code/mtsVFAbsoluteJointLimits.cpp
-       code/mtsVFCartesianLimits.cpp
-       code/mtsVFFollow.cpp
-#       code/mtsVFFollowPath.cpp
-       code/mtsVF_RCM.cpp
-       code/roPath.cpp
-       code/roPathSegment.cpp
-       )
+      code/mtsVFBase.cpp
+      code/mtsVFJointVel.cpp
+      code/mtsVFJointPos.cpp
+      code/mtsVFCartVel.cpp
+      code/mtsVFCartOrientationVel.cpp
+      code/mtsVFSensorCompliance.cpp
+      code/mtsVFController.cpp
+      code/mtsVFPlane.cpp
+      code/mtsVFJointLimits.cpp
+      code/mtsVFAbsoluteJointLimits.cpp
+      code/mtsVFCartesianLimits.cpp
+      code/mtsVFFollow.cpp
+      code/mtsVFLimitsConstraint.cpp
+      #       code/mtsVFFollowPath.cpp
+      code/mtsVF_RCM.cpp
+      code/roPath.cpp
+      code/roPathSegment.cpp
+)
 
 endif(SAW_sawConstraintController_USE_EIGEN)
 
