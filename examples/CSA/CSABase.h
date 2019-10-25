@@ -15,9 +15,9 @@
 #include <sawConstraintController/prmKinematicsState.h>
 #include <sawConstraintController/prmSensorState.h>
 
-class CSABase: cmnGenericObject {
+class CSABase: mtsVFController {
 public:
-    CSABase(const int &numDoF, const int &numJoints, mtsComponent *component);
+    CSABase(const int &_numDoF, const int &_numJoints, mtsVFBase::CONTROLLERMODE _controlMode, mtsComponent *_component);
     virtual ~CSABase(){};
     
     // initialize
@@ -25,7 +25,6 @@ public:
     virtual void setupRobotInterface(); // setup robot required/provided interfaces
     virtual void setupVFInterface(); // setup vf required/provided interfaces
     virtual void initParameters(); // to be overridden, other initialization needed for base type
-    void initVFController(const mtsVFBase::CONTROLLERMODE controllermode);
     virtual void initKinematicName();
     virtual void initSensorName();
 
@@ -40,7 +39,6 @@ public:
     virtual void setVFData();
 
 private:
-    mtsVFController  *mVfController;  // Constraint controller
     mtsStateTable* mVFStateTable; // state table for virtual fixture data
 
     int mNumDoF;

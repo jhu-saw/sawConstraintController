@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 2.8.3)
 
+project(csa_example)
 ## Compile as C++11, supported in ROS Kinetic and newer
 # add_compile_options(-std=c++11)
 
@@ -31,34 +32,44 @@ if (cisst_FOUND)
     # load cisst configuration
     include (${CISST_USE_FILE})
 
+    # find include in catkin space
+    include_directories (${catkin_INCLUDE_DIRS})
+    file (MAKE_DIRECTORY "${CATKIN_DEVEL_PREFIX}/include")
+    catkin_package (INCLUDE_DIRS "${CATKIN_DEVEL_PREFIX}/include"
+                  CATKIN_DEPENDS cisst_ros_bridge geometry_msgs roscpp std_msgs)
+
     # find pacage
     find_package (sawConstraintController REQUIRED)
     include_directories(${sawConstraintController_INCLUDE_DIR})
-    message(${sawConstraintController_INCLUDE_DIR})
     link_directories(${sawConstraintController_LIBRARY_DIR})
-    message(${sawConstraintController_LIBRARY_DIR})
 
     # include directories
     include_directories (${sawConstraintController_INCLUDE_DIR})
     set(HEADER_DIR "${CMAKE_CURRENT_SOURCE_DIR}")
-    message(${HEADER_DIR})
 
     # set header/source files
     set(HEADER_FILES
-            ${HEADER_DIR}/CSABase.h
+#            ${HEADER_DIR}/CSABase.h
             ${HEADER_DIR}/simpleRobot.h)
     set(SOURCE_FILES
-            main.cpp
-            CSABase.cpp
+#            CSABase.cpp
             simpleRobot.cpp)
 
     # add executable
     add_executable(csaConstraintController
+            main.cpp
             ${HEADER_FILES}
             ${SOURCE_FILES})
 
     # link libraries
     cisst_target_link_libraries(csaConstraintController ${REQUIRED_CISST_LIBRARIES})
-    target_link_libraries(csaConstraintController ${sawConstraintController_LIBRARIES})
+    target_link_libraries(csaConstraintController ${sawConstraintController_LIBRARIES}
+            ${catkin_LIBRARIES})
 
+#    set_target_properties(csaConstraintController
+#            PROPERTIES
+#            CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}
+#            CMAKE_RUNTIME_OUTPUT_DIRECTORY  ${CMAKE_BINARY_DIR}
+#            )
+#    message(${CMAKE_BINARY_DIR})
 endif(cisst_FOUND)

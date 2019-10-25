@@ -4,7 +4,8 @@
 
 #include "CSABase.h"
 
-CSABase::CSABase(const int &_numDoF, const int &_numJoints, mtsComponent *_component):
+CSABase::CSABase(const int &_numDoF, const int &_numJoints, mtsVFBase::CONTROLLERMODE _controlMode, mtsComponent *_component):
+    mtsVFController(_numDoF,_controlMode),
     mNumDoF(_numDoF),
     mNumJoints(_numJoints),
     mRobot(_component)
@@ -19,8 +20,6 @@ void CSABase::init() {
     setupRobotInterface();
     // call vf setup interfaces
     setupVFInterface();
-    // initialize controller
-    initVFController(mtsVFBase::JPOS);
 }
 
 void CSABase::initParameters() {
@@ -55,10 +54,6 @@ void CSABase::setupVFInterface() {
     mVFStateTable->Start();
 }
 
-void CSABase::initVFController(const mtsVFBase::CONTROLLERMODE controllermode) {
-    mVfController = new mtsVFController(mNumDoF, controllermode);
-}
-
 void CSABase::readStateInfo() {
     // advance statetable
     mVFStateTable->Advance();
@@ -83,12 +78,12 @@ void CSABase::readVirtualFixture() {
 
 void CSABase::solve(vctDoubleVec & dq) {
     // set kinematics
-    mVfController->SetKinematics(mMeasuredKinematics);
-    mVfController->SetKinematics(mGoalKinematics);
+    mtsVFController::SetKinematics(mMeasuredKinematics);
+    mtsVFController::SetKinematics(mGoalKinematics);
 
     // set sensor
-    mVfController->SetSensor(mMeasuredSensor);
-    mVfController->SetSensor(mGoalSensor);
+    mtsVFController::SetSensor(mMeasuredSensor);
+    mtsVFController::SetSensor(mGoalSensor);
 
     // set vf
     setVFData();
@@ -96,7 +91,7 @@ void CSABase::solve(vctDoubleVec & dq) {
 //    mVfController->UpdateOptimizer(mRobot->StateTable.GetAveragePeriod());
 
     // solve
-    mVfController->Solve(dq);
+    mtsVFController::Solve(dq);
 }
 
 void CSABase::setVFData() {
