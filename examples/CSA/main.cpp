@@ -3,9 +3,11 @@
 //
 
 #include "simpleRobot.h"
+#include "teleop.h"
 #include <cstdio>
 #include <cisst_ros_bridge/mtsROSBridge.h>
-#include <cisstMultiTask/mtsComponent.h>
+#include <cisstOSAbstraction/osaSleep.h>
+
 
 int main(int argc, char ** argv){
     // component manager
@@ -16,15 +18,23 @@ int main(int argc, char ** argv){
 
     // add robot to manager
     componentManger->AddComponent(&robot);
+
     // add ros bridge
     mtsROSBridge * subscribers = new mtsROSBridge("subscribers", 0.1 * cmn_ms, true /* spin */);
-    subscribers->AddSubscriberToCommandWrite<mtsFrm4x4, geometry_msgs::TransformStamped>("RequiresSimpleRobot",
-                                             "ServoCartesianRelative",
-                                             "/simple_robot/servo_cr");
+    subscribers->AddSubscriberToCommandWrite<vctFrm4x4, geometry_msgs::PoseStamped>("RequiresSimpleRobot",
+                                             "ServoCartesianPosition",
+                                             "/simple_robot/servo_cp");
     componentManger->AddComponent(subscribers);
+    mtsROSBridge * publishers = new mtsROSBridge("publishers", 5 * cmn_ms);
+    publishers->AddPublisherFromCommandRead<prmPositionCartesianGet, geometry_msgs::PoseStamped>("RequiresSimpleRobot",
+                                             "GetMeasuredCartesianPosition",
+                                             "/simple_robot/measured_cp");
+    componentManger->AddComponent(publishers);
 
     // connect components
     componentManger->Connect(subscribers->GetName(), "RequiresSimpleRobot",
+            robot.GetName(), "ProvidesSimpleRobot");
+    componentManger->Connect(publishers->GetName(), "RequiresSimpleRobot",
             robot.GetName(), "ProvidesSimpleRobot");
 
     // create components
@@ -36,6 +46,7 @@ int main(int argc, char ** argv){
     componentManger->WaitForStateAll(mtsComponentState::ACTIVE, 2.0*cmn_s);
 
     while(true){
+	osaSleep(10.0 * cmn_ms);
     }
 
     // cleanup

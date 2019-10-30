@@ -50,10 +50,14 @@ if (cisst_FOUND)
     # set header/source files
     set(HEADER_FILES
 #            ${HEADER_DIR}/CSABase.h
-            ${HEADER_DIR}/simpleRobot.h)
+            ${HEADER_DIR}/simpleRobot.h
+#            ${HEADER_DIR}/teleop.h
+            )
     set(SOURCE_FILES
 #            CSABase.cpp
-            simpleRobot.cpp)
+            simpleRobot.cpp
+#            teleop.cpp
+            )
 
     # add executable
     add_executable(csaConstraintController
@@ -65,11 +69,4 @@ if (cisst_FOUND)
     cisst_target_link_libraries(csaConstraintController ${REQUIRED_CISST_LIBRARIES})
     target_link_libraries(csaConstraintController ${sawConstraintController_LIBRARIES}
             ${catkin_LIBRARIES})
-
-#    set_target_properties(csaConstraintController
-#            PROPERTIES
-#            CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}
-#            CMAKE_RUNTIME_OUTPUT_DIRECTORY  ${CMAKE_BINARY_DIR}
-#            )
-#    message(${CMAKE_BINARY_DIR})
 endif(cisst_FOUND)

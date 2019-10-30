@@ -1,14 +1,27 @@
-//
-// Created by max on 2019-10-11.
-//
+/* -*- Mode: C++; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-    */
+/* ex: set filetype=cpp softtabstop=4 shiftwidth=4 tabstop=4 cindent expandtab: */
+
+/*
+  Author(s):  Zhaoshuo Li
+  Created on: 2019-10-21
+
+  (C) Copyright 2019 Johns Hopkins University (JHU), All Rights
+  Reserved.
+
+--- begin cisst license - do not edit ---
+
+This software is provided "as is" under an open source license, with
+no warranty.  The complete license can be found in license.txt and
+http://www.cisst.org/cisst/license.txt.
+
+--- end cisst license ---
+*/
+
 #include <cstdio>
 #include "simpleRobot.h"
 
 #include <cisstCommon/cmnConstants.h>
 #include <cisstMultiTask/mtsInterfaceProvided.h>
-
-// required to implement the class services, see cisstCommon
-CMN_IMPLEMENT_SERVICES_DERIVED(simpleRobot, mtsTaskPeriodic);
 
 simpleRobot::simpleRobot(const std::string & componentName, double periodInSeconds):
     mtsTaskPeriodic(componentName, periodInSeconds)
@@ -21,11 +34,12 @@ void simpleRobot::init() {
     setupVF();
 
     StateTable.AddData(mJacobian,"Jacobian");
-    StateTable.AddData(mCartesianPosition,"CartesianPosition");
+    StateTable.AddData(mMeasuredCartesianPosition,"MeasuredCartesianPosition");
 
     mtsInterfaceProvided * interfaceProvided = AddInterfaceProvided("ProvidesSimpleRobot");
     if (interfaceProvided){
-        interfaceProvided->AddCommandWrite(&simpleRobot::servoCartesianRelative, this, "ServoCartesianRelative");
+        interfaceProvided->AddCommandWrite(&simpleRobot::servoCartesianPosition, this, "ServoCartesianPosition");
+        interfaceProvided->AddCommandReadState(StateTable, mMeasuredCartesianPosition, "GetMeasuredCartesianPosition");
     }
 }
 
@@ -35,7 +49,7 @@ void simpleRobot::setupRobot() {
 
     // joint values
     mJointPosition.SetSize(mNumJoints);
-    mJointPosition.SetAll(1.0);
+    mJointPosition.SetAll(0.0);
 
     // fixed jacobian
     mJacobian.SetSize(mNumDof,mNumJoints);
@@ -45,7 +59,9 @@ void simpleRobot::setupRobot() {
     }
 
     // initialize cartesian
-    mCartesianPosition.Identity();
+    forwardKinematics(mJointPosition);
+    mMeasuredCartesianPosition.SetReferenceFrame("map");
+    mMeasuredCartesianPosition.Valid() = true;
 }
 
 void simpleRobot::setupVF() {
@@ -54,7 +70,7 @@ void simpleRobot::setupVF() {
 
     // robot related data
     mMeasuredKinematics.Name="MeasuredKinematics";
-    mMeasuredKinematics.Frame.FromNormalized(mCartesianPosition);
+    mMeasuredKinematics.Frame.FromNormalized(mMeasuredCartesianPosition.Position());
     mMeasuredKinematics.Jacobian.SetSize(mNumDof, mNumJoints);
     mMeasuredKinematics.Jacobian.Assign(mJacobian);
     mMeasuredJoint.SetSize(mNumJoints);
@@ -62,7 +78,7 @@ void simpleRobot::setupVF() {
     mMeasuredKinematics.JointState = &mMeasuredJoint;
 
     mGoalKinematics.Name="GoalKinematics";
-    mGoalKinematics.Frame.FromNormalized(mCartesianPosition);
+    mGoalKinematics.Frame.FromNormalized(mMeasuredCartesianPosition.Position());
 
     // objective
     mTeleopObjective.Name = "Teleop";
@@ -90,6 +106,11 @@ void simpleRobot::setupVF() {
     mPlaneConstraint.PointOnPlane.Assign(0.0, 0.0, -5.0);
     // use the names defined above to relate kinematics data
     mPlaneConstraint.KinNames.push_back("MeasuredKinematics"); // need measured kinematics according to mtsVFPlane.cpp
+    // slack
+    mPlaneConstraint.NumSlacks = 1;
+    mPlaneConstraint.SlackCosts = 1.0;
+    mPlaneConstraint.SlackLimits.SetSize(1);
+    mPlaneConstraint.SlackLimits.Assign(vctDouble1(1.0));
 
     // add objective and constraint to optimizer
     // first, we check if we can set the data. If not, we insert it.
@@ -117,21 +138,22 @@ void simpleRobot::setupVF() {
 
 void simpleRobot::forwardKinematics(vctDoubleVec& jointPosition) {
     // TODO: how to access part of the vector?
-    mCartesianPosition.Translation() = jointPosition.XYZ();
+    mMeasuredCartesianPosition.Position().Translation() = jointPosition.Ref(3,0);
     // TODO: update rotation
 }
 
 void simpleRobot::Run() {
-    // process the events received
+    ProcessQueuedCommands();
     ProcessQueuedEvents();
+
+    // activate/deactivate constraints (or select desired behaviours) if needed
 
     // solve for next movement
     vctDoubleVec dq;
     nmrConstraintOptimizer::STATUS optimizerStatus =solve(dq);
 
     if (optimizerStatus == nmrConstraintOptimizer::STATUS::NMR_OK){
-        std::cout << "solved successfully \n";
-        mJointPosition += dq;
+        mJointPosition += dq.Ref(6,0);
         // move
         forwardKinematics(mJointPosition);
     }
@@ -140,13 +162,13 @@ void simpleRobot::Run() {
         std::cout << optimizerStatus << std::endl;
 
     }
-    std::cout << "Measured CP \n" << mCartesianPosition << std::endl;
 }
 
-void simpleRobot::updateKinematics() {
+void simpleRobot::updateOptimizerKinematics() {
     // update cartesian position and jacobian
-    mMeasuredKinematics.Frame.FromNormalized(mCartesianPosition);
+    mMeasuredKinematics.Frame.FromNormalized(mMeasuredCartesianPosition.Position());
     mMeasuredKinematics.Jacobian.Assign(mJacobian);
+    mMeasuredKinematics.JointState->SetPosition(mJointPosition);
 
     // update controller stored kinematics
     mController->SetKinematics(mMeasuredKinematics);
@@ -154,20 +176,19 @@ void simpleRobot::updateKinematics() {
 }
 
 nmrConstraintOptimizer::STATUS simpleRobot::solve(vctDoubleVec &dq) {
-    std::cout << "update kinematics \n";
-    // update kinematics
-    updateKinematics();
+    // update optimizer kinematics
+    updateOptimizerKinematics();
+
+    // update sensor data if needed
+    // update vf data if needed
 
     // update optimizer
-    std::cout << "update optimizer \n";
     mController->UpdateOptimizer(StateTable.GetAveragePeriod());
-
-    // update vf data if needed
 
     // solve
     return mController->Solve(dq);
 }
 
-void simpleRobot::servoCartesianRelative(const mtsFrm4x4 & newGoal) {
+void simpleRobot::servoCartesianPosition(const vctFrm4x4 & newGoal) {
     mGoalKinematics.Frame.FromNormalized(newGoal);
 }
