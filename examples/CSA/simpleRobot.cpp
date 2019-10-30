@@ -146,6 +146,7 @@ void simpleRobot::Run() {
     ProcessQueuedCommands();
     ProcessQueuedEvents();
 
+    // acquire sensor/kinematics information
     // activate/deactivate constraints (or select desired behaviours) if needed
 
     // solve for next movement
