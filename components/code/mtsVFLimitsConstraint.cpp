@@ -33,8 +33,8 @@ void mtsVFLimitsConstraint::FillInTableauRefs(const CONTROLLERMODE mode,
         cmnThrow("mtsVFLimitsConstraint FillInTableauRefs: kinematics needed");
     }
 
-    vctDoubleVec jointPoints;
-    Kinematics.at(0)->JointState->GetPosition(jointPoints);
+    vctDoubleVec jointPositions;
+    Kinematics.at(0)->JointState->GetPosition(jointPositions);
 
     mtsVFDataJointLimits * limitData = (mtsVFDataJointLimits*)(Data);
     size_t numLimits = limitData->LowerLimits.size();
@@ -45,8 +45,8 @@ void mtsVFLimitsConstraint::FillInTableauRefs(const CONTROLLERMODE mode,
         for(size_t i = 0; i < numLimits; i++) {
             IneqConstraintMatrixRef.at(i,i) = 1.0;
             IneqConstraintMatrixRef.at(i+numLimits,i) = -1.0;
-            IneqConstraintVectorRef.at(i) = limitData->LowerLimits.at(i) - jointPoints.at(i);
-            IneqConstraintVectorRef.at(i+numLimits) = -limitData->UpperLimits.at(i) + jointPoints.at(i);
+            IneqConstraintVectorRef.at(i) = limitData->LowerLimits.at(i) - jointPositions.at(i);
+            IneqConstraintVectorRef.at(i+numLimits) = -limitData->UpperLimits.at(i) + jointPositions.at(i);
         }
     } else if(mode == JVEL || mode == CARTVEL) {
         for(size_t i = 0; i < numLimits; i++) {

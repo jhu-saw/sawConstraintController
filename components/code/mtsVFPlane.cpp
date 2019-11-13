@@ -79,20 +79,21 @@ void mtsVFPlane::FillInTableauRefs(const CONTROLLERMODE CMN_UNUSED(mode), const 
 
 
     vctDynamicMatrix<double> Jacobian3x6( 3, 6, VCT_COL_MAJOR );
-    for (size_t i = 0; i < Jacobian3x6.rows(); ++i)
-        for (size_t j = 0; j < Jacobian3x6.cols(); ++j)
-            Jacobian3x6.at(i,j) = CurrentKinematics->Jacobian.at(i,j);
+    Jacobian3x6.Assign(CurrentKinematics->Jacobian.Ref(3,6,0,0));
 
     IneqConstraintVectorRef.Assign(vct1(d - vct1(vctDotProduct(planeData->Normal, CurrentPos))));
 
+    // TODO: this only works for JPOS/JVEL case
     IneqConstraintMatrixRef.Assign(N * Jacobian3x6);
 //    IneqConstraintMatrixRef.Assign(N);
 
+    // check if slack is used
+    if (Data->NumSlacks > 0){
+        ObjectiveMatrixSlackRef.Diagonal().Assign(Data->SlackCosts);
+        IneqConstraintMatrixSlackRef.Diagonal().SetAll(-1.0);
+        IneqConstraintVectorSlackRef.Assign(-1.0*Data->SlackLimits);
+    }
 
-//    std::cout << "Mat Ine \n" << IneqConstraintMatrixRef << std::endl;
-//    std::cout << "Vec Ine \n" << IneqConstraintVectorRef << std::endl;
-//    @TODO Fix convert Refs
-//    ConvertRefs(mode,TickTime);
 }
 
 void mtsVFPlane::SetFrame(const vctFrame4x4<double> &Frame)
