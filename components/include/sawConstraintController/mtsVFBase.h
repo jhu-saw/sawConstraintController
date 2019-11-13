@@ -72,6 +72,9 @@ public:
     //! Inequality constraint vector reference
     vctDynamicVectorRef<double> IneqConstraintVectorRef;
 
+    //! Inequality constraint slack reference
+    vctDynamicVectorRef<double> IneqConstraintVectorSlackRef;
+
     //! Equality constraint data reference
     vctDynamicMatrixRef<double> EqConstraintMatrixRef;
 

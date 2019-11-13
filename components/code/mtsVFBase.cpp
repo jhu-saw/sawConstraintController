@@ -100,9 +100,9 @@ void mtsVFBase::SetTableauRefs(nmrConstraintOptimizer & co)
 {
     //assign the VF's refs to optimizer by passing them all to the optimizer
     co.SetRefs(Data->ObjectiveRows,Data->IneqConstraintRows,Data->EqConstraintRows,
-               Data->NumSlacks,Data->SlackLimits,ObjectiveMatrixRef,ObjectiveMatrixSlackRef,ObjectiveVectorRef,
-		       IneqConstraintMatrixRef,IneqConstraintMatrixSlackRef,IneqConstraintVectorRef,
-			   EqConstraintMatrixRef,EqConstraintMatrixSlackRef,EqConstraintVectorRef);
+               Data->NumSlacks,ObjectiveMatrixRef,ObjectiveMatrixSlackRef,ObjectiveVectorRef,
+               IneqConstraintMatrixRef,IneqConstraintMatrixSlackRef,IneqConstraintVectorRef, IneqConstraintVectorSlackRef,
+               EqConstraintMatrixRef,EqConstraintVectorRef);
 }
 
 vctDoubleMat mtsVFBase::Skew(const vctDoubleVec &in)
