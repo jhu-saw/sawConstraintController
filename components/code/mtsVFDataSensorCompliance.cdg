@@ -14,7 +14,7 @@ class {
 
     member {
       name Gain;
-      type vctDoubleMat;
+      type vctDoubleVec;
       visibility public;
     }
     member {
@@ -22,28 +22,28 @@ class {
       type vctDynamicVector<size_t>;
       visibility public;
     }
-    inline-header {
-        mtsVFDataSensorCompliance(const std::string & name, const std::string & kinName,
-                                  const std::string & forceSensorName, const std::string & overallGainName,
-                                  const vctDoubleMat & g, const vctDoubleVec & selections = vctDoubleVec(0));
-    }
+//    inline-header {
+//        mtsVFDataSensorCompliance(const std::string & name, const std::string & kinName,
+//                                  const std::string & forceSensorName, const std::string & overallGainName,
+//                                  const vctDoubleMat & g, const vctDoubleVec & selections = vctDoubleVec(0));
+//    }
 }
 
-//TODO can create new cpp file
-inline-code {
-    /*! Constructor
-    \param name String name of object
-    \param importance Number representing this virtual fixture's relative importance
-    */
-    mtsVFDataSensorCompliance::mtsVFDataSensorCompliance(const std::string & name, const std::string & kinName,
-                                                         const std::string & forceSensorName, const std::string & overallGainName,
-                                                         const vctDoubleMat & g, const vctDoubleVec & selections) : mtsVFDataBase()
-    {
-        Name = name;
-        KinNames.push_back(kinName);
-        SensorNames.push_back(forceSensorName);
-        SensorNames.push_back(overallGainName);
-        Gain = g;
-        SensorSelections = selections;
-    }
-}
+////TODO can create new cpp file
+//inline-code {
+//    /*! Constructor
+//    \param name String name of object
+//    \param importance Number representing this virtual fixture's relative importance
+//    */
+//    mtsVFDataSensorCompliance::mtsVFDataSensorCompliance(const std::string & name, const std::string & kinName,
+//                                                         const std::string & forceSensorName, const std::string & overallGainName,
+//                                                         const vctDoubleMat & g, const vctDoubleVec & selections) : mtsVFDataBase()
+//    {
+//        Name = name;
+//        KinNames.push_back(kinName);
+//        SensorNames.push_back(forceSensorName);
+//        SensorNames.push_back(overallGainName);
+//        Gain = g;
+//        SensorSelections = selections;
+//    }
+//}
