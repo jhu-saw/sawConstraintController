@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 2.8.3)
 
-project(csa_example)
+project(simple_teleop)
 ## Compile as C++11, supported in ROS Kinetic and newer
 # add_compile_options(-std=c++11)
 
@@ -49,24 +49,20 @@ if (cisst_FOUND)
 
     # set header/source files
     set(HEADER_FILES
-#            ${HEADER_DIR}/CSABase.h
             ${HEADER_DIR}/simpleRobot.h
-#            ${HEADER_DIR}/teleop.h
             )
     set(SOURCE_FILES
-#            CSABase.cpp
             simpleRobot.cpp
-#            teleop.cpp
             )
 
     # add executable
-    add_executable(csaConstraintController
+    add_executable(simpleTeleop
             main.cpp
             ${HEADER_FILES}
             ${SOURCE_FILES})
 
     # link libraries
-    cisst_target_link_libraries(csaConstraintController ${REQUIRED_CISST_LIBRARIES})
-    target_link_libraries(csaConstraintController ${sawConstraintController_LIBRARIES}
+    cisst_target_link_libraries(simpleTeleop ${REQUIRED_CISST_LIBRARIES})
+    target_link_libraries(simpleTeleop ${sawConstraintController_LIBRARIES}
             ${catkin_LIBRARIES})
 endif(cisst_FOUND)

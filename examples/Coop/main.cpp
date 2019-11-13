@@ -3,7 +3,6 @@
 //
 
 #include "simpleRobot.h"
-#include "teleop.h"
 #include <cstdio>
 #include <cisst_ros_bridge/mtsROSBridge.h>
 #include <cisstOSAbstraction/osaSleep.h>
@@ -21,9 +20,9 @@ int main(int argc, char ** argv){
 
     // add ros bridge
     mtsROSBridge * subscribers = new mtsROSBridge("subscribers", 0.1 * cmn_ms, true /* spin */);
-    subscribers->AddSubscriberToCommandWrite<vctFrm4x4, geometry_msgs::PoseStamped>("RequiresSimpleRobot",
-                                             "ServoCartesianPosition",
-                                             "/simple_robot/servo_cp");
+    subscribers->AddSubscriberToCommandWrite<mtsDoubleVec, geometry_msgs::Wrench>("RequiresSimpleRobot",
+                                             "ServoCartesianForce",
+                                             "/simple_robot/servo_cf");
     componentManger->AddComponent(subscribers);
     mtsROSBridge * publishers = new mtsROSBridge("publishers", 5 * cmn_ms);
     publishers->AddPublisherFromCommandRead<prmPositionCartesianGet, geometry_msgs::PoseStamped>("RequiresSimpleRobot",

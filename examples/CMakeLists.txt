@@ -12,6 +12,5 @@
 
 cmake_minimum_required (VERSION 2.8)
 
-add_subdirectory (SimpleCommunication)
-add_subdirectory (BasicSetup)
-add_subdirectory (CSA)
+add_subdirectory (Teleop)
+add_subdirectory (Coop)

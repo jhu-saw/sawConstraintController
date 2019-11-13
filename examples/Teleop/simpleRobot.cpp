@@ -106,11 +106,11 @@ void simpleRobot::setupVF() {
     mPlaneConstraint.PointOnPlane.Assign(0.0, 0.0, -5.0);
     // use the names defined above to relate kinematics data
     mPlaneConstraint.KinNames.push_back("MeasuredKinematics"); // need measured kinematics according to mtsVFPlane.cpp
-    // slack
-    mPlaneConstraint.NumSlacks = 1;
-    mPlaneConstraint.SlackCosts = 1.0;
-    mPlaneConstraint.SlackLimits.SetSize(1);
-    mPlaneConstraint.SlackLimits.Assign(vctDouble1(1.0));
+    // TODO: slack optimization is still not working yet
+//    mPlaneConstraint.NumSlacks = 1;
+//    mPlaneConstraint.SlackCosts = 1.0;
+//    mPlaneConstraint.SlackLimits.SetSize(1);
+//    mPlaneConstraint.SlackLimits.Assign(vctDouble1(1.0));
 
     // add objective and constraint to optimizer
     // first, we check if we can set the data. If not, we insert it.
@@ -150,10 +150,13 @@ void simpleRobot::Run() {
 
     // solve for next movement
     vctDoubleVec dq;
+    std::cout << "Solve" << std::endl;
     nmrConstraintOptimizer::STATUS optimizerStatus =solve(dq);
+    std::cout << "solution obtained" << std::endl;
 
     if (optimizerStatus == nmrConstraintOptimizer::STATUS::NMR_OK){
         mJointPosition += dq.Ref(6,0);
+        std::cout << dq << std::endl;
         // move
         forwardKinematics(mJointPosition);
     }
@@ -183,7 +186,9 @@ nmrConstraintOptimizer::STATUS simpleRobot::solve(vctDoubleVec &dq) {
     // update vf data if needed
 
     // update optimizer
+    std::cout << "update optimizer" << std::endl;
     mController->UpdateOptimizer(StateTable.GetAveragePeriod());
+    std::cout << "updated optimizer" << std::endl;
 
     // solve
     return mController->Solve(dq);
