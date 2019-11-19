@@ -109,8 +109,8 @@ if(SAW_sawConstraintController_USE_EIGEN)
        ${sawConstraintController_HEADER_DIR}/mtsVFFollow.h
 #       ${sawConstraintController_HEADER_DIR}/mtsVFFollowPath.h
        ${sawConstraintController_HEADER_DIR}/mtsVF_RCM.h
-       ${sawConstraintController_HEADER_DIR}/roPath.h
-       ${sawConstraintController_HEADER_DIR}/roPathSegment.h
+#       ${sawConstraintController_HEADER_DIR}/roPath.h
+#       ${sawConstraintController_HEADER_DIR}/roPathSegment.h
        ${sawConstraintController_HEADER_DIR}/constraintOptimizer.h
        )
 
@@ -129,8 +129,8 @@ if(SAW_sawConstraintController_USE_EIGEN)
        code/mtsVFFollow.cpp
 #       code/mtsVFFollowPath.cpp
        code/mtsVF_RCM.cpp
-       code/roPath.cpp
-       code/roPathSegment.cpp
+#       code/roPath.cpp
+#       code/roPathSegment.cpp
        code/constraintOptimizer.cpp
        code/eiquadprog.hpp
        )
@@ -153,8 +153,8 @@ else(SAW_sawConstraintController_USE_EIGEN)
        ${sawConstraintController_HEADER_DIR}/mtsVFLimitsConstraint.h
 #       ${sawConstraintController_HEADER_DIR}/mtsVFFollowPath.h
        ${sawConstraintController_HEADER_DIR}/mtsVF_RCM.h
-       ${sawConstraintController_HEADER_DIR}/roPath.h
-       ${sawConstraintController_HEADER_DIR}/roPathSegment.h
+#       ${sawConstraintController_HEADER_DIR}/roPath.h
+#       ${sawConstraintController_HEADER_DIR}/roPathSegment.h
        )
 
   set (SOURCE_FILES
@@ -173,8 +173,8 @@ else(SAW_sawConstraintController_USE_EIGEN)
       code/mtsVFLimitsConstraint.cpp
       #       code/mtsVFFollowPath.cpp
       code/mtsVF_RCM.cpp
-      code/roPath.cpp
-      code/roPathSegment.cpp
+#      code/roPath.cpp
+#      code/roPathSegment.cpp
 )
 
 endif(SAW_sawConstraintController_USE_EIGEN)
