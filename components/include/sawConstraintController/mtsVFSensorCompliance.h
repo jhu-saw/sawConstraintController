@@ -62,6 +62,8 @@ public:
     */
     void FillInTableauRefs(const mtsVFBase::CONTROLLERMODE mode, const double TickTime);
 
+    void ConvertRefs(const mtsVFBase::CONTROLLERMODE mode, const double TickTime);
+
 };
 
 CMN_DECLARE_SERVICES_INSTANTIATION(mtsVFSensorCompliance);

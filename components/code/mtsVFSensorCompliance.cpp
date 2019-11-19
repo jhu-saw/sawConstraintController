@@ -23,7 +23,7 @@ CMN_IMPLEMENT_SERVICES(mtsVFSensorCompliance);
 //! Updates co with virtual fixture data.
 /*! FillInTableauRefs
 */
-void mtsVFSensorCompliance::FillInTableauRefs(const CONTROLLERMODE CMN_UNUSED(mode), const double TickTime)
+void mtsVFSensorCompliance::FillInTableauRefs(const CONTROLLERMODE mode, const double TickTime)
 {
     // fill in refs
     // min || J(q)*dq - gain*sensorValues ||
@@ -49,5 +49,14 @@ void mtsVFSensorCompliance::FillInTableauRefs(const CONTROLLERMODE CMN_UNUSED(mo
     ObjectiveMatrixRef.Assign(Jacobian);
     ObjectiveVectorRef.ElementwiseProductOf(gainData->Gain, SensorValues);
 
-    // ConvertRefs(mode,TickTime);
+    ConvertRefs(mode,TickTime);
 }
+
+void mtsVFSensorCompliance::ConvertRefs(const mtsVFBase::CONTROLLERMODE mode, const double TickTime)
+{
+    if (mode == mtsVFBase::CONTROLLERMODE::JVEL){
+        // min || J(q)*t*v - gain*sensorValues ||
+        ObjectiveMatrixRef.Multiply(TickTime);
+    }
+}
+
