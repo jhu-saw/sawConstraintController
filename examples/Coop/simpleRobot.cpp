@@ -31,7 +31,7 @@ simpleRobot::simpleRobot(const std::string & componentName, double periodInSecon
 
 void simpleRobot::init() {
     setupRobot();
-    setupVF();
+    setupVFBehaviour();
 
     StateTable.AddData(mJacobian,"Jacobian");
     StateTable.AddData(mMeasuredCartesianPosition,"MeasuredCartesianPosition");
@@ -64,9 +64,9 @@ void simpleRobot::setupRobot() {
     mMeasuredCartesianPosition.Valid() = true;
 }
 
-void simpleRobot::setupVF() {
+void simpleRobot::setupVFBehaviour() {
     // initialize controller
-    mController = new mtsVFController(mNumJoints, mtsVFBase::JPOS);
+    mController = new mtsVFController(mNumJoints, mtsVFBase::JVEL);
 
     // robot related data
     mMeasuredKinematics.Name="MeasuredKinematics";
@@ -98,9 +98,11 @@ void simpleRobot::setupVF() {
     // joint limit constraint
     mJointLimitsConstraint.Name = "Joint Limit";
     mJointLimitsConstraint.LowerLimits.SetSize(mNumJoints);
-    mJointLimitsConstraint.LowerLimits.Assign(-10.0, -10.0, -10.0, -2.0, -2.0, -2.0);
+//    mJointLimitsConstraint.LowerLimits.Assign(-10, -10, -10, -0.01, -0.01, -0.01);
+    mJointLimitsConstraint.LowerLimits.Assign(-0.1, -0.1, -0.1, -0.01, -0.01, -0.01).Multiply(5);
     mJointLimitsConstraint.UpperLimits.SetSize(mNumJoints);
-    mJointLimitsConstraint.UpperLimits.Assign(10.0, 10.0, 10.0, 2.0, 2.0, 2.0);
+//    mJointLimitsConstraint.UpperLimits.Assign(10, 10, 10, 0.01, 0.01, 0.01);
+    mJointLimitsConstraint.UpperLimits.Assign(0.1, 0.1, 0.1, 0.01, 0.01, 0.01).Multiply(5);
     mJointLimitsConstraint.IneqConstraintRows = 2 * mNumJoints;
     mJointLimitsConstraint.KinNames.clear(); // sanity
     // use the names defined above to relate kinematics data
@@ -144,7 +146,6 @@ void simpleRobot::setupVF() {
 }
 
 void simpleRobot::forwardKinematics(vctDoubleVec& jointPosition) {
-    // TODO: how to access part of the vector?
     mMeasuredCartesianPosition.Position().Translation() = jointPosition.Ref(3,0);
     // TODO: update rotation
 }
@@ -162,8 +163,8 @@ void simpleRobot::Run() {
     std::cout << "solution obtained" << std::endl;
 
     if (optimizerStatus == nmrConstraintOptimizer::STATUS::NMR_OK){
-        mJointPosition += dq.Ref(6,0);
-        std::cout << dq << std::endl;
+        mJointPosition += dq.Multiply(StateTable.GetAveragePeriod()); // convert v to q
+        std::cout << StateTable.GetAveragePeriod() << std::endl;
         // move
         forwardKinematics(mJointPosition);
     }

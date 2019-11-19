@@ -21,7 +21,26 @@ protected:
     // internal method to configure this component
     void init();
     void setupRobot();
-    void setupVF();
+
+    //! Set up the behaviours for the robot
+    /*!
+     * \brief setupVFBehaviour
+     * User needs to add the desired behaviour inside this function. This library only means to provide a receipe instead of a full API.
+     * For details of how to define behaviours, please check the code in sawConstraintOptimizer.
+     */
+    void setupVFBehaviour();
+
+    //! Run funtion for constraint behaviour
+    /*!
+     * \brief runBehaviour
+     * \param dq the incremental joint value
+     * \return optimizer STATUS,
+     * 0  Both equality and inequality constraints are compatible and have been satisfied.
+     * 1  Equality constraints are contradictory. A generalized inverse solution of EX=F was used to minimize the residual vector length F-EX. In this sense, the solution is still meaningful.
+     * 2  Inequality constraints are contradictory.
+     * 3  Both equality and inequality constraints are contradictory.
+     * 4  Input has a NaN or INF
+     */
     nmrConstraintOptimizer::STATUS runBehaviour(vctDoubleVec & dq);
 
     // robot specific variables
@@ -35,29 +54,35 @@ protected:
     int mNumJoints;
 
     // constraint controller
-    mtsVFController *mController;
-    prmKinematicsState mMeasuredKinematics; // follow crtk convention
-    prmSensorState mGoalForceValues;
-    prmStateJoint mMeasuredJoint;
-    mtsVFDataSensorCompliance mCoopObjective; // No additional data needed, therefore using mtsVFBase
+    mtsVFController *mController;   //! Constraint controller that controls the behaviours
+    prmKinematicsState mMeasuredKinematics; //! Current kinematics information (frame, jacobian) from the robot
+    prmSensorState mGoalForceValues; //! Current force sensor information from the robot
+    prmStateJoint mMeasuredJoint; //! Current joint information (joint values) from the robot
+    mtsVFDataSensorCompliance mCoopObjective; //! Compliance control behaviour
     mtsVFDataPlane mPlaneConstraint;
     mtsVFDataJointLimits mJointLimitsConstraint;
 
-    // update optimizer of the information needed
+    //! Update the numerical solver of the robot kinematics values
+    /*!
+     * \brief updateOptimizerKinematics
+     * Update the necessary kinematics information for the optimizer
+     */
     void updateOptimizerKinematics();
+    //! Update the numerical solver of the sensor values
+    /*!
+     * \brief updateOptimizerSensor
+     * Update the necessary sensor information for the optimizer
+     */
     void updateOptimizerSensor();
 
-    // teleop command
     void servoCartesianForce(const mtsDoubleVec & newGoal);
 
 public:
-    // provide a name for the task and define the frequency (time
-    // interval between calls to the periodic Run).  Also used to
-    // populate the interface(s)
+    //! Constructor
     simpleRobot(const std::string & componentName, const double periodInSeconds);
     ~simpleRobot() {}
 
-    // all four methods are pure virtual in mtsTask
+    //! Run loop for the robot task
     void Run();        // performed periodically
 };
 
