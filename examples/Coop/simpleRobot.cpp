@@ -94,32 +94,30 @@ void simpleRobot::setupVFBehaviour() {
     // use the names defined above to relate kinematics data
     mCoopObjective.SensorNames.push_back("GoalForce");
 
-
-    // joint limit constraint
-    mJointLimitsConstraint.Name = "Joint Limit";
-    mJointLimitsConstraint.LowerLimits.SetSize(mNumJoints);
-//    mJointLimitsConstraint.LowerLimits.Assign(-10, -10, -10, -0.01, -0.01, -0.01);
-    mJointLimitsConstraint.LowerLimits.Assign(-0.1, -0.1, -0.1, -0.01, -0.01, -0.01).Multiply(5);
-    mJointLimitsConstraint.UpperLimits.SetSize(mNumJoints);
-//    mJointLimitsConstraint.UpperLimits.Assign(10, 10, 10, 0.01, 0.01, 0.01);
-    mJointLimitsConstraint.UpperLimits.Assign(0.1, 0.1, 0.1, 0.01, 0.01, 0.01).Multiply(5);
-    mJointLimitsConstraint.IneqConstraintRows = 2 * mNumJoints;
-    mJointLimitsConstraint.KinNames.clear(); // sanity
-    // use the names defined above to relate kinematics data
-    mJointLimitsConstraint.KinNames.push_back("MeasuredKinematics"); // measured kinematics needs to be first according to mtsVFLimitsConstraint.cpp
-
     // plane constraint
     mPlaneConstraint.Name = "PlaneConstraint";
     mPlaneConstraint.IneqConstraintRows = 1;
     mPlaneConstraint.Normal.Assign(0.0,0.0,1.0);
-    mPlaneConstraint.PointOnPlane.Assign(0.0, 0.0, -5.0);
+    mPlaneConstraint.PointOnPlane.Assign(0.0, 0.0, -2.0);
     // use the names defined above to relate kinematics data
     mPlaneConstraint.KinNames.push_back("MeasuredKinematics"); // need measured kinematics according to mtsVFPlane.cpp
-//    // TODO: slack optimization is still not working yet
-////    mPlaneConstraint.NumSlacks = 1;
-////    mPlaneConstraint.SlackCosts = 1.0;
-////    mPlaneConstraint.SlackLimits.SetSize(1);
-////    mPlaneConstraint.SlackLimits.Assign(vctDouble1(1.0));
+    // slack
+    mPlaneConstraint.NumSlacks = 1;
+    mPlaneConstraint.SlackCosts.SetSize(1);
+    mPlaneConstraint.SlackCosts.Assign(vctDouble1(1.0));
+    mPlaneConstraint.SlackLimits.SetSize(1);
+    mPlaneConstraint.SlackLimits.Assign(vctDouble1(1.0));
+
+    // joint limit constraint
+    mJointLimitsConstraint.Name = "Joint Limit";
+    mJointLimitsConstraint.LowerLimits.SetSize(mNumJoints);
+    mJointLimitsConstraint.LowerLimits.Assign(-0.1, -0.1, -0.1, -0.01, -0.01, -0.01);
+    mJointLimitsConstraint.UpperLimits.SetSize(mNumJoints);
+    mJointLimitsConstraint.UpperLimits.Assign(0.1, 0.1, 0.1, 0.01, 0.01, 0.01);
+    mJointLimitsConstraint.IneqConstraintRows = 2 * mNumJoints;
+    mJointLimitsConstraint.KinNames.clear(); // sanity
+    // use the names defined above to relate kinematics data
+    mJointLimitsConstraint.KinNames.push_back("MeasuredKinematics"); // measured kinematics needs to be first according to mtsVFLimitsConstraint.cpp
 
     // add objective and constraint to optimizer
     // first, we check if we can set the data. If not, we insert it.
@@ -130,17 +128,19 @@ void simpleRobot::setupVFBehaviour() {
         // Increment users of each kinematics and sensor object found
         mController->IncrementUsers(mCoopObjective.KinNames, mCoopObjective.SensorNames);
     }
+
+    if (!mController->SetVFData(mPlaneConstraint, typeid(mtsVFPlane)))
+    {
+        mController->VFMap.insert(std::pair<std::string, mtsVFPlane*>(mPlaneConstraint.Name, new mtsVFPlane(mPlaneConstraint.Name, new mtsVFDataPlane(mPlaneConstraint))));
+        mController->IncrementUsers(mPlaneConstraint.KinNames, mPlaneConstraint.SensorNames);
+    }
+
     if (!mController->SetVFData(mJointLimitsConstraint, typeid(mtsVFLimitsConstraint)))
     {
         // Adds a new virtual fixture to the active vector
         mController->VFMap.insert(std::pair<std::string,mtsVFLimitsConstraint *>(mJointLimitsConstraint.Name,new mtsVFLimitsConstraint(mJointLimitsConstraint.Name,new mtsVFDataJointLimits(mJointLimitsConstraint))));
         // Increment users of each kinematics and sensor object found
         mController->IncrementUsers(mJointLimitsConstraint.KinNames, mJointLimitsConstraint.SensorNames);
-    }
-    if (!mController->SetVFData(mPlaneConstraint, typeid(mtsVFPlane)))
-    {
-        mController->VFMap.insert(std::pair<std::string, mtsVFPlane*>(mPlaneConstraint.Name, new mtsVFPlane(mPlaneConstraint.Name, new mtsVFDataPlane(mPlaneConstraint))));
-        mController->IncrementUsers(mPlaneConstraint.KinNames, mPlaneConstraint.SensorNames);
     }
 
 }
@@ -158,20 +158,20 @@ void simpleRobot::Run() {
 
     // solve for next movement
     vctDoubleVec dq;
-    std::cout << "Solve" << std::endl;
     nmrConstraintOptimizer::STATUS optimizerStatus = runBehaviour(dq);
-    std::cout << "solution obtained" << std::endl;
 
     if (optimizerStatus == nmrConstraintOptimizer::STATUS::NMR_OK){
-        mJointPosition += dq.Multiply(StateTable.GetAveragePeriod()); // convert v to q
-        std::cout << StateTable.GetAveragePeriod() << std::endl;
+        mJointPosition += dq.Ref(6,0).Multiply(StateTable.GetAveragePeriod()); // convert v to q
         // move
         forwardKinematics(mJointPosition);
+
+        // reset
+        mGoalForceValues.Values.SetAll(0.0);
     }
     else{
+        std::cout << optimizerStatus << std::endl;
         std::cout << "No solution found" << std::endl;
         std::cout << optimizerStatus << std::endl;
-
     }
 }
 
@@ -201,7 +201,6 @@ nmrConstraintOptimizer::STATUS simpleRobot::runBehaviour(vctDoubleVec &dq) {
 
     // update optimizer
     mController->UpdateOptimizer(StateTable.GetAveragePeriod());
-    std::cout << "updated optimizer" << std::endl;
 
     // solve
     return mController->Solve(dq);

@@ -55,6 +55,8 @@ public:
 
     void SetFrame(const vctFrame4x4<double>& Frame);
 
+    void ConvertRefs(const mtsVFBase::CONTROLLERMODE mode, const double TickTime);
+
     prmKinematicsState * CurrentKinematics;
 
 private:

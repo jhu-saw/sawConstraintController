@@ -23,7 +23,7 @@ CMN_IMPLEMENT_SERVICES(mtsVFPlane)
 //! Updates co with virtual fixture data.
 /*! FillInTableauRefs
 */
-void mtsVFPlane::FillInTableauRefs(const CONTROLLERMODE CMN_UNUSED(mode), const double TickTime)
+void mtsVFPlane::FillInTableauRefs(const CONTROLLERMODE mode, const double TickTime)
 {    
     /*
          Fill in refs
@@ -84,8 +84,12 @@ void mtsVFPlane::FillInTableauRefs(const CONTROLLERMODE CMN_UNUSED(mode), const 
     IneqConstraintVectorRef.Assign(vct1(d - vct1(vctDotProduct(planeData->Normal, CurrentPos))));
 
     // TODO: this only works for JPOS/JVEL case
-    IneqConstraintMatrixRef.Assign(N * Jacobian3x6);
-//    IneqConstraintMatrixRef.Assign(N);
+    if (mode == mtsVFBase::CONTROLLERMODE::JPOS || mode == mtsVFBase::CONTROLLERMODE::JVEL){
+        IneqConstraintMatrixRef.Assign(N * Jacobian3x6);
+    }
+    else if (mode == mtsVFBase::CONTROLLERMODE::CARTPOS || mode == mtsVFBase::CONTROLLERMODE::CARTVEL){
+        IneqConstraintMatrixRef.Assign(N);
+    }
 
     // check if slack is used
     if (Data->NumSlacks > 0){
@@ -100,4 +104,12 @@ void mtsVFPlane::SetFrame(const vctFrame4x4<double> &Frame)
 {
     IsFrameSet = true;
     frame = Frame;
+}
+
+void mtsVFPlane::ConvertRefs(const mtsVFBase::CONTROLLERMODE mode, const double TickTime)
+{
+    if (mode == mtsVFBase::CONTROLLERMODE::JVEL){
+        // min || J.N.v*t + J.N.q - d|| => min || N.dx - (d - N.x)||
+        IneqConstraintMatrixRef.Multiply(TickTime);
+    }
 }
