@@ -12,6 +12,8 @@
 project (sawConstraintController)
 
 cmake_minimum_required (VERSION 2.8)
+set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 if(SAW_sawConstraintController_USE_EIGEN)
 
