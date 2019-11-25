@@ -23,7 +23,7 @@ CMN_IMPLEMENT_SERVICES(mtsVFPlane)
 //! Updates co with virtual fixture data.
 /*! FillInTableauRefs
 */
-void mtsVFPlane::FillInTableauRefs(const CONTROLLERMODE CMN_UNUSED(mode), const double TickTime)
+void mtsVFPlane::FillInTableauRefs(const CONTROLLERMODE mode, const double TickTime)
 {    
     /*
          Fill in refs
@@ -79,24 +79,37 @@ void mtsVFPlane::FillInTableauRefs(const CONTROLLERMODE CMN_UNUSED(mode), const 
 
 
     vctDynamicMatrix<double> Jacobian3x6( 3, 6, VCT_COL_MAJOR );
-    for (size_t i = 0; i < Jacobian3x6.rows(); ++i)
-        for (size_t j = 0; j < Jacobian3x6.cols(); ++j)
-            Jacobian3x6.at(i,j) = CurrentKinematics->Jacobian.at(i,j);
+    Jacobian3x6.Assign(CurrentKinematics->Jacobian.Ref(3,6,0,0));
 
     IneqConstraintVectorRef.Assign(vct1(d - vct1(vctDotProduct(planeData->Normal, CurrentPos))));
 
-    IneqConstraintMatrixRef.Assign(N * Jacobian3x6);
-//    IneqConstraintMatrixRef.Assign(N);
+    // TODO: this only works for JPOS/JVEL case
+    if (mode == mtsVFBase::CONTROLLERMODE::JPOS || mode == mtsVFBase::CONTROLLERMODE::JVEL){
+        IneqConstraintMatrixRef.Assign(N * Jacobian3x6);
+    }
+    else if (mode == mtsVFBase::CONTROLLERMODE::CARTPOS || mode == mtsVFBase::CONTROLLERMODE::CARTVEL){
+        IneqConstraintMatrixRef.Assign(N);
+    }
 
+    // check if slack is used
+    if (Data->NumSlacks > 0){
+        ObjectiveMatrixSlackRef.Diagonal().Assign(Data->SlackCosts);
+        IneqConstraintMatrixSlackRef.Diagonal().SetAll(-1.0);
+        IneqConstraintVectorSlackRef.Assign(-1.0*Data->SlackLimits);
+    }
 
-//    std::cout << "Mat Ine \n" << IneqConstraintMatrixRef << std::endl;
-//    std::cout << "Vec Ine \n" << IneqConstraintVectorRef << std::endl;
-//    @TODO Fix convert Refs
-//    ConvertRefs(mode,TickTime);
 }
 
 void mtsVFPlane::SetFrame(const vctFrame4x4<double> &Frame)
 {
     IsFrameSet = true;
     frame = Frame;
+}
+
+void mtsVFPlane::ConvertRefs(const mtsVFBase::CONTROLLERMODE mode, const double TickTime)
+{
+    if (mode == mtsVFBase::CONTROLLERMODE::JVEL){
+        // min || J.N.v*t + J.N.q - d|| => min || N.dx - (d - N.x)||
+        IneqConstraintMatrixRef.Multiply(TickTime);
+    }
 }

@@ -45,7 +45,7 @@ public:
 
     mtsVFSensorCompliance(mtsVFDataSensorCompliance *data) : mtsVFJointVelocity(DefaultKinematicsName,data)
     {
-        Data->ObjectiveRows = data->Gain.rows();
+        Data->ObjectiveRows = data->ObjectiveRows;
     }
 
     /*! Constructor
@@ -54,13 +54,15 @@ public:
     mtsVFSensorCompliance(const std::string & name, mtsVFDataSensorCompliance * data) : mtsVFJointVelocity(name,data)
     {
         //assuming gain is properly sized for now, if not will throw an error later
-        Data->ObjectiveRows = data->Gain.rows();
+        Data->ObjectiveRows = data->ObjectiveRows;
     }
 
     //! Updates co with virtual fixture data.
     /*! FillInTableauRefs
     */
     void FillInTableauRefs(const mtsVFBase::CONTROLLERMODE mode, const double TickTime);
+
+    void ConvertRefs(const mtsVFBase::CONTROLLERMODE mode, const double TickTime);
 
 };
 

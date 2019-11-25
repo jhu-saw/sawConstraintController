@@ -12,6 +12,8 @@
 project (sawConstraintController)
 
 cmake_minimum_required (VERSION 2.8)
+set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 if(SAW_sawConstraintController_USE_EIGEN)
 
@@ -109,8 +111,8 @@ if(SAW_sawConstraintController_USE_EIGEN)
        ${sawConstraintController_HEADER_DIR}/mtsVFFollow.h
 #       ${sawConstraintController_HEADER_DIR}/mtsVFFollowPath.h
        ${sawConstraintController_HEADER_DIR}/mtsVF_RCM.h
-       ${sawConstraintController_HEADER_DIR}/roPath.h
-       ${sawConstraintController_HEADER_DIR}/roPathSegment.h
+#       ${sawConstraintController_HEADER_DIR}/roPath.h
+#       ${sawConstraintController_HEADER_DIR}/roPathSegment.h
        ${sawConstraintController_HEADER_DIR}/constraintOptimizer.h
        )
 
@@ -129,8 +131,8 @@ if(SAW_sawConstraintController_USE_EIGEN)
        code/mtsVFFollow.cpp
 #       code/mtsVFFollowPath.cpp
        code/mtsVF_RCM.cpp
-       code/roPath.cpp
-       code/roPathSegment.cpp
+#       code/roPath.cpp
+#       code/roPathSegment.cpp
        code/constraintOptimizer.cpp
        code/eiquadprog.hpp
        )
@@ -150,30 +152,32 @@ else(SAW_sawConstraintController_USE_EIGEN)
        ${sawConstraintController_HEADER_DIR}/mtsVFAbsoluteJointLimits.h
        ${sawConstraintController_HEADER_DIR}/mtsVFCartesianLimits.h
        ${sawConstraintController_HEADER_DIR}/mtsVFFollow.h
+       ${sawConstraintController_HEADER_DIR}/mtsVFLimitsConstraint.h
 #       ${sawConstraintController_HEADER_DIR}/mtsVFFollowPath.h
        ${sawConstraintController_HEADER_DIR}/mtsVF_RCM.h
-       ${sawConstraintController_HEADER_DIR}/roPath.h
-       ${sawConstraintController_HEADER_DIR}/roPathSegment.h
+#       ${sawConstraintController_HEADER_DIR}/roPath.h
+#       ${sawConstraintController_HEADER_DIR}/roPathSegment.h
        )
 
   set (SOURCE_FILES
-       code/mtsVFBase.cpp
-       code/mtsVFJointVel.cpp
-       code/mtsVFJointPos.cpp
-       code/mtsVFCartVel.cpp
-       code/mtsVFCartOrientationVel.cpp
-       code/mtsVFSensorCompliance.cpp
-       code/mtsVFController.cpp
-       code/mtsVFPlane.cpp
-       code/mtsVFJointLimits.cpp
-       code/mtsVFAbsoluteJointLimits.cpp
-       code/mtsVFCartesianLimits.cpp
-       code/mtsVFFollow.cpp
-#       code/mtsVFFollowPath.cpp
-       code/mtsVF_RCM.cpp
-       code/roPath.cpp
-       code/roPathSegment.cpp
-       )
+      code/mtsVFBase.cpp
+      code/mtsVFJointVel.cpp
+      code/mtsVFJointPos.cpp
+      code/mtsVFCartVel.cpp
+      code/mtsVFCartOrientationVel.cpp
+      code/mtsVFSensorCompliance.cpp
+      code/mtsVFController.cpp
+      code/mtsVFPlane.cpp
+      code/mtsVFJointLimits.cpp
+      code/mtsVFAbsoluteJointLimits.cpp
+      code/mtsVFCartesianLimits.cpp
+      code/mtsVFFollow.cpp
+      code/mtsVFLimitsConstraint.cpp
+      #       code/mtsVFFollowPath.cpp
+      code/mtsVF_RCM.cpp
+#      code/roPath.cpp
+#      code/roPathSegment.cpp
+)
 
 endif(SAW_sawConstraintController_USE_EIGEN)
 

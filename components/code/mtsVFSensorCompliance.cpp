@@ -23,10 +23,10 @@ CMN_IMPLEMENT_SERVICES(mtsVFSensorCompliance);
 //! Updates co with virtual fixture data.
 /*! FillInTableauRefs
 */
-void mtsVFSensorCompliance::FillInTableauRefs(const CONTROLLERMODE CMN_UNUSED(mode), const double TickTime)
+void mtsVFSensorCompliance::FillInTableauRefs(const CONTROLLERMODE mode, const double TickTime)
 {
     // fill in refs
-    // min || J(q)*dq - gain*overallGain*sensorValues ||
+    // min || J(q)*dq - gain*sensorValues ||
 
     // Check if we have a jacobian to use
     if(Kinematics.size() < 1)
@@ -35,39 +35,28 @@ void mtsVFSensorCompliance::FillInTableauRefs(const CONTROLLERMODE CMN_UNUSED(mo
         cmnThrow("Error: Sensor Compliance VF is missing kinematics dependencies");
     }    
 
-    mtsVFDataSensorCompliance * SensorComplianceData = (mtsVFDataSensorCompliance *)(Data);
-    vctDoubleMat * JacP = &(Kinematics.at(0)->Jacobian);
-    vctDynamicVector<double> * SensorValues = &(Sensors.at(0)->Values);
-    vctDynamicVector<double> overallGain = Sensors.at(1)->Values;        
-
-    //choose only selected sensor values (indices stored in SensorSelections)
-    vctDynamicVector<double> UsedValues(SensorComplianceData->Gain.cols());
-    for (size_t s=0; s < SensorComplianceData->SensorSelections.size(); s++)
+    if(Sensors.size() < 1)
     {
-        UsedValues[s] = (overallGain[0]/100.0)*((*SensorValues)[SensorComplianceData->SensorSelections[s]]);
-    }
-
-    // Check if we have all dependencies met
-    if(Sensors.size() < 2 || SensorComplianceData->Gain.rows() != JacP->rows() || SensorComplianceData->Gain.cols() != UsedValues.size())
-    {        
         CMN_LOG_CLASS_RUN_ERROR << "Error: Sensor Compliance VF is missing sensor dependencies" << std::endl;
         cmnThrow("Error: Sensor Compliance VF is missing sensor dependencies");
-    }    
-
-    //set the reference to the right hand side of the above equation (gain*Force)
-    ObjectiveVectorRef.Assign(SensorComplianceData->Gain * UsedValues);
-
-    //now set reference to the left hand side of the above equation, the jacobian (only rows indicated in DOFSelections)
-    for(size_t r = 0; r < SensorComplianceData->DOFSelections.size(); r++)
-    {
-        for (size_t c = 0; c < JacP->cols(); c++)
-        {
-            if(r == c)
-            {
-                ObjectiveMatrixRef[r][c] = (*JacP)[r][c];
-            }
-        }
     }
 
-    // ConvertRefs(mode,TickTime);
+    mtsVFDataSensorCompliance * gainData = (mtsVFDataSensorCompliance *)(Data);
+    vctDoubleMat Jacobian = Kinematics.at(0)->Jacobian;
+    vctDoubleVec SensorValues = Sensors.at(0)->Values;
+
+    //set the reference to the right hand side of the above equation (gain*Force)
+    ObjectiveMatrixRef.Assign(Jacobian);
+    ObjectiveVectorRef.ElementwiseProductOf(gainData->Gain, SensorValues);
+
+    ConvertRefs(mode,TickTime);
 }
+
+void mtsVFSensorCompliance::ConvertRefs(const mtsVFBase::CONTROLLERMODE mode, const double TickTime)
+{
+    if (mode == mtsVFBase::CONTROLLERMODE::JVEL){
+        // min || J(q)*t*v - gain*sensorValues ||
+        ObjectiveMatrixRef.Multiply(TickTime);
+    }
+}
+
