@@ -99,7 +99,7 @@ void mtsVFController::UpdateRCMVF(const size_t rows, const std::string vfName, c
     AddVFRCM(RCM_Data);
 }
 
-bool mtsVFController::SetVFData(const mtsVFDataBase & data, const std::type_info & type)
+bool mtsVFController::SetVFData(const mtsVFDataBase & data)
 {
     // find vf by data.Name
     std::map<std::string, mtsVFBase *>::iterator itVF;

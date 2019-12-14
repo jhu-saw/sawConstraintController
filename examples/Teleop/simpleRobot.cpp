@@ -114,21 +114,21 @@ void simpleRobot::setupVF() {
 
     // add objective and constraint to optimizer
     // first, we check if we can set the data. If not, we insert it.
-    if (!mController->SetVFData(mTeleopObjective, typeid(mtsVFFollow)))
+    if (!mController->SetVFData(mTeleopObjective))
     {
         // Adds a new virtual fixture to the active vector
         mController->VFMap.insert(std::pair<std::string,mtsVFFollow *>(mTeleopObjective.Name,new mtsVFFollow(mTeleopObjective.Name,new mtsVFDataBase(mTeleopObjective))));
         // Increment users of each kinematics and sensor object found
         mController->IncrementUsers(mTeleopObjective.KinNames, mTeleopObjective.SensorNames);
     }
-    if (!mController->SetVFData(mJointLimitsConstraint, typeid(mtsVFLimitsConstraint)))
+    if (!mController->SetVFData(mJointLimitsConstraint))
     {
         // Adds a new virtual fixture to the active vector
         mController->VFMap.insert(std::pair<std::string,mtsVFLimitsConstraint *>(mJointLimitsConstraint.Name,new mtsVFLimitsConstraint(mJointLimitsConstraint.Name,new mtsVFDataJointLimits(mJointLimitsConstraint))));
         // Increment users of each kinematics and sensor object found
         mController->IncrementUsers(mJointLimitsConstraint.KinNames, mJointLimitsConstraint.SensorNames);
     }
-    if (!mController->SetVFData(mPlaneConstraint, typeid(mtsVFPlane)))
+    if (!mController->SetVFData(mPlaneConstraint))
     {
         mController->VFMap.insert(std::pair<std::string, mtsVFPlane*>(mPlaneConstraint.Name, new mtsVFPlane(mPlaneConstraint.Name, new mtsVFDataPlane(mPlaneConstraint))));
         mController->IncrementUsers(mPlaneConstraint.KinNames, mPlaneConstraint.SensorNames);
