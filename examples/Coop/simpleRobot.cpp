@@ -121,26 +121,21 @@ void simpleRobot::setupVFBehaviour() {
 
     // add objective and constraint to optimizer
     // first, we check if we can set the data. If not, we insert it.
-    if (!mController->SetVFData(mCoopObjective, typeid(mtsVFSensorCompliance)))
+    if (!mController->SetVFData(mCoopObjective))
     {
         // Adds a new virtual fixture to the active vector
         mController->VFMap.insert(std::pair<std::string,mtsVFSensorCompliance *>(mCoopObjective.Name,new mtsVFSensorCompliance(mCoopObjective.Name,new mtsVFDataSensorCompliance(mCoopObjective))));
-        // Increment users of each kinematics and sensor object found
-        mController->IncrementUsers(mCoopObjective.KinNames, mCoopObjective.SensorNames);
     }
 
-    if (!mController->SetVFData(mPlaneConstraint, typeid(mtsVFPlane)))
+    if (!mController->SetVFData(mPlaneConstraint))
     {
         mController->VFMap.insert(std::pair<std::string, mtsVFPlane*>(mPlaneConstraint.Name, new mtsVFPlane(mPlaneConstraint.Name, new mtsVFDataPlane(mPlaneConstraint))));
-        mController->IncrementUsers(mPlaneConstraint.KinNames, mPlaneConstraint.SensorNames);
     }
 
-    if (!mController->SetVFData(mJointLimitsConstraint, typeid(mtsVFLimitsConstraint)))
+    if (!mController->SetVFData(mJointLimitsConstraint))
     {
         // Adds a new virtual fixture to the active vector
         mController->VFMap.insert(std::pair<std::string,mtsVFLimitsConstraint *>(mJointLimitsConstraint.Name,new mtsVFLimitsConstraint(mJointLimitsConstraint.Name,new mtsVFDataJointLimits(mJointLimitsConstraint))));
-        // Increment users of each kinematics and sensor object found
-        mController->IncrementUsers(mJointLimitsConstraint.KinNames, mJointLimitsConstraint.SensorNames);
     }
 
 }
@@ -208,5 +203,4 @@ nmrConstraintOptimizer::STATUS simpleRobot::runBehaviour(vctDoubleVec &dq) {
 
 void simpleRobot::servoCartesianForce(const mtsDoubleVec & newGoal) {
     mGoalForceValues.Values.Assign(newGoal);
-    std::cout << "data received \n" << mGoalForceValues << std::endl;
 }

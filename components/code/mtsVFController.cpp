@@ -99,7 +99,7 @@ void mtsVFController::UpdateRCMVF(const size_t rows, const std::string vfName, c
     AddVFRCM(RCM_Data);
 }
 
-bool mtsVFController::SetVFData(const mtsVFDataBase & data, const std::type_info & type)
+bool mtsVFController::SetVFData(const mtsVFDataBase & data)
 {
     // find vf by data.Name
     std::map<std::string, mtsVFBase *>::iterator itVF;
@@ -111,16 +111,7 @@ bool mtsVFController::SetVFData(const mtsVFDataBase & data, const std::type_info
         return false;
     }
 
-    // if found, get std::typeid(iter->second) and compare to type
-    // if same type, just update iter->second->Data and return true
-    if(typeid(itVF->second) == type)
-    {
-        DecrementUsers(itVF->second->Data->KinNames,itVF->second->Data->SensorNames);
-        itVF->second->Data = new mtsVFDataBase(data);
-        IncrementUsers(itVF->second->Data->KinNames,itVF->second->Data->SensorNames);
-        return true;
-    }
-    return false;
+    return true;
 }
 
 bool mtsVFController::SetVFDataSensorCompliance(const mtsVFDataSensorCompliance & data, const std::type_info & type)
@@ -505,8 +496,6 @@ void mtsVFController::RemoveSensorFromMap(const std::string & senName)
 */
 void mtsVFController::UpdateOptimizer(double TickTime)
 {
-
-
     // use VFVector to find the space needed in the control optimizer tableau
     Optimizer.ResetIndices();
 
@@ -544,6 +533,15 @@ void mtsVFController::UpdateOptimizer(double TickTime)
 
         }
     }
+
+    std::cout << "\nobjective m" << std::endl;
+    std::cout << Optimizer.GetObjectiveMatrix() << std::endl;
+    std::cout << "objective v" << std::endl;
+    std::cout << Optimizer.GetObjectiveVector() << std::endl;
+    std::cout << "ineq m" << std::endl;
+    std::cout << Optimizer.GetIneqConstraintMatrix() << std::endl;
+    std::cout << "ineq v" << std::endl;
+    std::cout << Optimizer.GetIneqConstraintVector() << std::endl;
 }
 
 //! Solves the constraint optimization problem and fills the result into the parameter

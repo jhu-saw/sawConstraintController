@@ -184,7 +184,7 @@ public:
     //! Helper function that decrements users of new data in an old vf
     void DecrementUsers(const std::vector<std::string> kin_names, const std::vector<std::string> sensor_names);
 
-    bool SetVFData(const mtsVFDataBase & data, const std::type_info & type);
+    bool SetVFData(const mtsVFDataBase & data);
 
     bool SetVFDataSensorCompliance(const mtsVFDataSensorCompliance & data, const std::type_info & type);
 
