@@ -44,7 +44,6 @@ if (cisst_FOUND)
     link_directories(${sawConstraintController_LIBRARY_DIR})
 
     # include directories
-    include_directories (${sawConstraintController_INCLUDE_DIR})
     set(HEADER_DIR "${CMAKE_CURRENT_SOURCE_DIR}")
 
     # set header/source files
