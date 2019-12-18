@@ -1,5 +1,5 @@
 <package>
-  <name>simple_teleop</name>
+  <name>saw_constraint_controller_examples_teleop</name>
   <version>1.3.0</version>
   <description>
   csa_example
