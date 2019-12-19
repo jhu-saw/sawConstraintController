@@ -43,7 +43,7 @@ public:
     /*! Constructor
     \param name String name of object
     */
-    mtsVFPlane(const std::string & name, mtsVFDataPlane * data) : mtsVFCartesianTranslation(name,data)
+    mtsVFPlane(const std::string & name, mtsVFDataBase * data) : mtsVFCartesianTranslation(name,data)
     {
         IsFrameSet = false;
     }

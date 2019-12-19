@@ -1,4 +1,4 @@
-#include <sawConstraintController/mtsVF_RCM.h>
+#include <sawConstraintController/mtsVFRCM.h>
 
 CMN_IMPLEMENT_SERVICES(mtsVF_RCM);
 

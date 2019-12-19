@@ -44,7 +44,7 @@
 #include <sawConstraintController/mtsVFDataJointLimits.h>
 #include <sawConstraintController/mtsVFPlane.h>
 #include <sawConstraintController/mtsVFDataRCM.h>
-#include <sawConstraintController/mtsVF_RCM.h>
+#include <sawConstraintController/mtsVFRCM.h>
 #include <sawConstraintController/mtsVFFollow.h>
 #include <cisstParameterTypes/prmStateJoint.h>
 

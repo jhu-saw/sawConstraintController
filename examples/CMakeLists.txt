@@ -1,5 +1,5 @@
 #
-# (C) Copyright 2014 Johns Hopkins University (JHU), All Rights
+# (C) Copyright 2019 Johns Hopkins University (JHU), All Rights
 # Reserved.
 #
 # --- begin cisst license - do not edit ---
@@ -11,6 +11,8 @@
 # --- end cisst license ---
 
 cmake_minimum_required (VERSION 2.8)
+
+project(saw_constraint_controller_examples)
 
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
