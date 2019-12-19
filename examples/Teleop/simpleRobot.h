@@ -1,3 +1,19 @@
+/*
+  Author(s):  Max Zhaoshuo Li
+  Created on: 2019-10-21
+
+  (C) Copyright 2019 Johns Hopkins University (JHU), All Rights
+  Reserved.
+
+--- begin cisst license - do not edit ---
+
+This software is provided "as is" under an open source license, with
+no warranty.  The complete license can be found in license.txt and
+http://www.cisst.org/cisst/license.txt.
+
+--- end cisst license ---
+*/
+
 #ifndef _simpleRobot_h
 #define _simpleRobot_h
 
@@ -11,9 +27,12 @@
 #include <sawConstraintController/mtsVFFollow.h>
 #include <sawConstraintController/mtsVFPlane.h>
 #include <sawConstraintController/mtsVFLimitsConstraint.h>
+#include <sawConstraintController/mtsVFCylinder.h>
+
 #include <sawConstraintController/mtsVFDataBase.h>
 #include <sawConstraintController/mtsVFDataPlane.h>
 #include <sawConstraintController/mtsVFDataJointLimits.h>
+#include <sawConstraintController/mtsVFDataCylinder.h>
 
 class simpleRobot: public mtsTaskPeriodic {
 protected:
@@ -41,6 +60,8 @@ protected:
     mtsVFDataBase mTeleopObjective; // No additional data needed, therefore using mtsVFBase
     mtsVFDataPlane mPlaneConstraint;
     mtsVFDataJointLimits mJointLimitsConstraint;
+    mtsVFDataCylinder mCylindricalConstraint;
+
     void updateOptimizerKinematics();
 
     // teleop command

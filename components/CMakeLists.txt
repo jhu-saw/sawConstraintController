@@ -89,7 +89,8 @@ if (cisst_FOUND_AS_REQUIRED)
                         code/mtsVFDataPlane.cdg
                         code/mtsVFDataJointLimits.cdg
                         code/mtsVFDataAbsoluteJointLimits.cdg
-                        code/mtsVFDataRCM.cdg)
+                        code/mtsVFDataRCM.cdg
+                        code/mtsVFDataCylinder.cdg)
 
   include_directories (${sawConstraintController_INCLUDE_DIR})
   set (sawConstraintController_HEADER_DIR "include/sawConstraintController")
@@ -109,10 +110,8 @@ if(SAW_sawConstraintController_USE_EIGEN)
        ${sawConstraintController_HEADER_DIR}/mtsVFAbsoluteJointLimits.h
        ${sawConstraintController_HEADER_DIR}/mtsVFCartesianLimits.h
        ${sawConstraintController_HEADER_DIR}/mtsVFFollow.h
-#       ${sawConstraintController_HEADER_DIR}/mtsVFFollowPath.h
-       ${sawConstraintController_HEADER_DIR}/mtsVF_RCM.h
-#       ${sawConstraintController_HEADER_DIR}/roPath.h
-#       ${sawConstraintController_HEADER_DIR}/roPathSegment.h
+       ${sawConstraintController_HEADER_DIR}/mtsVFRCM.h
+       ${sawConstraintController_HEADER_DIR}/mtsVFCylinder.h
        ${sawConstraintController_HEADER_DIR}/constraintOptimizer.h
        )
 
@@ -129,11 +128,9 @@ if(SAW_sawConstraintController_USE_EIGEN)
        code/mtsVFAbsoluteJointLimits.cpp
        code/mtsVFCartesianLimits.cpp
        code/mtsVFFollow.cpp
-#       code/mtsVFFollowPath.cpp
-       code/mtsVF_RCM.cpp
-#       code/roPath.cpp
-#       code/roPathSegment.cpp
+       code/mtsVFRCM.cpp
        code/constraintOptimizer.cpp
+       code/mtsVFCylinder.cpp
        code/eiquadprog.hpp
        )
 
@@ -153,10 +150,8 @@ else(SAW_sawConstraintController_USE_EIGEN)
        ${sawConstraintController_HEADER_DIR}/mtsVFCartesianLimits.h
        ${sawConstraintController_HEADER_DIR}/mtsVFFollow.h
        ${sawConstraintController_HEADER_DIR}/mtsVFLimitsConstraint.h
-#       ${sawConstraintController_HEADER_DIR}/mtsVFFollowPath.h
-       ${sawConstraintController_HEADER_DIR}/mtsVF_RCM.h
-#       ${sawConstraintController_HEADER_DIR}/roPath.h
-#       ${sawConstraintController_HEADER_DIR}/roPathSegment.h
+       ${sawConstraintController_HEADER_DIR}/mtsVFRCM.h
+       ${sawConstraintController_HEADER_DIR}/mtsVFCylinder.h
        )
 
   set (SOURCE_FILES
@@ -173,10 +168,8 @@ else(SAW_sawConstraintController_USE_EIGEN)
       code/mtsVFCartesianLimits.cpp
       code/mtsVFFollow.cpp
       code/mtsVFLimitsConstraint.cpp
-      #       code/mtsVFFollowPath.cpp
-      code/mtsVF_RCM.cpp
-#      code/roPath.cpp
-#      code/roPathSegment.cpp
+      code/mtsVFRCM.cpp
+      code/mtsVFCylinder.cpp
 )
 
 endif(SAW_sawConstraintController_USE_EIGEN)
