@@ -29,5 +29,10 @@ class {
       visibility public;
     }
 
+    member {
+      name NumJoints;
+      type int;
+      visibility public;
+    }
 }
 

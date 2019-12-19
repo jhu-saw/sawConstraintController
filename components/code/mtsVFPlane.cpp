@@ -78,14 +78,11 @@ void mtsVFPlane::FillInTableauRefs(const CONTROLLERMODE mode, const double TickT
     }    
 
 
-    vctDynamicMatrix<double> Jacobian3x6( 3, 6, VCT_COL_MAJOR );
-    Jacobian3x6.Assign(CurrentKinematics->Jacobian.Ref(3,6,0,0));
-
     IneqConstraintVectorRef.Assign(vct1(d - vct1(vctDotProduct(planeData->Normal, CurrentPos))));
 
     // TODO: this only works for JPOS/JVEL case
     if (mode == mtsVFBase::CONTROLLERMODE::JPOS || mode == mtsVFBase::CONTROLLERMODE::JVEL){
-        IneqConstraintMatrixRef.Assign(N * Jacobian3x6);
+        IneqConstraintMatrixRef.Assign(N * CurrentKinematics->Jacobian.Ref(3,planeData->NumJoints,0,0)); // first 3 rows are position
     }
     else if (mode == mtsVFBase::CONTROLLERMODE::CARTPOS || mode == mtsVFBase::CONTROLLERMODE::CARTVEL){
         IneqConstraintMatrixRef.Assign(N);

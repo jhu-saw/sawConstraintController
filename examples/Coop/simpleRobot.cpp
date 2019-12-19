@@ -1,8 +1,5 @@
-/* -*- Mode: C++; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-    */
-/* ex: set filetype=cpp softtabstop=4 shiftwidth=4 tabstop=4 cindent expandtab: */
-
 /*
-  Author(s):  Zhaoshuo Li
+  Author(s):  Max Zhaoshuo Li
   Created on: 2019-10-21
 
   (C) Copyright 2019 Johns Hopkins University (JHU), All Rights
@@ -99,13 +96,21 @@ void simpleRobot::setupVFBehaviour() {
     // use the names defined above to relate kinematics data
     mCoopObjective.SensorNames.push_back("GoalForce");
 
-    std::cout << "objective \n";
+    // add objective and constraint to optimizer
+    // first, we check if we can set the data. If not, we insert it.
+    if (!mController->SetVFData(mCoopObjective))
+    {
+        // Adds a new virtual fixture to the active vector
+        mController->VFMap.insert(std::pair<std::string,mtsVFSensorCompliance *>(mCoopObjective.Name,new mtsVFSensorCompliance(mCoopObjective.Name,new mtsVFDataSensorCompliance(mCoopObjective))));
+    }
+    std::cout << "objective added \n";
 
     // plane constraint
     mPlaneConstraint.Name = "PlaneConstraint";
     mPlaneConstraint.IneqConstraintRows = 1;
     mPlaneConstraint.Normal.Assign(0.0,0.0,1.0);
     mPlaneConstraint.PointOnPlane.Assign(0.0, 0.0, -2.0);
+    mPlaneConstraint.NumJoints = mNumJoints;
     // use the names defined above to relate kinematics data
     mPlaneConstraint.KinNames.push_back("MeasuredKinematics"); // need measured kinematics according to mtsVFPlane.cpp
     // slack
@@ -115,7 +120,11 @@ void simpleRobot::setupVFBehaviour() {
     mPlaneConstraint.SlackLimits.SetSize(1);
     mPlaneConstraint.SlackLimits.Assign(vctDouble1(1.0));
 
-    std::cout << "plane constraint \n";
+    if (!mController->SetVFData(mPlaneConstraint))
+    {
+        mController->VFMap.insert(std::pair<std::string, mtsVFPlane*>(mPlaneConstraint.Name, new mtsVFPlane(mPlaneConstraint.Name, new mtsVFDataPlane(mPlaneConstraint))));
+    }
+    std::cout << "plane added \n";
 
     // joint limit constraint
     mJointLimitsConstraint.Name = "Joint Limit";
@@ -128,30 +137,12 @@ void simpleRobot::setupVFBehaviour() {
     // use the names defined above to relate kinematics data
     mJointLimitsConstraint.KinNames.push_back("MeasuredKinematics"); // measured kinematics needs to be first according to mtsVFLimitsConstraint.cpp
 
-    std::cout << "joint limit \n";
-
-    // add objective and constraint to optimizer
-    // first, we check if we can set the data. If not, we insert it.
-    if (!mController->SetVFData(mCoopObjective))
-    {
-        // Adds a new virtual fixture to the active vector
-        mController->VFMap.insert(std::pair<std::string,mtsVFSensorCompliance *>(mCoopObjective.Name,new mtsVFSensorCompliance(mCoopObjective.Name,new mtsVFDataSensorCompliance(mCoopObjective))));
-    }
-    std::cout << "objective added \n";
-
-    if (!mController->SetVFData(mPlaneConstraint))
-    {
-        mController->VFMap.insert(std::pair<std::string, mtsVFPlane*>(mPlaneConstraint.Name, new mtsVFPlane(mPlaneConstraint.Name, new mtsVFDataPlane(mPlaneConstraint))));
-    }
-    std::cout << "plane added \n";
-
     if (!mController->SetVFData(mJointLimitsConstraint))
     {
         // Adds a new virtual fixture to the active vector
         mController->VFMap.insert(std::pair<std::string,mtsVFLimitsConstraint *>(mJointLimitsConstraint.Name,new mtsVFLimitsConstraint(mJointLimitsConstraint.Name,new mtsVFDataJointLimits(mJointLimitsConstraint))));
     }
     std::cout << "joint limit added \n";
-
 }
 
 void simpleRobot::forwardKinematics(vctDoubleVec& jointPosition) {
