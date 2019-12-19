@@ -99,6 +99,7 @@ void mtsVFController::UpdateRCMVF(const size_t rows, const std::string vfName, c
     AddVFRCM(RCM_Data);
 }
 
+// TODO: change name to setVFDataBase
 bool mtsVFController::SetVFData(const mtsVFDataBase & data)
 {
     // find vf by data.Name
@@ -114,7 +115,7 @@ bool mtsVFController::SetVFData(const mtsVFDataBase & data)
     return true;
 }
 
-bool mtsVFController::SetVFDataSensorCompliance(const mtsVFDataSensorCompliance & data, const std::type_info & type)
+bool mtsVFController::SetVFDataSensorCompliance(const mtsVFDataSensorCompliance & data)
 {
     // find vf by data.Name
     std::map<std::string, mtsVFBase *>::iterator itVF;
@@ -128,14 +129,9 @@ bool mtsVFController::SetVFDataSensorCompliance(const mtsVFDataSensorCompliance 
 
     // if found, get std::typeid(iter->second) and compare to type
     // if same type, just update iter->second->Data and return true
-    if(typeid(itVF->second) == type)
-    {
-        DecrementUsers(itVF->second->Data->KinNames,itVF->second->Data->SensorNames);
-        itVF->second->Data = new mtsVFDataSensorCompliance(data);
-        IncrementUsers(itVF->second->Data->KinNames,itVF->second->Data->SensorNames);
-        return true;
-    }
-    return false;
+    itVF->second->Data = new mtsVFDataSensorCompliance(data);
+
+    return true;
 }
 
 bool mtsVFController::SetVFDataPlane(const mtsVFDataPlane &data, const std::type_info &type)

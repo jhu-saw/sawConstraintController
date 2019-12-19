@@ -50,8 +50,9 @@ protected:
     vctFrm4x4 mCartesianPosition;
     prmPositionCartesianGet mMeasuredCartesianPosition;// for ros publication
 
-    int mNumDof;
+    int mNumOutput;
     int mNumJoints;
+    int mNumFTDoF;
 
     // constraint controller
     mtsVFController *mController;   //! Constraint controller that controls the behaviours
