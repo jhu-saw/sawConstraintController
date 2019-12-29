@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 2.8.3)
 
-project(simple_coop)
+project(saw_constraint_controller_examples_coop)
 ## Compile as C++11, supported in ROS Kinetic and newer
 # add_compile_options(-std=c++11)
 
@@ -44,7 +44,6 @@ if (cisst_FOUND)
     link_directories(${sawConstraintController_LIBRARY_DIR})
 
     # include directories
-    include_directories (${sawConstraintController_INCLUDE_DIR})
     set(HEADER_DIR "${CMAKE_CURRENT_SOURCE_DIR}")
 
     # set header/source files
