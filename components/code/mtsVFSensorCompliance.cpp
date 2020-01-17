@@ -41,14 +41,22 @@ void mtsVFSensorCompliance::FillInTableauRefs(const CONTROLLERMODE mode, const d
         cmnThrow("Error: Sensor Compliance VF is missing sensor dependencies");
     }
 
+    std::cout << "fill in values for sensor compliance \n";
+
     mtsVFDataSensorCompliance * gainData = (mtsVFDataSensorCompliance *)(Data);
     vctDoubleMat Jacobian = Kinematics.at(0)->Jacobian;
     vctDoubleVec SensorValues = Sensors.at(0)->Values;
 
-    //set the reference to the right hand side of the above equation (gain*Force)
-    ObjectiveMatrixRef.Assign(Jacobian);
-    ObjectiveVectorRef.ElementwiseProductOf(gainData->Gain, SensorValues);
+    std::cout << "gains \n" << gainData->Gain << std::endl;
+    std::cout << "Jacobian \n" << Jacobian << std::endl;
+    std::cout << "SensorValues \n" << SensorValues << std::endl;
 
+    //set the reference to the right hand side of the above equation (gain*Force)
+    std::cout << ObjectiveMatrixRef.size() << std::endl;
+    ObjectiveMatrixRef.Assign(Jacobian);
+    std::cout << "Assigned objective \n"<< std::endl;
+    ObjectiveVectorRef.ElementwiseProductOf(gainData->Gain, SensorValues);
+    std::cout << "Computed force \n"<< std::endl;
     ConvertRefs(mode,TickTime);
 }
 

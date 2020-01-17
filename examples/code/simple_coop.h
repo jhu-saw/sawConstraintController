@@ -14,8 +14,8 @@ http://www.cisst.org/cisst/license.txt.
 --- end cisst license ---
 */
 
-#ifndef _simpleRobot_h
-#define _simpleRobot_h
+#ifndef _simpleCoop_h
+#define _simpleCoop_h
 
 #include <cisstMultiTask/mtsTaskPeriodic.h>
 #include <cisstMultiTask/mtsVector.h>
@@ -37,7 +37,7 @@ http://www.cisst.org/cisst/license.txt.
 #include <sawConstraintController/mtsVFDataJointLimits.h>
 #include <sawConstraintController/mtsVFDataCylinder.h>
 
-class simpleRobot: public mtsTaskPeriodic {
+class simpleCoop: public mtsTaskPeriodic {
 protected:
     // internal method to configure this component
     void init();
@@ -102,11 +102,11 @@ protected:
 
 public:
     //! Constructor
-    simpleRobot(const std::string & componentName, const double periodInSeconds);
-    ~simpleRobot() {}
+    simpleCoop(const std::string & componentName, const double periodInSeconds);
+    ~simpleCoop() {}
 
     //! Run loop for the robot task
     void Run();        // performed periodically
 };
 
-#endif // _simpleRobot_h
+#endif // _simpleCoop_h

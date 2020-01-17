@@ -15,18 +15,18 @@ http://www.cisst.org/cisst/license.txt.
 */
 
 #include <cstdio>
-#include "simpleRobot.h"
+#include "simple_coop.h"
 
 #include <cisstCommon/cmnConstants.h>
 #include <cisstMultiTask/mtsInterfaceProvided.h>
 
-simpleRobot::simpleRobot(const std::string & componentName, double periodInSeconds):
+simpleCoop::simpleCoop(const std::string & componentName, double periodInSeconds):
     mtsTaskPeriodic(componentName, periodInSeconds)
 {
     init();
 }
 
-void simpleRobot::init() {
+void simpleCoop::init() {
     setupRobot();
     setupVFBehaviour();
 
@@ -35,12 +35,12 @@ void simpleRobot::init() {
 
     mtsInterfaceProvided * interfaceProvided = AddInterfaceProvided("ProvidesSimpleRobot");
     if (interfaceProvided){
-        interfaceProvided->AddCommandWrite(&simpleRobot::servoCartesianForce, this, "ServoCartesianForce");
+        interfaceProvided->AddCommandWrite(&simpleCoop::servoCartesianForce, this, "ServoCartesianForce");
         interfaceProvided->AddCommandReadState(StateTable, mMeasuredCartesianPosition, "GetMeasuredCartesianPosition");
     }
 }
 
-void simpleRobot::setupRobot() {
+void simpleCoop::setupRobot() {
     mNumOutput = 6;
     mNumJoints = 6;
     mNumFTDoF = 6;
@@ -62,7 +62,7 @@ void simpleRobot::setupRobot() {
     mMeasuredCartesianPosition.Valid() = true;
 }
 
-void simpleRobot::setupVFBehaviour() {
+void simpleCoop::setupVFBehaviour() {
     // initialize controller
     mController = new mtsVFController(mNumJoints, mtsVFBase::JVEL);
 
@@ -75,13 +75,9 @@ void simpleRobot::setupVFBehaviour() {
     mMeasuredJoint.SetPosition(mJointPosition);
     mMeasuredKinematics.JointState = &mMeasuredJoint;
 
-    std::cout << "kinematics \n";
-
     mGoalForceValues.Name="GoalForce";
     mGoalForceValues.Values.SetSize(mNumFTDoF);
     mGoalForceValues.Values.SetAll(0.0);
-
-    std::cout << "force \n";
 
     // objective
     mCoopObjective.Name = "Coop";
@@ -145,12 +141,12 @@ void simpleRobot::setupVFBehaviour() {
     std::cout << "joint limit added \n";
 }
 
-void simpleRobot::forwardKinematics(vctDoubleVec& jointPosition) {
+void simpleCoop::forwardKinematics(vctDoubleVec& jointPosition) {
     mMeasuredCartesianPosition.Position().Translation() = jointPosition.Ref(3,0);
     // TODO: update rotation
 }
 
-void simpleRobot::Run() {
+void simpleCoop::Run() {
     ProcessQueuedCommands();
     ProcessQueuedEvents();
 
@@ -177,7 +173,7 @@ void simpleRobot::Run() {
     }
 }
 
-void simpleRobot::updateOptimizerKinematics() {
+void simpleCoop::updateOptimizerKinematics() {
     std::cout << "update kinematics \n";
     // update cartesian position and jacobian
     mMeasuredKinematics.Frame.FromNormalized(mMeasuredCartesianPosition.Position());
@@ -189,7 +185,7 @@ void simpleRobot::updateOptimizerKinematics() {
     std::cout << "update kinematics finished \n";
 }
 
-void simpleRobot::updateOptimizerSensor()
+void simpleCoop::updateOptimizerSensor()
 {
     std::cout << "update sensor \n";
     // update controller stored sensor
@@ -197,7 +193,7 @@ void simpleRobot::updateOptimizerSensor()
     std::cout << "update sensor finished \n";
 }
 
-nmrConstraintOptimizer::STATUS simpleRobot::runBehaviour(vctDoubleVec &dq) {
+nmrConstraintOptimizer::STATUS simpleCoop::runBehaviour(vctDoubleVec &dq) {
     // update optimizer kinematics
     updateOptimizerKinematics();
     // update sensor data
@@ -213,7 +209,7 @@ nmrConstraintOptimizer::STATUS simpleRobot::runBehaviour(vctDoubleVec &dq) {
     return mController->Solve(dq);
 }
 
-void simpleRobot::servoCartesianForce(const mtsDoubleVec & newGoal) {
+void simpleCoop::servoCartesianForce(const mtsDoubleVec & newGoal) {
     mGoalForceValues.Values.Assign(newGoal);
     std::cout << "New gain obtained" << std::endl;
 

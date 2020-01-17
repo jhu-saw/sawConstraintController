@@ -23,6 +23,13 @@ CMN_IMPLEMENT_SERVICES(mtsVFPlane)
 //! Updates co with virtual fixture data.
 /*! FillInTableauRefs
 */
+mtsVFPlane::mtsVFPlane() : mtsVFCartesianTranslation(){}
+
+mtsVFPlane::mtsVFPlane(const std::string &name, mtsVFDataBase *data) : mtsVFCartesianTranslation(name,data)
+{
+    IsFrameSet = false;
+}
+
 void mtsVFPlane::FillInTableauRefs(const CONTROLLERMODE mode, const double TickTime)
 {    
     /*

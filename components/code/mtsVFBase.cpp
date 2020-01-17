@@ -45,6 +45,7 @@ mtsVFBase::mtsVFBase(const std::string & name, mtsVFDataBase * data)
 */
 void mtsVFBase::ReserveSpace(nmrConstraintOptimizer & co)
 {
+    ComputeConstraintSize();
     co.ReserveSpace(Data->ObjectiveRows,Data->IneqConstraintRows,Data->EqConstraintRows,Data->NumSlacks);
 }
 

@@ -28,11 +28,5 @@ class {
       default vct3(0.0,0.0,0.0);
       visibility public;
     }
-
-    member {
-      name NumJoints;
-      type int;
-      visibility public;
-    }
 }
 

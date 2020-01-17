@@ -5,7 +5,7 @@ inline-header {
 }
 
 class {
-    name mtsVFDataCylinder;
+    name mtsVFDataMesh;
     attribute CISST_EXPORT;
 
     base-class {
@@ -13,26 +13,14 @@ class {
     }
 
     member {
-      name Axis;
-      type vctDouble3;
-      visibility public;
-    }
-
-    member {
-      name Point;
-      type vctDouble3;
-      visibility public;
-    }
-
-    member {
-      name Radius;
+      name BoudingDistance;
       type double;
       visibility public;
     }
 
     member {
-      name NumJoints;
-      type int;
-      visibility public;
+        name ActiveFaceIdx;
+        type std::vector<int>;
+        visibility public;
     }
 }

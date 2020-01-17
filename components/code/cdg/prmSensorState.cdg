@@ -1,6 +1,4 @@
 inline-header {
-#include <cisstVector/vctDynamicVectorTypes.h>
-#include <cisstVector/vctDynamicMatrixTypes.h>
 // Always include last!
 #include <sawConstraintController/sawConstraintControllerExport.h>
 }

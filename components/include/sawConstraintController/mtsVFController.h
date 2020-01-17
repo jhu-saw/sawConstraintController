@@ -202,6 +202,14 @@ public:
     mtsVFDataPlane PlaneData;
     mtsVFDataRCM RCM_Data;
 
+private:
+    // round vector to 6 decimal places
+    inline void round6(vctDoubleVec & dq){
+        for (auto it = dq.begin(); it != dq.end(); it ++){
+            *it = std::round(*it*1E6)/1E6;
+        }
+    }
+
 };
 
 CMN_DECLARE_SERVICES_INSTANTIATION(mtsVFController);

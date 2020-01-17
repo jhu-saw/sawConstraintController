@@ -498,9 +498,13 @@ void mtsVFController::UpdateOptimizer(double TickTime)
     std::map<std::string,mtsVFBase *>::iterator itVF;
     for(itVF = VFMap.begin(); itVF != VFMap.end(); itVF++)
     {       
-        if(itVF->second->Data->Active)
+        mtsVFBase * tempVFData = itVF->second;
+        if(tempVFData->Data->Active)
         {
-            itVF->second->ReserveSpace(Optimizer);
+            //updates the virtual fixture's kinematics and sensor objects
+            tempVFData->LookupStateData(Kinematics,Sensors);
+
+            tempVFData->ReserveSpace(Optimizer);
         }
     }
 
@@ -517,10 +521,6 @@ void mtsVFController::UpdateOptimizer(double TickTime)
 
         if(tempVFData->Data->Active)
         {
-            
-            //updates the virtual fixture's kinematics and sensor objects
-            tempVFData->LookupStateData(Kinematics,Sensors);
-
             //updates the virtual fixture's references to the control optimizer tableau
             tempVFData->SetTableauRefs(Optimizer);
 
@@ -530,23 +530,28 @@ void mtsVFController::UpdateOptimizer(double TickTime)
         }
     }
 
-    std::cout << "\nobjective m" << std::endl;
-    std::cout << Optimizer.GetObjectiveMatrix() << std::endl;
-    std::cout << "objective v" << std::endl;
-    std::cout << Optimizer.GetObjectiveVector() << std::endl;
-    std::cout << "ineq m" << std::endl;
-    std::cout << Optimizer.GetIneqConstraintMatrix() << std::endl;
-    std::cout << "ineq v" << std::endl;
-    std::cout << Optimizer.GetIneqConstraintVector() << std::endl;
+//    std::cout << "\nobjective m" << std::endl;
+//    std::cout << Optimizer.GetObjectiveMatrix() << std::endl;
+//    std::cout << "objective v" << std::endl;
+//    std::cout << Optimizer.GetObjectiveVector() << std::endl;
+//    std::cout << "ineq m" << std::endl;
+//    std::cout << Optimizer.GetIneqConstraintMatrix() << std::endl;
+//    std::cout << "ineq v" << std::endl;
+//    std::cout << Optimizer.GetIneqConstraintVector() << std::endl;
 }
 
 //! Solves the constraint optimization problem and fills the result into the parameter
+//! To enhance numerical stability, round to nearest 6 decimal places
+//! If unit is in meters, this results in micron meter precision
+//! If unit is in mili-meters, this results in pico meter precision
 /*! Solve
   @param dq Storage for the result of the solve call
   */
 nmrConstraintOptimizer::STATUS mtsVFController::Solve(vctDoubleVec & dq)
 {
-    return Optimizer.Solve(dq);
+    nmrConstraintOptimizer::STATUS status = Optimizer.Solve(dq);
+    round6(dq);
+    return status;
 }
 
 void mtsVFController::LookupBaseData()

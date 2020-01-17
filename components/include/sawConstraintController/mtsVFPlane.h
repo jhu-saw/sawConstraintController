@@ -2,10 +2,9 @@
 /* ex: set filetype=cpp softtabstop=4 shiftwidth=4 tabstop=4 cindent expandtab: */
 
 /*
- Author(s):  Preetham Chalasani
- Created on: 2014
+ Author(s):  Preetham Chalasani & Max Zhaoshuo Li
 
- (C) Copyright 2014 Johns Hopkins University (JHU), All Rights Reserved.
+ (C) Copyright 2014-2020 Johns Hopkins University (JHU), All Rights Reserved.
 
  --- begin cisst license - do not edit ---
 
@@ -38,15 +37,12 @@ public:
 
     /*! Constructor
     */
-    mtsVFPlane() : mtsVFCartesianTranslation(){}
+    mtsVFPlane();
 
     /*! Constructor
     \param name String name of object
     */
-    mtsVFPlane(const std::string & name, mtsVFDataBase * data) : mtsVFCartesianTranslation(name,data)
-    {
-        IsFrameSet = false;
-    }
+    mtsVFPlane(const std::string & name, mtsVFDataBase * data);
 
     //! Updates co with virtual fixture data.
     /*! FillInTableauRefs

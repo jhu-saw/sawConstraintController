@@ -14,8 +14,8 @@ http://www.cisst.org/cisst/license.txt.
 --- end cisst license ---
 */
 
-#ifndef _simpleRobot_h
-#define _simpleRobot_h
+#ifndef _simpleTeleop_h
+#define _simpleTeleop_h
 
 #include <cisstMultiTask/mtsTaskPeriodic.h>
 #include <cisstMultiTask/mtsVector.h>
@@ -28,13 +28,14 @@ http://www.cisst.org/cisst/license.txt.
 #include <sawConstraintController/mtsVFPlane.h>
 #include <sawConstraintController/mtsVFLimitsConstraint.h>
 #include <sawConstraintController/mtsVFCylinder.h>
+#include <sawConstraintController/mtsVFMesh.h>
 
 #include <sawConstraintController/mtsVFDataBase.h>
 #include <sawConstraintController/mtsVFDataPlane.h>
 #include <sawConstraintController/mtsVFDataJointLimits.h>
 #include <sawConstraintController/mtsVFDataCylinder.h>
 
-class simpleRobot: public mtsTaskPeriodic {
+class simpleTeleop: public mtsTaskPeriodic {
 protected:
     // internal method to configure this component
     void init();
@@ -60,19 +61,24 @@ protected:
     mtsVFDataBase mTeleopObjective; // No additional data needed, therefore using mtsVFBase
     mtsVFDataPlane mPlaneConstraint;
     mtsVFDataJointLimits mJointLimitsConstraint;
-    mtsVFDataCylinder mCylindricalConstraint;
+    mtsVFDataCylinder mNerveLeft;
+    mtsVFDataCylinder mNerveRight;
+    // mesh
+    cisstMesh mMeshFile;
+    mtsVFDataMesh mMesh;
 
     void updateOptimizerKinematics();
 
     // teleop command
     void servoCartesianPosition(const vctFrm4x4 & newGoal);
+    void transformationCallback(const vctFrm4x4 & transformation);
 
 public:
     // provide a name for the task and define the frequency (time
     // interval between calls to the periodic Run).  Also used to
     // populate the interface(s)
-    simpleRobot(const std::string & componentName, const double periodInSeconds);
-    ~simpleRobot() {}
+    simpleTeleop(const std::string & componentName, const double periodInSeconds);
+    ~simpleTeleop() {}
 
     // all four methods are pure virtual in mtsTask
     void Run();        // performed periodically
