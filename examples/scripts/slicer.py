@@ -11,9 +11,17 @@ from scipy.spatial.distance import cdist
 import datetime
 
 class RegistrationObject():
-    def poseCallback(self, data):
+    def measuredCPCallBack(self, data):
         msg = igtlpoint()
-        msg.name = "Tip"
+        msg.name = "Measured"
+        msg.pointdata = Point(
+            data.pose.position.x, data.pose.position.y, data.pose.position.z)
+
+        self.igtl_point_pub.publish(msg)
+
+    def servoCPCallBack(self, data):
+        msg = igtlpoint()
+        msg.name = "Servo"
         msg.pointdata = Point(
             data.pose.position.x, data.pose.position.y, data.pose.position.z)
 
@@ -27,23 +35,14 @@ class RegistrationObject():
         transfrom = data.transform
         self.transform_pub.publish(transfrom)
 
-    def pub_igtl_point(self, p_pivot):
-        msg = igtlpointcloud()
-        msg.name = 'pivot_point'
-
-        msg.pointdata = []
-        for i in range(self.p_pivot.shape[0]):
-            p = Point(p_pivot[i, 0], p_pivot[i, 1], p_pivot[i, 2])
-            msg.pointdata.append(p)
-
-        self.igtl_pointcloud_pub.publish(msg)
-
     def registration(self):
         rospy.init_node('ds_registration', anonymous=True)
 
         # subscribe to robot ee location
-        sub = rospy.Subscriber('/simple_robot/measured_cp',
-                               PoseStamped, self.poseCallback)
+        sub_measured = rospy.Subscriber('/simple_robot/measured_cp',
+                               PoseStamped, self.measuredCPCallBack)
+        sub_servo = rospy.Subscriber('/simple_robot/servo_cp',
+                               PoseStamped, self.servoCPCallBack)
         transform_sub = rospy.Subscriber(
             '/IGTL_TRANSFORM_IN', igtltransform, self.transformCallback)
         # publish to slicer

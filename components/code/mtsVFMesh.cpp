@@ -22,23 +22,19 @@ void mtsVFMesh::FillInTableauRefs(const mtsVFBase::CONTROLLERMODE mode, const do
 
     // if there is inequality constraint
     if (meshData->IneqConstraintRows > 0) {
-//        std::cout << "Fill in Tableau for mesh" << std::endl;
-//        std::cout << "Active constraint " << meshData->IneqConstraintRows << std::endl;
+        vct3 CurrentPos(CurrentKinematics->Frame.Translation()); // ignore rotation for now
+        std::cout << "Fill in Tableau for mesh" << std::endl;
+        std::cout << "Active constraint " << meshData->IneqConstraintRows << std::endl;
         int rowNumber = 0;
         vctDoubleVec N; N.SetSize(3);
         vctDoubleVec NJ; NJ.SetSize(6);
         vctDoubleMat JacPos(CurrentKinematics->Jacobian.Ref(3,meshData->NumJoints,0,0));
         for (auto it : meshData->ActiveFaceIdx){
-            // add to constraint
-//            std::cout << "Face index " << it << std::endl;
-//            std::cout << "CP Location " << pTreeMesh->Mesh->cpLocation.at(it) << std::endl;
-
             // get normal direction
-            N.Assign(pTreeMesh->Mesh->activeNormal.at(it));
-            IneqConstraintVectorRef.at(rowNumber) = - pTreeMesh->Mesh->distance.at(it);
+            N.Assign(pTreeMesh->Mesh->activeNormal.at(it)).NormalizedSelf();
+            IneqConstraintVectorRef.at(rowNumber) = - (CurrentPos-pTreeMesh->Mesh->closestPoint.at(it)).DotProduct(vct3(N));
 
-//            std::cout << "Normal " << N << std::endl;
-//            std::cout << "Distance " << pTreeMesh->Mesh->distance.at(it) << std::endl;
+            std::cout << "Face index " << it << " Normal " << N << " Distance " << IneqConstraintVectorRef.at(rowNumber) << std::endl;
 
             if (mode == mtsVFBase::CONTROLLERMODE::JPOS || mode == mtsVFBase::CONTROLLERMODE::JVEL){
                 NJ.ProductOf(N,JacPos);
@@ -77,6 +73,7 @@ void mtsVFMesh::ComputeConstraintSize()
     pTreeMesh->Mesh->ResetMeshConstraintValues();
     meshData->ActiveFaceIdx.clear();
     meshData->IneqConstraintRows = 0;
+    std::cout << "\nFind intersection" << std::endl;
     int numIntersected = pTreeMesh->FindIntersectedPoints(CurrentPos,meshData->BoudingDistance,meshData->ActiveFaceIdx);
 
     // if there is intersection

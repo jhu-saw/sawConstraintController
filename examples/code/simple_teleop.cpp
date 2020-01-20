@@ -114,7 +114,7 @@ void simpleTeleop::setupVF() {
 //    // plane constraint
 //    mPlaneConstraint.Name = "PlaneConstraint";
 //    mPlaneConstraint.IneqConstraintRows = 1;
-//    mPlaneConstraint.Normal.Assign(0.0,0.0,1.0);
+//    mPlaneConstraint.Normal.Assign(1.0,0.0,1.0).NormalizedSelf();
 //    mPlaneConstraint.PointOnPlane.Assign(0.0, 0.0, -5.0);
 //    mPlaneConstraint.NumJoints = mNumJoints;
 //    // use the names defined above to relate kinematics data
@@ -158,7 +158,7 @@ void simpleTeleop::setupVF() {
 //    }
 
     // mesh constraint
-    mMeshFile.LoadMeshFromSTLFile("/home/max/galen_ws/src/cisstICP/tests/mesh/Pyramid.STL");
+    mMeshFile.LoadMeshFromSTLFile("/home/max/galen_ws/src/cisstICP/tests/mesh/Cube.STL");
     mMesh.Name = "Mesh";
     mMesh.BoudingDistance = 1.0;
     mMesh.NumJoints = mNumJoints;
