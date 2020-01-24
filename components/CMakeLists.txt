@@ -90,7 +90,6 @@ if (cisst_FOUND_AS_REQUIRED)
        ${sawConstraintController_HEADER_DIR}/mtsVFLimitsConstraint.h
        ${sawConstraintController_HEADER_DIR}/mtsVFRCM.h
        ${sawConstraintController_HEADER_DIR}/mtsVFCylinder.h
-       ${sawConstraintController_HEADER_DIR}/testClass.h
        )
 
   set (SOURCE_FILES
@@ -109,7 +108,6 @@ if (cisst_FOUND_AS_REQUIRED)
       code/mtsVFLimitsConstraint.cpp
       code/mtsVFRCM.cpp
       code/mtsVFCylinder.cpp
-      code/testClass.cpp
 )
 
 if(USE_EIGEN)
