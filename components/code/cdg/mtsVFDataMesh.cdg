@@ -13,7 +13,7 @@ class {
     }
 
     member {
-      name BoudingDistance;
+      name BoundingDistance;
       type double;
       visibility public;
     }

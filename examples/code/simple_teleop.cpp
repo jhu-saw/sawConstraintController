@@ -160,7 +160,7 @@ void simpleTeleop::setupVF() {
     // mesh constraint
     mMeshFile.LoadMeshFromSTLFile("/home/max/galen_ws/src/cisstICP/tests/mesh/Cube.STL");
     mMesh.Name = "Mesh";
-    mMesh.BoudingDistance = 1.0;
+    mMesh.BoundingDistance = 1.0;
     mMesh.NumJoints = mNumJoints;
     mMesh.KinNames.clear(); // sanity
     // use the names defined above to relate kinematics data

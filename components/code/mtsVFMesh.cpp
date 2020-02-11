@@ -74,7 +74,7 @@ void mtsVFMesh::ComputeConstraintSize()
     meshData->ActiveFaceIdx.clear();
     meshData->IneqConstraintRows = 0;
     std::cout << "\nFind intersection" << std::endl;
-    int numIntersected = pTreeMesh->FindIntersectedPoints(CurrentPos,meshData->BoudingDistance,meshData->ActiveFaceIdx);
+    int numIntersected = pTreeMesh->FindIntersectedPoints(CurrentPos,meshData->BoundingDistance,meshData->ActiveFaceIdx);
 
     // if there is intersection
     if (numIntersected > 0){
