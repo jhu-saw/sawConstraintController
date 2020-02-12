@@ -31,6 +31,9 @@ public:
 
     void ConvertRefs(const mtsVFBase::CONTROLLERMODE mode, const double TickTime) override;
 
+    void TransformMesh(const vctFrm4x4 & transformation, cisstMesh & mesh);
+    void ConstructPDTree(cisstMesh& mesh);
+
 protected:
     prmKinematicsState * CurrentKinematics;
     PDTree_Mesh* pTreeMesh;

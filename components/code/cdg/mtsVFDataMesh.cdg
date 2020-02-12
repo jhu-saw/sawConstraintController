@@ -35,10 +35,4 @@ class {
         type double;
         visibility public;
     }
-
-    member {
-        name ConvertMToMM;
-        type bool;
-        visibility public;
-    }
 }

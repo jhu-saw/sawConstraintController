@@ -6,12 +6,7 @@ mtsVFMesh::mtsVFMesh() : mtsVFCartesianTranslation(){}
 
 
 mtsVFMesh::mtsVFMesh(const std::string &name, mtsVFDataBase *data, cisstMesh &mesh) : mtsVFCartesianTranslation(name,data) {
-    mtsVFDataMesh* meshData = reinterpret_cast<mtsVFDataMesh*>(Data);
-    std::cout << "pd tree params" <<meshData->NumTrianglesInNode << meshData->DiagonalDistanceOfNode<< std::endl;
-    // construct PD-Tree
-    pTreeMesh = new PDTree_Mesh(mesh, meshData->NumTrianglesInNode, meshData->DiagonalDistanceOfNode);
-    pAlgMesh = new algPDTree_CP_Mesh(pTreeMesh);
-    pTreeMesh->SetSearchAlgorithm(pAlgMesh);
+    ConstructPDTree(mesh);
 }
 
 void mtsVFMesh::FillInTableauRefs(const mtsVFBase::CONTROLLERMODE mode, const double TickTime)
@@ -23,22 +18,18 @@ void mtsVFMesh::FillInTableauRefs(const mtsVFBase::CONTROLLERMODE mode, const do
 
     // if there is inequality constraint
     if (meshData->IneqConstraintRows > 0) {
-        std::cout << "Fill in Tableau for mesh" << std::endl;
-        std::cout << "Active constraint " << meshData->IneqConstraintRows << std::endl;
+//        std::cout << "Fill in Tableau for mesh" << std::endl;
+//        std::cout << "Active constraint " << meshData->IneqConstraintRows << std::endl;
         int rowNumber = 0;
         vctDoubleVec N; N.SetSize(3);
         vctDoubleVec NJ; NJ.SetSize(6);
         vctDoubleMat JacPos(CurrentKinematics->Jacobian.Ref(3,meshData->NumJoints,0,0));
-        // convert unit
-        if (meshData->ConvertMToMM){
-            JacPos.Multiply(1000.0);
-        }
         for (auto it : meshData->ActiveFaceIdx){
             // get normal direction
             N.Assign(pTreeMesh->Mesh->activeNormal.at(it)).NormalizedSelf();
             IneqConstraintVectorRef.at(rowNumber) = - (mCurrentPosition-pTreeMesh->Mesh->closestPoint.at(it)).DotProduct(vct3(N));
 
-            std::cout << "Face index " << it << " Normal " << N << "\nCloseset point "<< pTreeMesh->Mesh->closestPoint.at(it) << " Distance " << IneqConstraintVectorRef.at(rowNumber) << std::endl;
+//            std::cout << "Face index " << it << " Normal " << N << "\nCloseset point "<< pTreeMesh->Mesh->closestPoint.at(it) << " Distance " << IneqConstraintVectorRef.at(rowNumber) << std::endl;
 
             if (mode == mtsVFBase::CONTROLLERMODE::JPOS || mode == mtsVFBase::CONTROLLERMODE::JVEL){
                 NJ.ProductOf(N,JacPos);
@@ -72,16 +63,11 @@ void mtsVFMesh::ComputeConstraintSize()
         return;
     }
 
-    // convert unit
-    if (meshData->ConvertMToMM){
-        mCurrentPosition.Multiply(1000.0);
-    }
-
     // find closest point
     pTreeMesh->Mesh->ResetMeshConstraintValues();
     meshData->ActiveFaceIdx.clear();
     meshData->IneqConstraintRows = 0;
-    std::cout << "\nFind intersection" << std::endl;
+//    std::cout << "\nFind intersection" << std::endl;
     int numIntersected = pTreeMesh->FindIntersectedPoints(mCurrentPosition,meshData->BoundingDistance,meshData->ActiveFaceIdx);
 
     // if there is intersection
@@ -95,5 +81,21 @@ void mtsVFMesh::ComputeConstraintSize()
 
 void mtsVFMesh::ConvertRefs(const mtsVFBase::CONTROLLERMODE mode, const double TickTime)
 {
+
+}
+
+void mtsVFMesh::TransformMesh(const vctFrm4x4 &transformation, cisstMesh & mesh)
+{
+    mesh.TransformTriangle(transformation);
+    ConstructPDTree(mesh);
+}
+
+void mtsVFMesh::ConstructPDTree(cisstMesh &mesh)
+{
+    mtsVFDataMesh* meshData = reinterpret_cast<mtsVFDataMesh*>(Data);
+    // construct PD-Tree
+    pTreeMesh = new PDTree_Mesh(mesh, meshData->NumTrianglesInNode, meshData->DiagonalDistanceOfNode);
+    pAlgMesh = new algPDTree_CP_Mesh(pTreeMesh);
+    pTreeMesh->SetSearchAlgorithm(pAlgMesh);
 
 }
