@@ -98,9 +98,9 @@ void simpleTeleop::setupVF() {
     mJointLimitsConstraint.Name = "Joint Limit";
     mJointLimitsConstraint.IneqConstraintRows = 2 * mNumJoints;
     mJointLimitsConstraint.LowerLimits.SetSize(mNumJoints);
-    mJointLimitsConstraint.LowerLimits.Assign(-150.0, -150.0, -150.0, -2.0, -2.0, -2.0);
+    mJointLimitsConstraint.LowerLimits.Assign(-150.0, -150.0, -150.0, -2.0, -2.0, -2.0).Multiply(1E-3);
     mJointLimitsConstraint.UpperLimits.SetSize(mNumJoints);
-    mJointLimitsConstraint.UpperLimits.Assign(150.0, 150.0, 150.0, 2.0, 2.0, 2.0);
+    mJointLimitsConstraint.UpperLimits.Assign(150.0, 150.0, 150.0, 2.0, 2.0, 2.0).Multiply(1E-3);
     mJointLimitsConstraint.KinNames.clear(); // sanity
     // use the names defined above to relate kinematics data
     mJointLimitsConstraint.KinNames.push_back("MeasuredKinematics"); // measured kinematics needs to be first according to mtsVFLimitsConstraint.cpp
@@ -158,16 +158,15 @@ void simpleTeleop::setupVF() {
 //    }
 
     // mesh constraint
-    if (mMeshFile.LoadMeshFromSTLFile("/home/max/dvrk_ws/src/USAblation/mesh/Skull.STL")==-1){
+    if (mMeshFile.LoadMeshFromSTLFile("/home/max/dvrk_ws/src/USAblation/mesh/Skull.STL",true)==-1){
         CMN_LOG_CLASS_RUN_ERROR << "Cannot load STL file" << std::endl;
         cmnThrow("Cannot load STL file");
     }
     else{
         mMesh.Name = "Mesh";
         mMesh.NumTrianglesInNode = 5;
-        mMesh.DiagonalDistanceOfNode = 10; // divide a node whenver distance has reached
-        mMesh.BoundingDistance = 5; // bounding distance for intersection detection
-        mMesh.ConvertMToMM = false;
+        mMesh.DiagonalDistanceOfNode = 0.005; // divide a node whenver distance has reached
+        mMesh.BoundingDistance = 0.005; // bounding distance for intersection detection
         mMesh.NumJoints = mNumJoints;
         mMesh.KinNames.clear(); // sanity
         // use the names defined above to relate kinematics data

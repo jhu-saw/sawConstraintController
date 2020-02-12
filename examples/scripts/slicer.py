@@ -10,12 +10,14 @@ from scipy.spatial.distance import cdist
 
 import datetime
 
+m_to_mm = 1E3
+
 class RegistrationObject():
     def measuredCPCallBack(self, data):
         msg = igtlpoint()
         msg.name = "Measured"
         msg.pointdata = Point(
-            data.pose.position.x, data.pose.position.y, data.pose.position.z)
+            data.pose.position.x*m_to_mm, data.pose.position.y*m_to_mm, data.pose.position.z*m_to_mm)
 
         self.igtl_point_pub.publish(msg)
 
@@ -23,17 +25,21 @@ class RegistrationObject():
         msg = igtlpoint()
         msg.name = "Servo"
         msg.pointdata = Point(
-            data.pose.position.x, data.pose.position.y, data.pose.position.z)
+            data.pose.position.x*m_to_mm, data.pose.position.y*m_to_mm, data.pose.position.z*m_to_mm)
 
         self.igtl_point_pub.publish(msg)
 
     def transformCallback(self, data):
         print('transform')
-        print(data)
 
         # TODO: check name
-        transfrom = data.transform
-        self.transform_pub.publish(transfrom)
+        transform = data.transform
+        transform.translation.x = transform.translation.x/m_to_mm
+        transform.translation.y = transform.translation.y/m_to_mm
+        transform.translation.z = transform.translation.z/m_to_mm
+
+        print(transform)
+        self.transform_pub.publish(transform)
 
     def registration(self):
         rospy.init_node('ds_registration', anonymous=True)

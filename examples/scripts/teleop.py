@@ -27,7 +27,7 @@ def teleop():
     t.header.frame_id = "map"
 
     # increment
-    increment = 1
+    increment = 0.005 # m
 
     while not rospy.is_shutdown():
         if isData():
