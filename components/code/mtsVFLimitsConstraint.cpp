@@ -41,14 +41,14 @@ void mtsVFLimitsConstraint::FillInTableauRefs(const CONTROLLERMODE mode,
 
     IneqConstraintMatrixRef.SetAll(0.0);
 
-    if(mode == JPOS || mode == CARTPOS) {
+    if((mode == JPOS || mode == CARTPOS) && limitData->AbsoluteLimit) {
         for(size_t i = 0; i < numLimits; i++) {
             IneqConstraintMatrixRef.at(i,i) = 1.0;
             IneqConstraintMatrixRef.at(i+numLimits,i) = -1.0;
             IneqConstraintVectorRef.at(i) = limitData->LowerLimits.at(i) - jointPositions.at(i);
             IneqConstraintVectorRef.at(i+numLimits) = -limitData->UpperLimits.at(i) + jointPositions.at(i);
         }
-    } else if(mode == JVEL || mode == CARTVEL) {
+    } else if(mode == JVEL || mode == CARTVEL || !limitData->AbsoluteLimit) {
         for(size_t i = 0; i < numLimits; i++) {
             IneqConstraintMatrixRef.at(i,i) = 1.0;
             IneqConstraintMatrixRef.at(i+numLimits,i) = -1.0;

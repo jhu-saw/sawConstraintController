@@ -26,6 +26,13 @@ class {
       name UpperLimits;
       type vctDoubleVec;
       visibility public;
-    }    
+    }
+
+    member {
+      name AbsoluteLimit;
+      type bool;
+      default true;
+      visibility public;
+    }
 }
 
