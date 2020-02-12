@@ -23,4 +23,22 @@ class {
         type std::vector<int>;
         visibility public;
     }
+
+    member {
+        name NumTrianglesInNode;
+        type int;
+        visibility public;
+    }
+
+    member {
+        name DiagonalDistanceOfNode;
+        type double;
+        visibility public;
+    }
+
+    member {
+        name ConvertMToMM;
+        type bool;
+        visibility public;
+    }
 }

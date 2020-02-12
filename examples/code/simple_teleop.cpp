@@ -158,17 +158,25 @@ void simpleTeleop::setupVF() {
 //    }
 
     // mesh constraint
-    mMeshFile.LoadMeshFromSTLFile("/home/max/galen_ws/src/cisstICP/tests/mesh/Cube.STL");
-    mMesh.Name = "Mesh";
-    mMesh.BoundingDistance = 1.0;
-    mMesh.NumJoints = mNumJoints;
-    mMesh.KinNames.clear(); // sanity
-    // use the names defined above to relate kinematics data
-    mMesh.KinNames.push_back("MeasuredKinematics");
+    if (mMeshFile.LoadMeshFromSTLFile("/home/max/dvrk_ws/src/USAblation/mesh/Skull.STL")==-1){
+        CMN_LOG_CLASS_RUN_ERROR << "Cannot load STL file" << std::endl;
+        cmnThrow("Cannot load STL file");
+    }
+    else{
+        mMesh.Name = "Mesh";
+        mMesh.NumTrianglesInNode = 5;
+        mMesh.DiagonalDistanceOfNode = 10; // divide a node whenver distance has reached
+        mMesh.BoundingDistance = 5; // bounding distance for intersection detection
+        mMesh.ConvertMToMM = false;
+        mMesh.NumJoints = mNumJoints;
+        mMesh.KinNames.clear(); // sanity
+        // use the names defined above to relate kinematics data
+        mMesh.KinNames.push_back("MeasuredKinematics");
 
-    if (!mController->SetVFData(mMesh))
-    {
-        mController->VFMap.insert(std::pair<std::string, mtsVFMesh*>(mMesh.Name, new mtsVFMesh(mMesh.Name, new mtsVFDataMesh(mMesh), mMeshFile)));
+        if (!mController->SetVFData(mMesh))
+        {
+            mController->VFMap.insert(std::pair<std::string, mtsVFMesh*>(mMesh.Name, new mtsVFMesh(mMesh.Name, new mtsVFDataMesh(mMesh), mMeshFile)));
+        }
     }
 }
 

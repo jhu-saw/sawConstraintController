@@ -35,6 +35,7 @@ protected:
     prmKinematicsState * CurrentKinematics;
     PDTree_Mesh* pTreeMesh;
     algPDTree_CP_Mesh* pAlgMesh;
+    vct3 mCurrentPosition;
 };
 
 CMN_DECLARE_SERVICES_INSTANTIATION(mtsVFMesh);

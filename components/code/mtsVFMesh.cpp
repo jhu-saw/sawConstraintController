@@ -6,9 +6,10 @@ mtsVFMesh::mtsVFMesh() : mtsVFCartesianTranslation(){}
 
 
 mtsVFMesh::mtsVFMesh(const std::string &name, mtsVFDataBase *data, cisstMesh &mesh) : mtsVFCartesianTranslation(name,data) {
-    int nThresh = 5; double diagThresh = 5.0;
+    mtsVFDataMesh* meshData = reinterpret_cast<mtsVFDataMesh*>(Data);
+    std::cout << "pd tree params" <<meshData->NumTrianglesInNode << meshData->DiagonalDistanceOfNode<< std::endl;
     // construct PD-Tree
-    pTreeMesh = new PDTree_Mesh(mesh, nThresh, diagThresh);
+    pTreeMesh = new PDTree_Mesh(mesh, meshData->NumTrianglesInNode, meshData->DiagonalDistanceOfNode);
     pAlgMesh = new algPDTree_CP_Mesh(pTreeMesh);
     pTreeMesh->SetSearchAlgorithm(pAlgMesh);
 }
@@ -22,19 +23,22 @@ void mtsVFMesh::FillInTableauRefs(const mtsVFBase::CONTROLLERMODE mode, const do
 
     // if there is inequality constraint
     if (meshData->IneqConstraintRows > 0) {
-        vct3 CurrentPos(CurrentKinematics->Frame.Translation()); // ignore rotation for now
         std::cout << "Fill in Tableau for mesh" << std::endl;
         std::cout << "Active constraint " << meshData->IneqConstraintRows << std::endl;
         int rowNumber = 0;
         vctDoubleVec N; N.SetSize(3);
         vctDoubleVec NJ; NJ.SetSize(6);
         vctDoubleMat JacPos(CurrentKinematics->Jacobian.Ref(3,meshData->NumJoints,0,0));
+        // convert unit
+        if (meshData->ConvertMToMM){
+            JacPos.Multiply(1000.0);
+        }
         for (auto it : meshData->ActiveFaceIdx){
             // get normal direction
             N.Assign(pTreeMesh->Mesh->activeNormal.at(it)).NormalizedSelf();
-            IneqConstraintVectorRef.at(rowNumber) = - (CurrentPos-pTreeMesh->Mesh->closestPoint.at(it)).DotProduct(vct3(N));
+            IneqConstraintVectorRef.at(rowNumber) = - (mCurrentPosition-pTreeMesh->Mesh->closestPoint.at(it)).DotProduct(vct3(N));
 
-            std::cout << "Face index " << it << " Normal " << N << " Distance " << IneqConstraintVectorRef.at(rowNumber) << std::endl;
+            std::cout << "Face index " << it << " Normal " << N << "\nCloseset point "<< pTreeMesh->Mesh->closestPoint.at(it) << " Distance " << IneqConstraintVectorRef.at(rowNumber) << std::endl;
 
             if (mode == mtsVFBase::CONTROLLERMODE::JPOS || mode == mtsVFBase::CONTROLLERMODE::JVEL){
                 NJ.ProductOf(N,JacPos);
@@ -58,15 +62,19 @@ void mtsVFMesh::ComputeConstraintSize()
 
     // Pointer to kinematics
     CurrentKinematics = Kinematics.at(0);
-    vct3 CurrentPos(CurrentKinematics->Frame.Translation()); // ignore rotation for now
+    mCurrentPosition.Assign(CurrentKinematics->Frame.Translation()); // ignore rotation for now
 
     // get the data
     mtsVFDataMesh* meshData = reinterpret_cast<mtsVFDataMesh*>(Data);
-
     if(!meshData)
     {
         CMN_LOG_CLASS_RUN_ERROR << "Mesh data object not set" << std::endl;
         return;
+    }
+
+    // convert unit
+    if (meshData->ConvertMToMM){
+        mCurrentPosition.Multiply(1000.0);
     }
 
     // find closest point
@@ -74,12 +82,12 @@ void mtsVFMesh::ComputeConstraintSize()
     meshData->ActiveFaceIdx.clear();
     meshData->IneqConstraintRows = 0;
     std::cout << "\nFind intersection" << std::endl;
-    int numIntersected = pTreeMesh->FindIntersectedPoints(CurrentPos,meshData->BoundingDistance,meshData->ActiveFaceIdx);
+    int numIntersected = pTreeMesh->FindIntersectedPoints(mCurrentPosition,meshData->BoundingDistance,meshData->ActiveFaceIdx);
 
     // if there is intersection
     if (numIntersected > 0){
         // merge edge points
-        pTreeMesh->Mesh->MergeEdgePoint(meshData->ActiveFaceIdx, CurrentPos);
+        pTreeMesh->Mesh->MergeEdgePoint(meshData->ActiveFaceIdx, mCurrentPosition);
         meshData->IneqConstraintRows = meshData->ActiveFaceIdx.size();
     }
 
