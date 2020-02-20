@@ -35,4 +35,11 @@ class {
         type double;
         visibility public;
     }
+
+    member {
+        name EnableSlack;
+        type bool;
+        default false;
+        visibility public;
+    }
 }

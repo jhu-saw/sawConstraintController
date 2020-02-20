@@ -529,15 +529,14 @@ void mtsVFController::UpdateOptimizer(double TickTime)
 
         }
     }
-
-//    std::cout << "\nobjective m" << std::endl;
-//    std::cout << Optimizer.GetObjectiveMatrix() << std::endl;
-//    std::cout << "objective v" << std::endl;
-//    std::cout << Optimizer.GetObjectiveVector() << std::endl;
-//    std::cout << "ineq m" << std::endl;
-//    std::cout << Optimizer.GetIneqConstraintMatrix() << std::endl;
-//    std::cout << "ineq v" << std::endl;
-//    std::cout << Optimizer.GetIneqConstraintVector() << std::endl;
+//    CMN_LOG_INIT_VERBOSE << "objective m" << std::endl;
+//    CMN_LOG_INIT_VERBOSE << Optimizer.GetObjectiveMatrix() << std::endl;
+//    CMN_LOG_INIT_VERBOSE << "objective v" << std::endl;
+//    CMN_LOG_INIT_VERBOSE << Optimizer.GetObjectiveVector() << std::endl;
+//    CMN_LOG_INIT_VERBOSE << "ineq m" << std::endl;
+//    CMN_LOG_INIT_VERBOSE << Optimizer.GetIneqConstraintMatrix() << std::endl;
+//    CMN_LOG_INIT_VERBOSE << "ineq v" << std::endl;
+//    CMN_LOG_INIT_VERBOSE << Optimizer.GetIneqConstraintVector() << std::endl;
 }
 
 //! Solves the constraint optimization problem and fills the result into the parameter
