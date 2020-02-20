@@ -48,6 +48,7 @@ void simpleTeleop::setupRobot() {
     // joint values
     mJointPosition.SetSize(mNumJoints);
     mJointPosition.SetAll(0.0);
+    mJointPosition.Ref(3,0).Assign(-30.0,-30.0,-30.0).Multiply(cmn_mm);
 
     // fixed jacobian
     mJacobian.SetSize(mNumDof,mNumJoints);
@@ -158,7 +159,7 @@ void simpleTeleop::setupVF() {
 //    }
 
     // mesh constraint
-    if (mMeshFile.LoadMeshFromSTLFile("/home/max/dvrk_ws/src/USAblation/mesh/Skull.STL",true)==-1){
+    if (mMeshFile.LoadMeshFromSTLFile("/home/max/OneDrive/Research Projects/SickKids/Run Time Files/Bunny/bunny_ascii_orig.stl",true)==-1){
         CMN_LOG_CLASS_RUN_ERROR << "Cannot load STL file" << std::endl;
         cmnThrow("Cannot load STL file");
     }
@@ -198,7 +199,7 @@ void simpleTeleop::Run() {
 
     if (optimizerStatus == nmrConstraintOptimizer::STATUS::NMR_OK){
         mJointPosition += dq.Ref(6,0);
-        std::cout << dq.Ref(6,0) << std::endl;
+        std::cout << 1.0/StateTable.GetAveragePeriod() << std::endl;
         // move
         forwardKinematics(mJointPosition);
     }

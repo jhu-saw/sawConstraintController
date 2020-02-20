@@ -29,7 +29,7 @@ void mtsVFMesh::FillInTableauRefs(const mtsVFBase::CONTROLLERMODE mode, const do
             N.Assign(pTreeMesh->Mesh->activeNormal.at(it)).NormalizedSelf();
             IneqConstraintVectorRef.at(rowNumber) = - (mCurrentPosition-pTreeMesh->Mesh->closestPoint.at(it)).DotProduct(vct3(N));
 
-//            CMN_LOG_CLASS_INIT_VERBOSE << "Face index " << it << " Normal " << N << "\nCloseset point "<< pTreeMesh->Mesh->closestPoint.at(it) << " Distance " << IneqConstraintVectorRef.at(rowNumber) << std::endl;
+//            CMN_LOG_CLASS_INIT_VERBOSE << "Face index " << it << " CP Location " << pTreeMesh->Mesh->cpLocation.at(it) << " Distance " << IneqConstraintVectorRef.at(rowNumber) << "\nNormal " << N << "\nCloseset point "<< pTreeMesh->Mesh->closestPoint.at(it)  << std::endl;
 
             if (mode == mtsVFBase::CONTROLLERMODE::JPOS || mode == mtsVFBase::CONTROLLERMODE::JVEL){
                 NJ.ProductOf(N,JacPos);
