@@ -112,72 +112,51 @@ void simpleTeleop::setupVF() {
         mController->VFMap.insert(std::pair<std::string,mtsVFLimitsConstraint *>(mJointLimitsConstraint.Name,new mtsVFLimitsConstraint(mJointLimitsConstraint.Name,new mtsVFDataJointLimits(mJointLimitsConstraint))));
     }
 
-//    // plane constraint
-//    mPlaneConstraint.Name = "PlaneConstraint";
-//    mPlaneConstraint.IneqConstraintRows = 1;
-//    mPlaneConstraint.Normal.Assign(1.0,0.0,1.0).NormalizedSelf();
-//    mPlaneConstraint.PointOnPlane.Assign(0.0, 0.0, -5.0);
-//    mPlaneConstraint.NumJoints = mNumJoints;
-//    // use the names defined above to relate kinematics data
-//    mPlaneConstraint.KinNames.push_back("MeasuredKinematics"); // need measured kinematics according to mtsVFPlane.cpp
+   // plane constraint
+   mPlaneConstraint.Name = "PlaneConstraint";
+   mPlaneConstraint.IneqConstraintRows = 1;
+   mPlaneConstraint.Normal.Assign(1.0,0.0,1.0).NormalizedSelf();
+   mPlaneConstraint.PointOnPlane.Assign(0.0, 0.0, -5.0);
+   mPlaneConstraint.NumJoints = mNumJoints;
+   // use the names defined above to relate kinematics data
+   mPlaneConstraint.KinNames.push_back("MeasuredKinematics"); // need measured kinematics according to mtsVFPlane.cpp
 
-//    if (!mController->SetVFData(mPlaneConstraint))
-//    {
-//        mController->VFMap.insert(std::pair<std::string, mtsVFPlane*>(mPlaneConstraint.Name, new mtsVFPlane(mPlaneConstraint.Name, new mtsVFDataPlane(mPlaneConstraint))));
-//    }
+   if (!mController->SetVFData(mPlaneConstraint))
+   {
+       mController->VFMap.insert(std::pair<std::string, mtsVFPlane*>(mPlaneConstraint.Name, new mtsVFPlane(mPlaneConstraint.Name, new mtsVFDataPlane(mPlaneConstraint))));
+   }
 
-//    // cylindrical constraint
-//    vct3 origin(-55,-30,0), left(15,-27,3),right(-15,-27,3),end(0,27,3);
-//    mNerveLeft.Name = "Nerve Left";
-//    mNerveLeft.IneqConstraintRows = 1;
-//    mNerveLeft.Axis.Assign(left-end);
-//    mNerveLeft.Point.Assign(left-origin);
-//    mNerveLeft.Radius = 5.0;
-//    mNerveLeft.NumJoints = mNumJoints;
-//    mNerveLeft.KinNames.clear(); // sanity
-//    // use the names defined above to relate kinematics data
-//    mNerveLeft.KinNames.push_back("MeasuredKinematics");
+   // cylindrical constraint
+   vct3 origin(-55,-30,0), left(15,-27,3),right(-15,-27,3),end(0,27,3);
+   mNerveLeft.Name = "Nerve Left";
+   mNerveLeft.IneqConstraintRows = 1;
+   mNerveLeft.Axis.Assign(left-end);
+   mNerveLeft.Point.Assign(left-origin);
+   mNerveLeft.Radius = 5.0;
+   mNerveLeft.NumJoints = mNumJoints;
+   mNerveLeft.KinNames.clear(); // sanity
+   // use the names defined above to relate kinematics data
+   mNerveLeft.KinNames.push_back("MeasuredKinematics");
 
-//    if (!mController->SetVFData(mNerveLeft))
-//    {
-//        mController->VFMap.insert(std::pair<std::string, mtsVFCylinder*>(mNerveLeft.Name, new mtsVFCylinder(mNerveLeft.Name, new mtsVFDataCylinder(mNerveLeft))));
-//    }
+   if (!mController->SetVFData(mNerveLeft))
+   {
+       mController->VFMap.insert(std::pair<std::string, mtsVFCylinder*>(mNerveLeft.Name, new mtsVFCylinder(mNerveLeft.Name, new mtsVFDataCylinder(mNerveLeft))));
+   }
 
-//    mNerveRight.Name = "Nerve Right";
-//    mNerveRight.IneqConstraintRows = 1;
-//    mNerveRight.Axis.Assign(right-end);
-//    mNerveRight.Point.Assign(right-origin);
-//    mNerveRight.Radius = 5.0;
-//    mNerveRight.NumJoints = mNumJoints;
-//    mNerveRight.KinNames.clear(); // sanity
-//    // use the names defined above to relate kinematics data
-//    mNerveRight.KinNames.push_back("MeasuredKinematics");
+   mNerveRight.Name = "Nerve Right";
+   mNerveRight.IneqConstraintRows = 1;
+   mNerveRight.Axis.Assign(right-end);
+   mNerveRight.Point.Assign(right-origin);
+   mNerveRight.Radius = 5.0;
+   mNerveRight.NumJoints = mNumJoints;
+   mNerveRight.KinNames.clear(); // sanity
+   // use the names defined above to relate kinematics data
+   mNerveRight.KinNames.push_back("MeasuredKinematics");
 
-//    if (!mController->SetVFData(mNerveRight))
-//    {
-//        mController->VFMap.insert(std::pair<std::string, mtsVFCylinder*>(mNerveRight.Name, new mtsVFCylinder(mNerveRight.Name, new mtsVFDataCylinder(mNerveRight))));
-//    }
-
-    // mesh constraint
-    if (mMeshFile.LoadMeshFromSTLFile("/home/max/OneDrive/Research Projects/SickKids/Run Time Files/Bunny/bunny_ascii_orig.stl",true)==-1){
-        CMN_LOG_CLASS_RUN_ERROR << "Cannot load STL file" << std::endl;
-        cmnThrow("Cannot load STL file");
-    }
-    else{
-        mMesh.Name = "Mesh";
-        mMesh.NumTrianglesInNode = 5;
-        mMesh.DiagonalDistanceOfNode = 0.005; // divide a node whenver distance has reached
-        mMesh.BoundingDistance = 0.005; // bounding distance for intersection detection
-        mMesh.NumJoints = mNumJoints;
-        mMesh.KinNames.clear(); // sanity
-        // use the names defined above to relate kinematics data
-        mMesh.KinNames.push_back("MeasuredKinematics");
-
-        if (!mController->SetVFData(mMesh))
-        {
-            mController->VFMap.insert(std::pair<std::string, mtsVFMesh*>(mMesh.Name, new mtsVFMesh(mMesh.Name, new mtsVFDataMesh(mMesh), mMeshFile)));
-        }
-    }
+   if (!mController->SetVFData(mNerveRight))
+   {
+       mController->VFMap.insert(std::pair<std::string, mtsVFCylinder*>(mNerveRight.Name, new mtsVFCylinder(mNerveRight.Name, new mtsVFDataCylinder(mNerveRight))));
+   }
 }
 
 void simpleTeleop::forwardKinematics(vctDoubleVec& jointPosition) {

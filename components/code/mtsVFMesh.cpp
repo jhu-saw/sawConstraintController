@@ -18,8 +18,8 @@ void mtsVFMesh::FillInTableauRefs(const mtsVFBase::CONTROLLERMODE mode, const do
 
     // if there is inequality constraint
     if (meshData->IneqConstraintRows > 0) {
-//        CMN_LOG_CLASS_INIT_VERBOSE << "Fill in Tableau for mesh" << std::endl;
-//        CMN_LOG_CLASS_INIT_VERBOSE << "Active constraint " << meshData->IneqConstraintRows << std::endl;
+        CMN_LOG_CLASS_RUN_VERBOSE << "Fill in Tableau for mesh" << std::endl;
+        CMN_LOG_CLASS_RUN_VERBOSE << "Active constraint " << meshData->IneqConstraintRows << std::endl;
         int rowNumber = 0;
         vctDoubleVec N; N.SetSize(3);
         vctDoubleVec NJ; NJ.SetSize(6);
@@ -29,7 +29,7 @@ void mtsVFMesh::FillInTableauRefs(const mtsVFBase::CONTROLLERMODE mode, const do
             N.Assign(pTreeMesh->Mesh->activeNormal.at(it)).NormalizedSelf();
             IneqConstraintVectorRef.at(rowNumber) = - (mCurrentPosition-pTreeMesh->Mesh->closestPoint.at(it)).DotProduct(vct3(N));
 
-//            CMN_LOG_CLASS_INIT_VERBOSE << "Face index " << it << " CP Location " << pTreeMesh->Mesh->cpLocation.at(it) << " Distance " << IneqConstraintVectorRef.at(rowNumber) << "\nNormal " << N << "\nCloseset point "<< pTreeMesh->Mesh->closestPoint.at(it)  << std::endl;
+            CMN_LOG_CLASS_RUN_VERBOSE << "Face index " << it << " CP Location " << pTreeMesh->Mesh->cpLocation.at(it) << " Distance " << IneqConstraintVectorRef.at(rowNumber) << "\nNormal " << N << "\nCloseset point "<< pTreeMesh->Mesh->closestPoint.at(it)  << std::endl;
 
             if (mode == mtsVFBase::CONTROLLERMODE::JPOS || mode == mtsVFBase::CONTROLLERMODE::JVEL){
                 NJ.ProductOf(N,JacPos);
