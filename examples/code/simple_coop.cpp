@@ -215,8 +215,4 @@ void simpleCoop::servoCartesianForce(const mtsDoubleVec & newGoal) {
 
     // change gain
     mCoopObjective.Gain.SetAll(1.0);
-    if (!mController->SetVFDataSensorCompliance(mCoopObjective))
-    {
-        std::cout << "Error! Cooperative Objective has not been added yet!" << std::endl;
-    }
 }

@@ -46,6 +46,8 @@
 #include <sawConstraintController/mtsVFDataRCM.h>
 #include <sawConstraintController/mtsVFRCM.h>
 #include <sawConstraintController/mtsVFFollow.h>
+#include <sawConstraintController/mtsVFLimitsConstraint.h>
+#include <sawConstraintController/mtsVFCylinder.h>
 #include <cisstParameterTypes/prmStateJoint.h>
 
 // Always include last!
@@ -98,13 +100,6 @@ public:
         }
     }
 
-    void UpdateFollowPathVF(const std::string & vfName, const std::string & CurKinName, const std::string & DesKinName, const bool & UseRotation = false);
-    void UpdateJointVelLimitsVF(const std::string vfName, const vctDoubleVec & UpperLimits, const vctDoubleVec & LowerLimits);
-    void UpdateCartVelLimitsVF(const std::string vfName, const std::string kinName, const vctDoubleVec & UpperLimits, const vctDoubleVec & LowerLimits);
-    void UpdateJointPosLimitsVF(const std::string vfName, const vctDoubleVec & UpperLimits, const vctDoubleVec & LowerLimits, const vctDoubleVec & CurrentJoints);
-    void UpdatePlaneVF(const std::string vfName, const std::string curKinName, const vct3 plane_point, const vct3 plane_normal);    
-    void UpdateRCMVF(const size_t rows, const std::string vfName, const std::string curKinName, const vct3 & RCMPoint, const vctDoubleMat & JacClosest, const vctFrm3 & TipFrame);
-
     nmrConstraintOptimizer GetOptimizer(){return Optimizer;}
 
     bool ActivateVF(const std::string & s);
@@ -127,13 +122,15 @@ public:
     void AddVFSensorCompliance(const mtsVFDataSensorCompliance & vf);
 
     //! Adds/Updates a vf plane object
-    void AddVFPlane(const mtsVFDataPlane &vf);        
+    void AddVFPlane(mtsVFDataPlane &vf);
 
-    void AddVFFollowPath(const mtsVFDataBase & vf);
+    void AddVFFollow(mtsVFDataBase & vf);
+
+    void AddVFCylinder(mtsVFDataCylinder & vf);
 
     void AddVFRCM(const mtsVFDataRCM & vf);
 
-    void AddVFJointLimits(const mtsVFDataJointLimits & vf);
+    void AddVFLimits(mtsVFDataJointLimits & vf);
 
     void AddVFCartesianLimits(const mtsVFDataJointLimits & vf);
 
@@ -178,22 +175,8 @@ public:
     //control optimizer variables
     nmrConstraintOptimizer Optimizer;
 
-    //! Helper function that increments users of new vf
-    void IncrementUsers(const std::vector<std::string> kin_names, const std::vector<std::string> sensor_names);
-
-    //! Helper function that decrements users of new data in an old vf
-    void DecrementUsers(const std::vector<std::string> kin_names, const std::vector<std::string> sensor_names);
-
-    // TODO: change name to setVFDataBase
     bool SetVFData(const mtsVFDataBase & data);
 
-    bool SetVFDataSensorCompliance(const mtsVFDataSensorCompliance & data);
-
-    bool SetVFDataPlane(const mtsVFDataPlane & data, const std::type_info & type);
-
-    bool SetVFDataRCM(const mtsVFDataRCM & data, const std::type_info & type);
-
-    bool SetVFDataAJL(const mtsVFDataAbsoluteJointLimits & data, const std::type_info & type);   
 
     mtsVFDataBase FollowData;
     mtsVFDataJointLimits JLimitsData;

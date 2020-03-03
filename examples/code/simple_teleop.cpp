@@ -86,14 +86,7 @@ void simpleTeleop::setupVF() {
     // use the names defined above to relate kinematics data
     mTeleopObjective.KinNames.push_back("MeasuredKinematics"); // measured kinematics needs to be first according to mtsVFFollow.cpp
     mTeleopObjective.KinNames.push_back("GoalKinematics"); // goal kinematics needs to be second
-
-    // add objective and constraint to optimizer
-    // first, we check if we can set the data. If not, we insert it.
-    if (!mController->SetVFData(mTeleopObjective))
-    {
-        // Adds a new virtual fixture to the active vector
-        mController->VFMap.insert(std::pair<std::string,mtsVFFollow *>(mTeleopObjective.Name,new mtsVFFollow(mTeleopObjective.Name,new mtsVFDataBase(mTeleopObjective))));
-    }
+    mController->AddVFFollow(mTeleopObjective);
 
     // joint limit constraint
     mJointLimitsConstraint.Name = "Joint Limit";
@@ -105,12 +98,7 @@ void simpleTeleop::setupVF() {
     mJointLimitsConstraint.KinNames.clear(); // sanity
     // use the names defined above to relate kinematics data
     mJointLimitsConstraint.KinNames.push_back("MeasuredKinematics"); // measured kinematics needs to be first according to mtsVFLimitsConstraint.cpp
-
-    if (!mController->SetVFData(mJointLimitsConstraint))
-    {
-        // Adds a new virtual fixture to the active vector
-        mController->VFMap.insert(std::pair<std::string,mtsVFLimitsConstraint *>(mJointLimitsConstraint.Name,new mtsVFLimitsConstraint(mJointLimitsConstraint.Name,new mtsVFDataJointLimits(mJointLimitsConstraint))));
-    }
+    mController->AddVFLimits(mJointLimitsConstraint);
 
    // plane constraint
    mPlaneConstraint.Name = "PlaneConstraint";
@@ -120,11 +108,7 @@ void simpleTeleop::setupVF() {
    mPlaneConstraint.NumJoints = mNumJoints;
    // use the names defined above to relate kinematics data
    mPlaneConstraint.KinNames.push_back("MeasuredKinematics"); // need measured kinematics according to mtsVFPlane.cpp
-
-   if (!mController->SetVFData(mPlaneConstraint))
-   {
-       mController->VFMap.insert(std::pair<std::string, mtsVFPlane*>(mPlaneConstraint.Name, new mtsVFPlane(mPlaneConstraint.Name, new mtsVFDataPlane(mPlaneConstraint))));
-   }
+   mController->AddVFPlane(mPlaneConstraint);
 
    // cylindrical constraint
    vct3 origin(-55,-30,0), left(15,-27,3),right(-15,-27,3),end(0,27,3);
@@ -137,11 +121,7 @@ void simpleTeleop::setupVF() {
    mNerveLeft.KinNames.clear(); // sanity
    // use the names defined above to relate kinematics data
    mNerveLeft.KinNames.push_back("MeasuredKinematics");
-
-   if (!mController->SetVFData(mNerveLeft))
-   {
-       mController->VFMap.insert(std::pair<std::string, mtsVFCylinder*>(mNerveLeft.Name, new mtsVFCylinder(mNerveLeft.Name, new mtsVFDataCylinder(mNerveLeft))));
-   }
+   mController->AddVFCylinder(mNerveLeft);
 
    mNerveRight.Name = "Nerve Right";
    mNerveRight.IneqConstraintRows = 1;
@@ -152,11 +132,7 @@ void simpleTeleop::setupVF() {
    mNerveRight.KinNames.clear(); // sanity
    // use the names defined above to relate kinematics data
    mNerveRight.KinNames.push_back("MeasuredKinematics");
-
-   if (!mController->SetVFData(mNerveRight))
-   {
-       mController->VFMap.insert(std::pair<std::string, mtsVFCylinder*>(mNerveRight.Name, new mtsVFCylinder(mNerveRight.Name, new mtsVFDataCylinder(mNerveRight))));
-   }
+   mController->AddVFCylinder(mNerveRight);
 }
 
 void simpleTeleop::forwardKinematics(vctDoubleVec& jointPosition) {
