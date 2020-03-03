@@ -43,7 +43,7 @@ void mtsVFSensorCompliance::FillInTableauRefs(const CONTROLLERMODE mode, const d
 
     std::cout << "fill in values for sensor compliance \n";
 
-    mtsVFDataSensorCompliance * gainData = (mtsVFDataSensorCompliance *)(Data);
+    mtsVFDataSensorCompliance * gainData = reinterpret_cast<mtsVFDataSensorCompliance*>(Data);
     vctDoubleMat Jacobian = Kinematics.at(0)->Jacobian;
     vctDoubleVec SensorValues = Sensors.at(0)->Values;
 

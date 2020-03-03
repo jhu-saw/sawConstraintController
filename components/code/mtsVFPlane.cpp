@@ -55,7 +55,7 @@ void mtsVFPlane::FillInTableauRefs(const CONTROLLERMODE mode, const double TickT
     CurrentKinematics = Kinematics.at(0);
     vct3 CurrentPos(CurrentKinematics->Frame.Translation());
 
-    mtsVFDataPlane *planeData = (mtsVFDataPlane*)(Data);
+    mtsVFDataPlane *planeData = reinterpret_cast<mtsVFDataPlane*>(Data);
 
     if(!planeData)
     {

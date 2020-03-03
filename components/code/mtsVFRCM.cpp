@@ -5,7 +5,7 @@ CMN_IMPLEMENT_SERVICES(mtsVF_RCM);
 void mtsVF_RCM::FillInTableauRefs(const CONTROLLERMODE CMN_UNUSED(mode), const double TickTime)
 {
 
-    mtsVFDataRCM * RCM_Data = (mtsVFDataRCM*)(Data);
+    mtsVFDataRCM * RCM_Data = reinterpret_cast<mtsVFDataRCM*>(Data);
 
     // Constraint-Based RCM
     vct3 Axis = -RCM_Data->TipFrame.Rotation() * vct3(0,0,1);

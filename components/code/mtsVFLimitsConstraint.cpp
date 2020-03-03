@@ -36,7 +36,7 @@ void mtsVFLimitsConstraint::FillInTableauRefs(const CONTROLLERMODE mode,
     vctDoubleVec jointPositions;
     Kinematics.at(0)->JointState->GetPosition(jointPositions);
 
-    mtsVFDataJointLimits * limitData = (mtsVFDataJointLimits*)(Data);
+    mtsVFDataJointLimits * limitData = reinterpret_cast<mtsVFDataJointLimits*>(Data);
     size_t numLimits = limitData->LowerLimits.size();
 
     IneqConstraintMatrixRef.SetAll(0.0);
