@@ -125,7 +125,7 @@ void mtsVFController::AddVFPlane(mtsVFDataPlane &vf)
 {
     if (!SetVFData(vf))
     {
-        VFMap.insert(std::pair<std::string, mtsVFPlane*>(vf.Name, new mtsVFPlane(vf.Name, new mtsVFDataPlane(vf))));
+        VFMap.insert(std::pair<std::string, mtsVFPlane*>(vf.Name, new mtsVFPlane(vf.Name, &vf)));
     }
 }
 
@@ -354,14 +354,14 @@ void mtsVFController::UpdateOptimizer(double TickTime)
 
         }
     }
-    CMN_LOG_CLASS_RUN_VERBOSE << "objective m" << std::endl;
-    CMN_LOG_CLASS_RUN_VERBOSE << Optimizer.GetObjectiveMatrix() << std::endl;
-    CMN_LOG_CLASS_RUN_VERBOSE << "objective v" << std::endl;
-    CMN_LOG_CLASS_RUN_VERBOSE << Optimizer.GetObjectiveVector() << std::endl;
-    CMN_LOG_CLASS_RUN_VERBOSE << "ineq m" << std::endl;
-    CMN_LOG_CLASS_RUN_VERBOSE << Optimizer.GetIneqConstraintMatrix() << std::endl;
-    CMN_LOG_CLASS_RUN_VERBOSE << "ineq v" << std::endl;
-    CMN_LOG_CLASS_RUN_VERBOSE << Optimizer.GetIneqConstraintVector() << std::endl;
+//    CMN_LOG_CLASS_RUN_VERBOSE << "objective m" << std::endl;
+//    CMN_LOG_CLASS_RUN_VERBOSE << Optimizer.GetObjectiveMatrix() << std::endl;
+//    CMN_LOG_CLASS_RUN_VERBOSE << "objective v" << std::endl;
+//    CMN_LOG_CLASS_RUN_VERBOSE << Optimizer.GetObjectiveVector() << std::endl;
+//    CMN_LOG_CLASS_RUN_VERBOSE << "ineq m" << std::endl;
+//    CMN_LOG_CLASS_RUN_VERBOSE << Optimizer.GetIneqConstraintMatrix() << std::endl;
+//    CMN_LOG_CLASS_RUN_VERBOSE << "ineq v" << std::endl;
+//    CMN_LOG_CLASS_RUN_VERBOSE << Optimizer.GetIneqConstraintVector() << std::endl;
 }
 
 //! Solves the constraint optimization problem and fills the result into the parameter
