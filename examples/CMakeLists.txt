@@ -14,8 +14,6 @@
 cmake_minimum_required(VERSION 2.8.3)
 
 project(saw_constraint_controller_examples)
-## Compile as C++11, supported in ROS Kinetic and newer
-# add_compile_options(-std=c++11)
 
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
@@ -56,11 +54,6 @@ if (cisst_FOUND)
     include_directories(${sawConstraintController_INCLUDE_DIR})
     link_directories(${sawConstraintController_LIBRARY_DIR})
 
-    # TODO: how to let sawConstraintController to include the ICP dependecy??
-    find_package (cisstICP REQUIRED)
-    include_directories(${cisstICP_INCLUDE_DIR})
-    link_directories(${cisstICP_LIBRARY_DIR})
-
     # add executable
     add_executable(simpleCoop
             code/main_coop.cpp
@@ -80,6 +73,5 @@ if (cisst_FOUND)
     cisst_target_link_libraries(simpleTeleop ${REQUIRED_CISST_LIBRARIES})
     target_link_libraries(simpleTeleop
             ${sawConstraintController_LIBRARIES}
-            ${cisstICP_LIBRARIES}
             ${catkin_LIBRARIES})
 endif(cisst_FOUND)

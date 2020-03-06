@@ -17,7 +17,7 @@ http://www.cisst.org/cisst/license.txt.
 #include <cstdio>
 #include "simple_teleop.h"
 
-#include <cisstCommon/cmnConstants.h>
+#include <cisstCommon/cmnUnits.h>
 #include <cisstMultiTask/mtsInterfaceProvided.h>
 
 simpleTeleop::simpleTeleop(const std::string & componentName, double periodInSeconds):

@@ -28,7 +28,6 @@ http://www.cisst.org/cisst/license.txt.
 #include <sawConstraintController/mtsVFPlane.h>
 #include <sawConstraintController/mtsVFLimitsConstraint.h>
 #include <sawConstraintController/mtsVFCylinder.h>
-#include <sawConstraintController/mtsVFMesh.h>
 
 #include <sawConstraintController/mtsVFDataBase.h>
 #include <sawConstraintController/mtsVFDataPlane.h>
@@ -63,9 +62,6 @@ protected:
     mtsVFDataJointLimits mJointLimitsConstraint;
     mtsVFDataCylinder mNerveLeft;
     mtsVFDataCylinder mNerveRight;
-    // mesh
-    cisstMesh mMeshFile;
-    mtsVFDataMesh mMesh;
 
     void updateOptimizerKinematics();
 
