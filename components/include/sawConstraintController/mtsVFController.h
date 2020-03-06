@@ -118,7 +118,7 @@ public:
     void AddVFCartesianOrientation(const mtsVFDataBase & vf);
 
     //! Adds/Updates a vf data object
-    void AddVFSensorCompliance(const mtsVFDataSensorCompliance & vf);
+    void AddVFSensorCompliance(mtsVFDataSensorCompliance & vf);
 
     //! Adds/Updates a vf plane object
     void AddVFPlane(mtsVFDataPlane &vf);

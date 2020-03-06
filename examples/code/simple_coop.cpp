@@ -38,6 +38,7 @@ void simpleCoop::Init() {
         interfaceProvided->AddCommandWrite(&simpleCoop::ServoCartesianForce, this, "ServoCartesianForce");
         interfaceProvided->AddCommandReadState(StateTable, mMeasuredCartesianPosition, "GetMeasuredCartesianPosition");
     }
+    std::cout << "Robot running"<< std::endl;
 }
 
 void simpleCoop::SetupRobot() {
@@ -91,15 +92,7 @@ void simpleCoop::SetupVFBehaviour() {
     mCoopObjective.SensorNames.clear(); // sanity
     // use the names defined above to relate kinematics data
     mCoopObjective.SensorNames.push_back("GoalForce");
-
-    // add objective and constraint to optimizer
-    // first, we check if we can set the data. If not, we insert it.
-    if (!mController->SetVFData(mCoopObjective))
-    {
-        // Adds a new virtual fixture to the active vector
-        mController->VFMap.insert(std::pair<std::string,mtsVFSensorCompliance *>(mCoopObjective.Name,new mtsVFSensorCompliance(mCoopObjective.Name,new mtsVFDataSensorCompliance(mCoopObjective))));
-    }
-    std::cout << "objective added \n";
+    mController->AddVFSensorCompliance(mCoopObjective);
 
     // plane constraint
     mPlaneConstraint.Name = "PlaneConstraint";
@@ -115,12 +108,7 @@ void simpleCoop::SetupVFBehaviour() {
     mPlaneConstraint.SlackCosts.Assign(vctDouble1(1.0));
     mPlaneConstraint.SlackLimits.SetSize(1);
     mPlaneConstraint.SlackLimits.Assign(vctDouble1(1.0));
-
-    if (!mController->SetVFData(mPlaneConstraint))
-    {
-        mController->VFMap.insert(std::pair<std::string, mtsVFPlane*>(mPlaneConstraint.Name, new mtsVFPlane(mPlaneConstraint.Name, new mtsVFDataPlane(mPlaneConstraint))));
-    }
-    std::cout << "plane added \n";
+    mController->AddVFPlane(mPlaneConstraint);
 
     // joint limit constraint
     mJointLimitsConstraint.Name = "Joint Limit";
@@ -132,13 +120,7 @@ void simpleCoop::SetupVFBehaviour() {
     mJointLimitsConstraint.KinNames.clear(); // sanity
     // use the names defined above to relate kinematics data
     mJointLimitsConstraint.KinNames.push_back("MeasuredKinematics"); // measured kinematics needs to be first according to mtsVFLimitsConstraint.cpp
-
-    if (!mController->SetVFData(mJointLimitsConstraint))
-    {
-        // Adds a new virtual fixture to the active vector
-        mController->VFMap.insert(std::pair<std::string,mtsVFLimitsConstraint *>(mJointLimitsConstraint.Name,new mtsVFLimitsConstraint(mJointLimitsConstraint.Name,new mtsVFDataJointLimits(mJointLimitsConstraint))));
-    }
-    std::cout << "joint limit added \n";
+    mController->AddVFLimits(mJointLimitsConstraint);
 }
 
 void simpleCoop::ForwardKinematics(vctDoubleVec& jointPosition) {
@@ -157,8 +139,6 @@ void simpleCoop::Run() {
     nmrConstraintOptimizer::STATUS optimizerStatus = RunBehaviour(dq);
 
     if (optimizerStatus == nmrConstraintOptimizer::STATUS::NMR_OK){
-        std::cout << "solution of joints are \n" << dq.Ref(mNumJoints,0) << std::endl;
-        std::cout << "solution of slacks are \n" << dq.Ref(1,mNumJoints) << std::endl;
         mJointPosition += dq.Ref(mNumJoints,0).Multiply(StateTable.GetAveragePeriod()); // convert v to q
         // move
         ForwardKinematics(mJointPosition);
@@ -167,14 +147,17 @@ void simpleCoop::Run() {
         mGoalForceValues.Values.SetAll(0.0);
     }
     else{
-        std::cout << optimizerStatus << std::endl;
-        std::cout << "No solution found" << std::endl;
-        std::cout << optimizerStatus << std::endl;
+        CMN_LOG_CLASS_RUN_ERROR << "No solution found" << std::endl;
+        CMN_LOG_CLASS_RUN_ERROR << optimizerStatus << std::endl;
+
+        if (optimizerStatus==nmrConstraintOptimizer::STATUS::NMR_INEQ_CONTRADICTION){
+            CMN_LOG_CLASS_RUN_ERROR << "inqeuality rows " << mController->Optimizer.GetIneqConstraintMatrix().rows() << "cols "<<mController->Optimizer.GetIneqConstraintMatrix().cols()<< std::endl;
+            CMN_LOG_CLASS_RUN_ERROR << "inqeuality vector " << mController->Optimizer.GetIneqConstraintVector().size() << std::endl;
+        }
     }
 }
 
 void simpleCoop::UpdateOptimizerKinematics() {
-    std::cout << "update kinematics \n";
     // update cartesian position and jacobian
     mMeasuredKinematics.Frame.FromNormalized(mMeasuredCartesianPosition.Position());
     mMeasuredKinematics.Jacobian.Assign(mJacobian);
@@ -182,15 +165,12 @@ void simpleCoop::UpdateOptimizerKinematics() {
 
     // update controller stored kinematics
     mController->SetKinematics(mMeasuredKinematics);
-    std::cout << "update kinematics finished \n";
 }
 
 void simpleCoop::UpdateOptimizerSensor()
 {
-    std::cout << "update sensor \n";
     // update controller stored sensor
     mController->SetSensor(mGoalForceValues);
-    std::cout << "update sensor finished \n";
 }
 
 nmrConstraintOptimizer::STATUS simpleCoop::RunBehaviour(vctDoubleVec &dq) {
@@ -205,14 +185,11 @@ nmrConstraintOptimizer::STATUS simpleCoop::RunBehaviour(vctDoubleVec &dq) {
     mController->UpdateOptimizer(StateTable.GetAveragePeriod());
 
     // solve
-    std::cout << "solve \n";
     return mController->Solve(dq);
 }
 
 void simpleCoop::ServoCartesianForce(const mtsDoubleVec & newGoal) {
     mGoalForceValues.Values.Assign(newGoal);
-    std::cout << "New gain obtained" << std::endl;
-
     // change gain
     mCoopObjective.Gain.SetAll(1.0);
 }

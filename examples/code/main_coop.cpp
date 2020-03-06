@@ -19,12 +19,16 @@ int main(int argc, char ** argv){
     componentManger->AddComponent(&robot);
 
     // add ros bridge
-    mtsROSBridge * subscribers = new mtsROSBridge("subscribers", 0.1 * cmn_ms, true /* spin */);
+    ros::init(argc, argv, "cisst_ros_bridge_example", ros::init_options::AnonymousName);
+    ros::NodeHandle rosNodeHandle;
+    mtsROSBridge * subscribers = new mtsROSBridge("subscribers", 0.1 * cmn_ms, &rosNodeHandle);
+    subscribers->PerformsSpin(true);
     subscribers->AddSubscriberToCommandWrite<mtsDoubleVec, geometry_msgs::Wrench>("RequiresSimpleRobot",
                                              "ServoCartesianForce",
                                              "/simple_robot/servo_cf");
     componentManger->AddComponent(subscribers);
-    mtsROSBridge * publishers = new mtsROSBridge("publishers", 5 * cmn_ms);
+
+    mtsROSBridge * publishers = new mtsROSBridge("publishers", 5 * cmn_ms, &rosNodeHandle);
     publishers->AddPublisherFromCommandRead<prmPositionCartesianGet, geometry_msgs::PoseStamped>("RequiresSimpleRobot",
                                              "GetMeasuredCartesianPosition",
                                              "/simple_robot/measured_cp");
@@ -44,9 +48,8 @@ int main(int argc, char ** argv){
     componentManger->StartAll();
     componentManger->WaitForStateAll(mtsComponentState::ACTIVE, 2.0*cmn_s);
 
-    while(true){
-	osaSleep(10.0 * cmn_ms);
-    }
+    // ros::spin() callback for subscribers
+    ros::spin();
 
     // cleanup
     componentManger->KillAll();

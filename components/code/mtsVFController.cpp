@@ -105,16 +105,13 @@ void mtsVFController::AddVFCartesianOrientation(const mtsVFDataBase & vf)
 /*! SetVFSensorCompliance
 @param vf virtual fixture to be added
 */
-void mtsVFController::AddVFSensorCompliance(const mtsVFDataSensorCompliance & vf)
+void mtsVFController::AddVFSensorCompliance(mtsVFDataSensorCompliance & vf)
 {
-    // If we can find the VF, only change its data. Otherwise, create a new VF object.
-    // if (!SetVFDataSensorCompliance(vf, typeid(mtsVFSensorCompliance)))
-    // {
+    if (!SetVFData(vf))
+    {
         // Adds a new virtual fixture to the active vector
-        VFMap.insert(std::pair<std::string,mtsVFSensorCompliance *>(vf.Name,new mtsVFSensorCompliance(vf.Name,new mtsVFDataSensorCompliance(vf))));
-        // Increment users of each kinematics and sensor object found
-//        IncrementUsers(vf.KinNames,vf.SensorNames);
-    // }
+        VFMap.insert(std::pair<std::string,mtsVFSensorCompliance *>(vf.Name,new mtsVFSensorCompliance(vf.Name,&vf)));
+    }
 }
 
 //! Adds/updates a sensor compliance virtual fixture in the map and increments users of kinematics and sensors

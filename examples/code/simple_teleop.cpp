@@ -38,6 +38,8 @@ void simpleTeleop::Init() {
         interfaceProvided->AddCommandWrite(&simpleTeleop::ServoCartesianPosition, this, "ServoCartesianPosition");
         interfaceProvided->AddCommandReadState(StateTable, mMeasuredCartesianPosition, "GetMeasuredCartesianPosition");
     }
+
+    std::cout << "Robot running"<< std::endl;
 }
 
 void simpleTeleop::SetupRobot() {
@@ -153,17 +155,16 @@ void simpleTeleop::Run() {
 
     if (optimizerStatus == nmrConstraintOptimizer::STATUS::NMR_OK){
         mJointPosition += dq.Ref(6,0);
-        std::cout << 1.0/StateTable.GetAveragePeriod() << std::endl;
         // move
         ForwardKinematics(mJointPosition);
     }
     else{
-        std::cout << "No solution found" << std::endl;
-        std::cout << optimizerStatus << std::endl;
+        CMN_LOG_CLASS_RUN_ERROR << "No solution found" << std::endl;
+        CMN_LOG_CLASS_RUN_ERROR << optimizerStatus << std::endl;
 
         if (optimizerStatus==nmrConstraintOptimizer::STATUS::NMR_INEQ_CONTRADICTION){
-            std::cout << "inqeuality rows " << mController->Optimizer.GetIneqConstraintMatrix().rows() << "cols "<<mController->Optimizer.GetIneqConstraintMatrix().cols()<< std::endl;
-            std::cout << "inqeuality vector " << mController->Optimizer.GetIneqConstraintVector().size() << std::endl;
+            CMN_LOG_CLASS_RUN_ERROR << "inqeuality rows " << mController->Optimizer.GetIneqConstraintMatrix().rows() << "cols "<<mController->Optimizer.GetIneqConstraintMatrix().cols()<< std::endl;
+            CMN_LOG_CLASS_RUN_ERROR << "inqeuality vector " << mController->Optimizer.GetIneqConstraintVector().size() << std::endl;
         }
 
     }

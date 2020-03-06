@@ -8,7 +8,7 @@
 #include <cisstOSAbstraction/osaSleep.h>
 
 
-int main(){
+int main(int argc, char **argv){
     // log configuration
     cmnLogger::SetMask(CMN_LOG_ALLOW_ALL);
     cmnLogger::SetMaskDefaultLog(CMN_LOG_ALLOW_ALL);
@@ -25,15 +25,17 @@ int main(){
     componentManger->AddComponent(&robot);
 
     // add ros bridge
-    mtsROSBridge * subscribers = new mtsROSBridge("subscribers", 0.1 * cmn_ms, true /* spin */);
+    ros::init(argc, argv, "cisst_ros_bridge_example", ros::init_options::AnonymousName);
+    ros::NodeHandle rosNodeHandle;
+
+    mtsROSBridge * subscribers = new mtsROSBridge("subscribers", 0.1 * cmn_ms, &rosNodeHandle);
+    subscribers->PerformsSpin(true);
     subscribers->AddSubscriberToCommandWrite<vctFrm4x4, geometry_msgs::PoseStamped>("RequiresSimpleRobot",
                                              "ServoCartesianPosition",
                                              "/simple_robot/servo_cp");
-    subscribers->AddSubscriberToCommandWrite<vctFrm4x4, geometry_msgs::Transform>("RequiresSimpleRobot",
-                                             "TransformationCallback",
-                                             "/simple_robot/transfrom/ee_to_ds");
     componentManger->AddComponent(subscribers);
-    mtsROSBridge * publishers = new mtsROSBridge("publishers", 5 * cmn_ms);
+
+    mtsROSBridge * publishers = new mtsROSBridge("publishers", 5 * cmn_ms, &rosNodeHandle);
     publishers->AddPublisherFromCommandRead<prmPositionCartesianGet, geometry_msgs::PoseStamped>("RequiresSimpleRobot",
                                              "GetMeasuredCartesianPosition",
                                              "/simple_robot/measured_cp");
@@ -53,9 +55,8 @@ int main(){
     componentManger->StartAll();
     componentManger->WaitForStateAll(mtsComponentState::ACTIVE, 2.0*cmn_s);
 
-    while(true){
-	osaSleep(10.0 * cmn_ms);
-    }
+    // ros::spin() callback for subscribers
+    ros::spin();
 
     // cleanup
     componentManger->KillAll();
