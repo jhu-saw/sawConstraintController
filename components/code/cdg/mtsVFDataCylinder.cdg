@@ -1,0 +1,32 @@
+inline-header {
+#include <sawConstraintController/mtsVFDataBase.h>
+// Always include last!
+#include <sawConstraintController/sawConstraintControllerExport.h>
+}
+
+class {
+    name mtsVFDataCylinder;
+    attribute CISST_EXPORT;
+
+    base-class {
+      type mtsVFDataBase;
+    }
+
+    member {
+      name Axis;
+      type vctDouble3;
+      visibility public;
+    }
+
+    member {
+      name Point;
+      type vctDouble3;
+      visibility public;
+    }
+
+    member {
+      name Radius;
+      type double;
+      visibility public;
+    }
+}

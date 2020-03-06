@@ -6,7 +6,7 @@ inline-header {
 
 class {
 
-    name mtsVFDataPlane;
+    name mtsVFDataJointLimits;
     attribute CISST_EXPORT;
 
     // All VF data objects are subclasses of mtsVFDataBase
@@ -14,20 +14,25 @@ class {
       type mtsVFDataBase;
     }
 
-    // This vct3 object represents a point in the central axis of the cochlea that we want the probe to stick close to
+    // This vector represents the lower joint limits (I*dq >= L)
     member {
-      name Normal;
-      type vct3;
-      default vct3(0.0,0.0,1.0);
+      name LowerLimits;
+      type vctDoubleVec;
+      visibility public;
+    }
+
+    // This vector represents the upper joint limits (-I*dq >= -U)
+    member {
+      name UpperLimits;
+      type vctDoubleVec;
       visibility public;
     }
 
     member {
-      name PointOnPlane;
-      type vct3;
-      default vct3(0.0,0.0,0.0);
+      name AbsoluteLimit;
+      type bool;
+      default true;
       visibility public;
     }
-
 }
 

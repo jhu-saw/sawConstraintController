@@ -23,7 +23,7 @@ CMN_IMPLEMENT_SERVICES(mtsVFSensorCompliance);
 //! Updates co with virtual fixture data.
 /*! FillInTableauRefs
 */
-void mtsVFSensorCompliance::FillInTableauRefs(const CONTROLLERMODE mode, const double TickTime)
+void mtsVFSensorCompliance::FillInTableauRefs(const CONTROLLERMODE mode, const double tickTime)
 {
     // fill in refs
     // min || J(q)*dq - gain*sensorValues ||
@@ -41,22 +41,21 @@ void mtsVFSensorCompliance::FillInTableauRefs(const CONTROLLERMODE mode, const d
         cmnThrow("Error: Sensor Compliance VF is missing sensor dependencies");
     }
 
-    mtsVFDataSensorCompliance * gainData = (mtsVFDataSensorCompliance *)(Data);
+    mtsVFDataSensorCompliance * gainData = reinterpret_cast<mtsVFDataSensorCompliance*>(Data);
     vctDoubleMat Jacobian = Kinematics.at(0)->Jacobian;
     vctDoubleVec SensorValues = Sensors.at(0)->Values;
 
     //set the reference to the right hand side of the above equation (gain*Force)
     ObjectiveMatrixRef.Assign(Jacobian);
     ObjectiveVectorRef.ElementwiseProductOf(gainData->Gain, SensorValues);
-
-    ConvertRefs(mode,TickTime);
+    ConvertRefs(mode,tickTime);
 }
 
-void mtsVFSensorCompliance::ConvertRefs(const mtsVFBase::CONTROLLERMODE mode, const double TickTime)
+void mtsVFSensorCompliance::ConvertRefs(const mtsVFBase::CONTROLLERMODE mode, const double tickTime)
 {
     if (mode == mtsVFBase::CONTROLLERMODE::JVEL){
         // min || J(q)*t*v - gain*sensorValues ||
-        ObjectiveMatrixRef.Multiply(TickTime);
+        ObjectiveMatrixRef.Multiply(tickTime);
     }
 }
 

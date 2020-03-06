@@ -102,6 +102,10 @@ public:
         delete Data;
     }
 
+    //! Computes the necessary size of constraints, modifier the values in Data
+    //! Overload if constraint size varies (such as mesh constraint)
+    virtual void ComputeConstraintSize() {}
+
     //! Reserves space in the control optimizer.
     /*! reserve_space
       \param co Control optimizer object

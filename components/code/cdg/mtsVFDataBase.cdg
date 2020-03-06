@@ -1,6 +1,4 @@
 inline-header {
-#include <cisstVector/vctDynamicVectorTypes.h>
-#include <cisstVector/vctDynamicMatrixTypes.h>
 // Always include last!
 #include <sawConstraintController/sawConstraintControllerExport.h>
 }
@@ -70,8 +68,8 @@ class {
 
     //! The degrees of freedom used in the virtual fixture
     member {
-      name DOFSelections;
-      type vctDynamicVector<size_t>;
+      name NumJoints;
+      type int;
       visibility public;
     }
 

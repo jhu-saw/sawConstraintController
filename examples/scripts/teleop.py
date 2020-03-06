@@ -27,7 +27,7 @@ def teleop():
     t.header.frame_id = "map"
 
     # increment
-    increment = 0.1
+    increment = 0.005 # m
 
     while not rospy.is_shutdown():
         if isData():
@@ -35,17 +35,17 @@ def teleop():
             if c == '\x1b':         # x1b is ESC
                 break
             elif c == '4':
-                t.pose.position.x += increment
-            elif c == '6':
                 t.pose.position.x -= increment
+            elif c == '6':
+                t.pose.position.x += increment
             elif c == '8':
                 t.pose.position.y += increment
             elif c == '2':
                 t.pose.position.y -= increment
             elif c == '7':
-                t.pose.position.z += increment
-            elif c == '9':
                 t.pose.position.z -= increment
+            elif c == '9':
+                t.pose.position.z += increment
 
         t.header.stamp = rospy.Time.now()
         pub.publish(t)

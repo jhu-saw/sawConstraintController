@@ -13,9 +13,9 @@ public:
         mtsVFBase(name, data)
     {}
 
-    void FillInTableauRefs(const mtsVFBase::CONTROLLERMODE mode, const double TickTime);
+    void FillInTableauRefs(const mtsVFBase::CONTROLLERMODE mode, const double tickTime);
 
-    void ConvertRefs(const mtsVFBase::CONTROLLERMODE mode, const double TickTime);
+    void ConvertRefs(const mtsVFBase::CONTROLLERMODE mode, const double tickTime);
 private:
 };
 
