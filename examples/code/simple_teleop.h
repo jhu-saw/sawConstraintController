@@ -37,13 +37,13 @@ http://www.cisst.org/cisst/license.txt.
 class simpleTeleop: public mtsTaskPeriodic {
 protected:
     // internal method to configure this component
-    void init();
-    void setupRobot();
-    void setupVF();
-    nmrConstraintOptimizer::STATUS solve(vctDoubleVec & dq);
+    void Init();
+    void SetupRobot();
+    void SetupVF();
+    nmrConstraintOptimizer::STATUS Solve(vctDoubleVec & dq);
 
     // robot specific variables
-    void forwardKinematics(vctDoubleVec& jointPosition);
+    void ForwardKinematics(vctDoubleVec& jointPosition);
     vctDoubleVec mJointPosition;
     vctDoubleMat mJacobian;
     vctFrm4x4 mCartesianPosition;
@@ -63,11 +63,10 @@ protected:
     mtsVFDataCylinder mNerveLeft;
     mtsVFDataCylinder mNerveRight;
 
-    void updateOptimizerKinematics();
+    void UpdateOptimizerKinematics();
 
     // teleop command
-    void servoCartesianPosition(const vctFrm4x4 & newGoal);
-    void transformationCallback(const vctFrm4x4 & transformation);
+    void ServoCartesianPosition(const vctFrm4x4 & newGoal);
 
 public:
     // provide a name for the task and define the frequency (time

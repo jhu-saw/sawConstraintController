@@ -40,8 +40,8 @@ http://www.cisst.org/cisst/license.txt.
 class simpleCoop: public mtsTaskPeriodic {
 protected:
     // internal method to configure this component
-    void init();
-    void setupRobot();
+    void Init();
+    void SetupRobot();
 
     //! Set up the behaviours for the robot
     /*!
@@ -49,7 +49,7 @@ protected:
      * User needs to add the desired behaviour inside this function. This library only means to provide a receipe instead of a full API.
      * For details of how to define behaviours, please check the code in sawConstraintOptimizer.
      */
-    void setupVFBehaviour();
+    void SetupVFBehaviour();
 
     //! Run funtion for constraint behaviour
     /*!
@@ -62,10 +62,10 @@ protected:
      * 3  Both equality and inequality constraints are contradictory.
      * 4  Input has a NaN or INF
      */
-    nmrConstraintOptimizer::STATUS runBehaviour(vctDoubleVec & dq);
+    nmrConstraintOptimizer::STATUS RunBehaviour(vctDoubleVec & dq);
 
     // robot specific variables
-    void forwardKinematics(vctDoubleVec& jointPosition);
+    void ForwardKinematics(vctDoubleVec& jointPosition);
     vctDoubleVec mJointPosition;
     vctDoubleMat mJacobian;
     vctFrm4x4 mCartesianPosition;
@@ -90,15 +90,15 @@ protected:
      * \brief updateOptimizerKinematics
      * Update the necessary kinematics information for the optimizer
      */
-    void updateOptimizerKinematics();
+    void UpdateOptimizerKinematics();
     //! Update the numerical solver of the sensor values
     /*!
      * \brief updateOptimizerSensor
      * Update the necessary sensor information for the optimizer
      */
-    void updateOptimizerSensor();
+    void UpdateOptimizerSensor();
 
-    void servoCartesianForce(const mtsDoubleVec & newGoal);
+    void ServoCartesianForce(const mtsDoubleVec & newGoal);
 
 public:
     //! Constructor

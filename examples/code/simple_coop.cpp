@@ -23,24 +23,24 @@ http://www.cisst.org/cisst/license.txt.
 simpleCoop::simpleCoop(const std::string & componentName, double periodInSeconds):
     mtsTaskPeriodic(componentName, periodInSeconds)
 {
-    init();
+    Init();
 }
 
-void simpleCoop::init() {
-    setupRobot();
-    setupVFBehaviour();
+void simpleCoop::Init() {
+    SetupRobot();
+    SetupVFBehaviour();
 
     StateTable.AddData(mJacobian,"Jacobian");
     StateTable.AddData(mMeasuredCartesianPosition,"MeasuredCartesianPosition");
 
     mtsInterfaceProvided * interfaceProvided = AddInterfaceProvided("ProvidesSimpleRobot");
     if (interfaceProvided){
-        interfaceProvided->AddCommandWrite(&simpleCoop::servoCartesianForce, this, "ServoCartesianForce");
+        interfaceProvided->AddCommandWrite(&simpleCoop::ServoCartesianForce, this, "ServoCartesianForce");
         interfaceProvided->AddCommandReadState(StateTable, mMeasuredCartesianPosition, "GetMeasuredCartesianPosition");
     }
 }
 
-void simpleCoop::setupRobot() {
+void simpleCoop::SetupRobot() {
     mNumOutput = 6;
     mNumJoints = 6;
     mNumFTDoF = 6;
@@ -57,12 +57,12 @@ void simpleCoop::setupRobot() {
     }
 
     // initialize cartesian
-    forwardKinematics(mJointPosition);
+    ForwardKinematics(mJointPosition);
     mMeasuredCartesianPosition.SetReferenceFrame("map");
     mMeasuredCartesianPosition.Valid() = true;
 }
 
-void simpleCoop::setupVFBehaviour() {
+void simpleCoop::SetupVFBehaviour() {
     // initialize controller
     mController = new mtsVFController(mNumJoints, mtsVFBase::JVEL);
 
@@ -141,7 +141,7 @@ void simpleCoop::setupVFBehaviour() {
     std::cout << "joint limit added \n";
 }
 
-void simpleCoop::forwardKinematics(vctDoubleVec& jointPosition) {
+void simpleCoop::ForwardKinematics(vctDoubleVec& jointPosition) {
     mMeasuredCartesianPosition.Position().Translation() = jointPosition.Ref(3,0);
     // TODO: update rotation
 }
@@ -154,14 +154,14 @@ void simpleCoop::Run() {
 
     // solve for next movement
     vctDoubleVec dq;
-    nmrConstraintOptimizer::STATUS optimizerStatus = runBehaviour(dq);
+    nmrConstraintOptimizer::STATUS optimizerStatus = RunBehaviour(dq);
 
     if (optimizerStatus == nmrConstraintOptimizer::STATUS::NMR_OK){
         std::cout << "solution of joints are \n" << dq.Ref(mNumJoints,0) << std::endl;
         std::cout << "solution of slacks are \n" << dq.Ref(1,mNumJoints) << std::endl;
         mJointPosition += dq.Ref(mNumJoints,0).Multiply(StateTable.GetAveragePeriod()); // convert v to q
         // move
-        forwardKinematics(mJointPosition);
+        ForwardKinematics(mJointPosition);
 
         // reset
         mGoalForceValues.Values.SetAll(0.0);
@@ -173,7 +173,7 @@ void simpleCoop::Run() {
     }
 }
 
-void simpleCoop::updateOptimizerKinematics() {
+void simpleCoop::UpdateOptimizerKinematics() {
     std::cout << "update kinematics \n";
     // update cartesian position and jacobian
     mMeasuredKinematics.Frame.FromNormalized(mMeasuredCartesianPosition.Position());
@@ -185,7 +185,7 @@ void simpleCoop::updateOptimizerKinematics() {
     std::cout << "update kinematics finished \n";
 }
 
-void simpleCoop::updateOptimizerSensor()
+void simpleCoop::UpdateOptimizerSensor()
 {
     std::cout << "update sensor \n";
     // update controller stored sensor
@@ -193,11 +193,11 @@ void simpleCoop::updateOptimizerSensor()
     std::cout << "update sensor finished \n";
 }
 
-nmrConstraintOptimizer::STATUS simpleCoop::runBehaviour(vctDoubleVec &dq) {
+nmrConstraintOptimizer::STATUS simpleCoop::RunBehaviour(vctDoubleVec &dq) {
     // update optimizer kinematics
-    updateOptimizerKinematics();
+    UpdateOptimizerKinematics();
     // update sensor data
-    updateOptimizerSensor();
+    UpdateOptimizerSensor();
 
     // update vf data if needed
 
@@ -209,7 +209,7 @@ nmrConstraintOptimizer::STATUS simpleCoop::runBehaviour(vctDoubleVec &dq) {
     return mController->Solve(dq);
 }
 
-void simpleCoop::servoCartesianForce(const mtsDoubleVec & newGoal) {
+void simpleCoop::ServoCartesianForce(const mtsDoubleVec & newGoal) {
     mGoalForceValues.Values.Assign(newGoal);
     std::cout << "New gain obtained" << std::endl;
 

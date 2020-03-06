@@ -23,25 +23,24 @@ http://www.cisst.org/cisst/license.txt.
 simpleTeleop::simpleTeleop(const std::string & componentName, double periodInSeconds):
     mtsTaskPeriodic(componentName, periodInSeconds)
 {
-    init();
+    Init();
 }
 
-void simpleTeleop::init() {
-    setupRobot();
-    setupVF();
+void simpleTeleop::Init() {
+    SetupRobot();
+    SetupVF();
 
     StateTable.AddData(mJacobian,"Jacobian");
     StateTable.AddData(mMeasuredCartesianPosition,"MeasuredCartesianPosition");
 
     mtsInterfaceProvided * interfaceProvided = AddInterfaceProvided("ProvidesSimpleRobot");
     if (interfaceProvided){
-        interfaceProvided->AddCommandWrite(&simpleTeleop::servoCartesianPosition, this, "ServoCartesianPosition");
-        interfaceProvided->AddCommandWrite(&simpleTeleop::transformationCallback, this, "TransformationCallback");
+        interfaceProvided->AddCommandWrite(&simpleTeleop::ServoCartesianPosition, this, "ServoCartesianPosition");
         interfaceProvided->AddCommandReadState(StateTable, mMeasuredCartesianPosition, "GetMeasuredCartesianPosition");
     }
 }
 
-void simpleTeleop::setupRobot() {
+void simpleTeleop::SetupRobot() {
     mNumDof = 6;
     mNumJoints = 6;
 
@@ -58,12 +57,12 @@ void simpleTeleop::setupRobot() {
     }
 
     // initialize cartesian
-    forwardKinematics(mJointPosition);
+    ForwardKinematics(mJointPosition);
     mMeasuredCartesianPosition.SetReferenceFrame("map");
     mMeasuredCartesianPosition.Valid() = true;
 }
 
-void simpleTeleop::setupVF() {
+void simpleTeleop::SetupVF() {
     // initialize controller
     mController = new mtsVFController(mNumJoints, mtsVFBase::JPOS);
 
@@ -135,7 +134,7 @@ void simpleTeleop::setupVF() {
    mController->AddVFCylinder(mNerveRight);
 }
 
-void simpleTeleop::forwardKinematics(vctDoubleVec& jointPosition) {
+void simpleTeleop::ForwardKinematics(vctDoubleVec& jointPosition) {
     // TODO: how to access part of the vector?
     mMeasuredCartesianPosition.Position().Translation() = jointPosition.Ref(3,0);
     // TODO: update rotation
@@ -150,13 +149,13 @@ void simpleTeleop::Run() {
 
     // solve for next movement
     vctDoubleVec dq;
-    nmrConstraintOptimizer::STATUS optimizerStatus =solve(dq);
+    nmrConstraintOptimizer::STATUS optimizerStatus =Solve(dq);
 
     if (optimizerStatus == nmrConstraintOptimizer::STATUS::NMR_OK){
         mJointPosition += dq.Ref(6,0);
         std::cout << 1.0/StateTable.GetAveragePeriod() << std::endl;
         // move
-        forwardKinematics(mJointPosition);
+        ForwardKinematics(mJointPosition);
     }
     else{
         std::cout << "No solution found" << std::endl;
@@ -170,7 +169,7 @@ void simpleTeleop::Run() {
     }
 }
 
-void simpleTeleop::updateOptimizerKinematics() {
+void simpleTeleop::UpdateOptimizerKinematics() {
     // update cartesian position and jacobian
     mMeasuredKinematics.Frame.FromNormalized(mMeasuredCartesianPosition.Position());
     mMeasuredKinematics.Jacobian.Assign(mJacobian);
@@ -181,9 +180,9 @@ void simpleTeleop::updateOptimizerKinematics() {
     mController->SetKinematics(mGoalKinematics);
 }
 
-nmrConstraintOptimizer::STATUS simpleTeleop::solve(vctDoubleVec &dq) {
+nmrConstraintOptimizer::STATUS simpleTeleop::Solve(vctDoubleVec &dq) {
     // update optimizer kinematics
-    updateOptimizerKinematics();
+    UpdateOptimizerKinematics();
 
     // update sensor data if needed
     // update vf data if needed
@@ -195,17 +194,6 @@ nmrConstraintOptimizer::STATUS simpleTeleop::solve(vctDoubleVec &dq) {
     return mController->Solve(dq);
 }
 
-void simpleTeleop::servoCartesianPosition(const vctFrm4x4 & newGoal) {
+void simpleTeleop::ServoCartesianPosition(const vctFrm4x4 & newGoal) {
     mGoalKinematics.Frame.FromNormalized(newGoal);
-}
-
-void simpleTeleop::transformationCallback(const vctFrm4x4 &transformation)
-{
-    std::cout << "-----------------------\n";
-    std::cout << "Transform received!!!!! " << std::endl;
-    std::cout << "Jacobian: \n" << mJacobian << std::endl;
-    std::cout << "Transformed Jacobian: \n" << vctMat(transformation.Rotation())*mJacobian.Ref(3,3,0,0) << std::endl;
-    std::cout << "Tip: \n" << mMeasuredCartesianPosition.Position() << std::endl;
-    std::cout << "Transformed Tip: \n" << vctFrm3(transformation.ApplyTo(vctFrm4x4(mMeasuredCartesianPosition.Position()))) << std::endl;
-    std::cout << "-----------------------\n";
 }
