@@ -200,22 +200,6 @@ void mtsVFController::AddVFCartesianLimits(const mtsVFDataJointLimits & vf)
    // }
 }
 
-//! Adds/updates a velocity-limiting virtual fixture in the map and increments users of kinematics and sensors
-/*! AddVFAbsoluteJointLimits
-@param vf virtual fixture to be added
-*/
-void mtsVFController::AddVFAbsoluteJointLimits(const mtsVFDataAbsoluteJointLimits & vf)
-{
-    // If we can find the VF, only change its data. Otherwise, create a new VF object.
-   // if (!SetVFDataAJL(vf, typeid(mtsVFAbsoluteJointLimits)))
-   // {
-       // Adds a new virtual fixture to the active vector
-       VFMap[vf.Name] = new mtsVFAbsoluteJointLimits(vf.Name,new mtsVFDataAbsoluteJointLimits(vf));
-       // Increment users of each kinematics and sensor object found
-//       IncrementUsers(vf.KinNames,vf.SensorNames);
-   // }
-}
-
 bool mtsVFController::ActivateVF(const std::string & s)
 {
     // find vf by data.Name

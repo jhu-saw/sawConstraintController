@@ -23,7 +23,7 @@ mtsVFCylinder::mtsVFCylinder(const std::string & name, mtsVFDataBase * data):
 
 }
 
-void mtsVFCylinder::FillInTableauRefs(const mtsVFBase::CONTROLLERMODE mode, const double TickTime)
+void mtsVFCylinder::FillInTableauRefs(const mtsVFBase::CONTROLLERMODE CMN_UNUSED(mode), const double CMN_UNUSED(tickTime))
 {
     // ||v|| + dx . v >= R
     mtsVFDataCylinder * cylinderData = reinterpret_cast<mtsVFDataCylinder*>(Data);
@@ -53,7 +53,7 @@ void mtsVFCylinder::FillInTableauRefs(const mtsVFBase::CONTROLLERMODE mode, cons
     IneqConstraintVectorRef.Assign(vct1(cylinderData->Radius-lineToCurrPos.Norm()));
 }
 
-void mtsVFCylinder::ConvertRefs(const mtsVFBase::CONTROLLERMODE mode, const double TickTime)
+void mtsVFCylinder::ConvertRefs(const mtsVFBase::CONTROLLERMODE CMN_UNUSED(mode), const double CMN_UNUSED(tickTime))
 {
 
 }

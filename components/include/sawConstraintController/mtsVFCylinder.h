@@ -34,11 +34,11 @@ class CISST_EXPORT mtsVFCylinder : public mtsVFBase
 {
 public:
     mtsVFCylinder(const std::string & name, mtsVFDataBase * data);
-    void FillInTableauRefs(const mtsVFBase::CONTROLLERMODE mode, const double TickTime);
+    void FillInTableauRefs(const mtsVFBase::CONTROLLERMODE mode, const double tickTime);
 
 protected:
     prmKinematicsState * CurrentKinematics;
-    void ConvertRefs(const mtsVFBase::CONTROLLERMODE mode, const double TickTime);
+    void ConvertRefs(const mtsVFBase::CONTROLLERMODE mode, const double tickTime);
 
     vctDoubleVec ClosestLinePoint(vctDoubleVec givenPt, vctDoubleVec linePoint, vctDoubleVec lineD)
     {

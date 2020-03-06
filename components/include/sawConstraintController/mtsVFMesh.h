@@ -26,10 +26,10 @@ public:
     //! Updates co with virtual fixture data.
     /*! FillInTableauRefs
     */
-    void FillInTableauRefs(const mtsVFBase::CONTROLLERMODE mode, const double TickTime) override;
+    void FillInTableauRefs(const mtsVFBase::CONTROLLERMODE mode, const double tickTime) override;
     void ComputeConstraintSize() override;
 
-    void ConvertRefs(const mtsVFBase::CONTROLLERMODE mode, const double TickTime) override;
+    void ConvertRefs(const mtsVFBase::CONTROLLERMODE mode, const double tickTime) override;
 
     void TransformMesh(const vctFrm4x4 & transformation, cisstMesh & mesh);
     void ConstructPDTree(cisstMesh& mesh);

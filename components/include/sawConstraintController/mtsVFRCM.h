@@ -24,7 +24,7 @@ public:
         H.Zeros();
         h.Zeros();
     }
-    void FillInTableauRefs(const mtsVFBase::CONTROLLERMODE mode, const double TickTime);
+    void FillInTableauRefs(const mtsVFBase::CONTROLLERMODE mode, const double tickTime);
 
 private:
 

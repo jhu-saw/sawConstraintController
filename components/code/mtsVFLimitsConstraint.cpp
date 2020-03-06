@@ -2,7 +2,7 @@
 /* ex: set filetype=cpp softtabstop=4 shiftwidth=4 tabstop=4 cindent expandtab: */
 
 /*
-  Author(s):  Zhaoshuo Li
+  Author(s):  Max Zhaoshuo Li
   Created on: 2019
 
   (C) Copyright 2019 Johns Hopkins University (JHU), All Rights Reserved.
@@ -25,7 +25,7 @@ CMN_IMPLEMENT_SERVICES(mtsVFLimitsConstraint)
 /*! FillInTableauRefs
 */
 void mtsVFLimitsConstraint::FillInTableauRefs(const CONTROLLERMODE mode,
-                                              const double TickTime)
+                                              const double CMN_UNUSED(tickTime))
 {
     if(Kinematics.size() < 1)
     {
@@ -58,8 +58,8 @@ void mtsVFLimitsConstraint::FillInTableauRefs(const CONTROLLERMODE mode,
     }
 }
 
-void mtsVFLimitsConstraint::ConvertRefs(const CONTROLLERMODE mode,
-                                        const double TickTime)
+void mtsVFLimitsConstraint::ConvertRefs(const CONTROLLERMODE CMN_UNUSED(mode),
+                                        const double CMN_UNUSED(tickTime))
 {
 
 }

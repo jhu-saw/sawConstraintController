@@ -39,7 +39,6 @@
 #include <sawConstraintController/mtsVFFollow.h>
 #include <typeinfo>
 #include <sawConstraintController/mtsVFJointLimits.h>
-#include <sawConstraintController/mtsVFAbsoluteJointLimits.h>
 #include <sawConstraintController/mtsVFCartesianLimits.h>
 #include <sawConstraintController/mtsVFDataJointLimits.h>
 #include <sawConstraintController/mtsVFPlane.h>
@@ -57,7 +56,7 @@
  */
 class CISST_EXPORT mtsVFController: public cmnGenericObject
 {
-    CMN_DECLARE_SERVICES(CMN_NO_DYNAMIC_CREATION, CMN_LOG_LOD_RUN_VERBOSE);
+    CMN_DECLARE_SERVICES(CMN_NO_DYNAMIC_CREATION, CMN_LOG_LOD_RUN_VERBOSE)
 
 public:
 
@@ -134,8 +133,6 @@ public:
 
     void AddVFCartesianLimits(const mtsVFDataJointLimits & vf);
 
-    void AddVFAbsoluteJointLimits(const mtsVFDataAbsoluteJointLimits & vf);     
-
     //! Adds/Updates a sensor to the map
     void SetSensor(const prmSensorState & sen);
 
@@ -176,14 +173,6 @@ public:
     nmrConstraintOptimizer Optimizer;
 
     bool SetVFData(const mtsVFDataBase & data);
-
-
-    mtsVFDataBase FollowData;
-    mtsVFDataJointLimits JLimitsData;
-    mtsVFDataJointLimits CLimitsData;
-    mtsVFDataAbsoluteJointLimits AJLimitsData;
-    mtsVFDataPlane PlaneData;
-    mtsVFDataRCM RCM_Data;
 
 private:
     // round vector to 6 decimal places

@@ -2,8 +2,8 @@
 /* ex: set filetype=cpp softtabstop=4 shiftwidth=4 tabstop=4 cindent expandtab: */
 
 /*
-  Author(s):  Preetham Chalasani
-  Created on: 2014
+  Author(s):  Preetham Chalasani, Max Zhaoshuo Li
+  Created on: 2020
 
   (C) Copyright 2014 Johns Hopkins University (JHU), All Rights Reserved.
 
@@ -30,7 +30,7 @@ mtsVFPlane::mtsVFPlane(const std::string &name, mtsVFDataBase *data) : mtsVFCart
     IsFrameSet = false;
 }
 
-void mtsVFPlane::FillInTableauRefs(const CONTROLLERMODE mode, const double TickTime)
+void mtsVFPlane::FillInTableauRefs(const CONTROLLERMODE mode, const double CMN_UNUSED(tickTime))
 {    
     /*
          Fill in refs
@@ -110,10 +110,10 @@ void mtsVFPlane::SetFrame(const vctFrame4x4<double> &Frame)
     frame = Frame;
 }
 
-void mtsVFPlane::ConvertRefs(const mtsVFBase::CONTROLLERMODE mode, const double TickTime)
+void mtsVFPlane::ConvertRefs(const mtsVFBase::CONTROLLERMODE mode, const double tickTime)
 {
     if (mode == mtsVFBase::CONTROLLERMODE::JVEL){
         // min || J.N.v*t + J.N.q - d|| => min || N.dx - (d - N.x)||
-        IneqConstraintMatrixRef.Multiply(TickTime);
+        IneqConstraintMatrixRef.Multiply(tickTime);
     }
 }

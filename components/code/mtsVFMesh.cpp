@@ -9,7 +9,7 @@ mtsVFMesh::mtsVFMesh(const std::string &name, mtsVFDataBase *data, cisstMesh &me
     ConstructPDTree(mesh);
 }
 
-void mtsVFMesh::FillInTableauRefs(const mtsVFBase::CONTROLLERMODE mode, const double TickTime)
+void mtsVFMesh::FillInTableauRefs(const mtsVFBase::CONTROLLERMODE mode, const double CMN_UNUSED(tickTime))
 {
     // This constraint only works with position (no rotation)
 
@@ -79,7 +79,7 @@ void mtsVFMesh::ComputeConstraintSize()
 
 }
 
-void mtsVFMesh::ConvertRefs(const mtsVFBase::CONTROLLERMODE mode, const double TickTime)
+void mtsVFMesh::ConvertRefs(const mtsVFBase::CONTROLLERMODE CMN_UNUSED(mode), const double CMN_UNUSED(tickTime))
 {
 
 }
