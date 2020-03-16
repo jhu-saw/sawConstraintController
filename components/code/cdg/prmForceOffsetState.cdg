@@ -1,9 +1,4 @@
 inline-header {
-#include <cisstCommon/cmnGenericObject.h> 
-#include <cisstVector/vctDynamicVectorTypes.h>
-#include <cisstVector/vctFixedSizeVectorTypes.h>
-#include <cisstVector/vctDynamicMatrixTypes.h>
-#include <cisstVector/vctFixedSizeVectorTypes.h>
 #include <sawConstraintController/prmOffsetState.h>
 }
 class {

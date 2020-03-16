@@ -1,5 +1,21 @@
-#ifndef _simpleRobot_h
-#define _simpleRobot_h
+/*
+  Author(s):  Max Zhaoshuo Li
+  Created on: 2019-10-21
+
+  (C) Copyright 2019 Johns Hopkins University (JHU), All Rights
+  Reserved.
+
+--- begin cisst license - do not edit ---
+
+This software is provided "as is" under an open source license, with
+no warranty.  The complete license can be found in license.txt and
+http://www.cisst.org/cisst/license.txt.
+
+--- end cisst license ---
+*/
+
+#ifndef _simpleCoop_h
+#define _simpleCoop_h
 
 #include <cisstMultiTask/mtsTaskPeriodic.h>
 #include <cisstMultiTask/mtsVector.h>
@@ -7,20 +23,25 @@
 
 #include <cisstParameterTypes/prmPositionCartesianGet.h>
 
+// vf
 #include <sawConstraintController/mtsVFController.h>
 #include <sawConstraintController/mtsVFSensorCompliance.h>
 #include <sawConstraintController/mtsVFPlane.h>
 #include <sawConstraintController/mtsVFLimitsConstraint.h>
+#include <sawConstraintController/mtsVFCylinder.h>
+
+// vf data
 #include <sawConstraintController/mtsVFDataBase.h>
 #include <sawConstraintController/mtsVFDataSensorCompliance.h>
 #include <sawConstraintController/mtsVFDataPlane.h>
 #include <sawConstraintController/mtsVFDataJointLimits.h>
+#include <sawConstraintController/mtsVFDataCylinder.h>
 
-class simpleRobot: public mtsTaskPeriodic {
+class simpleCoop: public mtsTaskPeriodic {
 protected:
     // internal method to configure this component
-    void init();
-    void setupRobot();
+    void Init();
+    void SetupRobot();
 
     //! Set up the behaviours for the robot
     /*!
@@ -28,7 +49,7 @@ protected:
      * User needs to add the desired behaviour inside this function. This library only means to provide a receipe instead of a full API.
      * For details of how to define behaviours, please check the code in sawConstraintOptimizer.
      */
-    void setupVFBehaviour();
+    void SetupVFBehaviour();
 
     //! Run funtion for constraint behaviour
     /*!
@@ -41,17 +62,18 @@ protected:
      * 3  Both equality and inequality constraints are contradictory.
      * 4  Input has a NaN or INF
      */
-    nmrConstraintOptimizer::STATUS runBehaviour(vctDoubleVec & dq);
+    nmrConstraintOptimizer::STATUS RunBehaviour(vctDoubleVec & dq);
 
     // robot specific variables
-    void forwardKinematics(vctDoubleVec& jointPosition);
+    void ForwardKinematics(vctDoubleVec& jointPosition);
     vctDoubleVec mJointPosition;
     vctDoubleMat mJacobian;
     vctFrm4x4 mCartesianPosition;
-    prmPositionCartesianGet mMeasuredCartesianPosition;// for ros publication
+    prmPositionCartesianGet mMeasuredCartesianPosition; // for ros publication
 
-    int mNumDof;
+    int mNumOutput;
     int mNumJoints;
+    int mNumFTDoF;
 
     // constraint controller
     mtsVFController *mController;   //! Constraint controller that controls the behaviours
@@ -61,29 +83,30 @@ protected:
     mtsVFDataSensorCompliance mCoopObjective; //! Compliance control behaviour
     mtsVFDataPlane mPlaneConstraint;
     mtsVFDataJointLimits mJointLimitsConstraint;
+    mtsVFDataCylinder mCylindricalConstraint;
 
     //! Update the numerical solver of the robot kinematics values
     /*!
      * \brief updateOptimizerKinematics
      * Update the necessary kinematics information for the optimizer
      */
-    void updateOptimizerKinematics();
+    void UpdateOptimizerKinematics();
     //! Update the numerical solver of the sensor values
     /*!
      * \brief updateOptimizerSensor
      * Update the necessary sensor information for the optimizer
      */
-    void updateOptimizerSensor();
+    void UpdateOptimizerSensor();
 
-    void servoCartesianForce(const mtsDoubleVec & newGoal);
+    void ServoCartesianForce(const mtsDoubleVec & newGoal);
 
 public:
     //! Constructor
-    simpleRobot(const std::string & componentName, const double periodInSeconds);
-    ~simpleRobot() {}
+    simpleCoop(const std::string & componentName, const double periodInSeconds);
+    ~simpleCoop() {}
 
     //! Run loop for the robot task
     void Run();        // performed periodically
 };
 
-#endif // _simpleRobot_h
+#endif // _simpleCoop_h

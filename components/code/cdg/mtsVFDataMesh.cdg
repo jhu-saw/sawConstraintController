@@ -1,0 +1,45 @@
+inline-header {
+#include <sawConstraintController/mtsVFDataBase.h>
+// Always include last!
+#include <sawConstraintController/sawConstraintControllerExport.h>
+}
+
+class {
+    name mtsVFDataMesh;
+    attribute CISST_EXPORT;
+
+    base-class {
+      type mtsVFDataBase;
+    }
+
+    member {
+      name BoundingDistance;
+      type double;
+      visibility public;
+    }
+
+    member {
+        name ActiveFaceIdx;
+        type std::vector<int>;
+        visibility public;
+    }
+
+    member {
+        name NumTrianglesInNode;
+        type int;
+        visibility public;
+    }
+
+    member {
+        name DiagonalDistanceOfNode;
+        type double;
+        visibility public;
+    }
+
+    member {
+        name EnableSlack;
+        type bool;
+        default false;
+        visibility public;
+    }
+}

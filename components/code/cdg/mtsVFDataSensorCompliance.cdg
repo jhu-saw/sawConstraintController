@@ -1,0 +1,20 @@
+inline-header {
+#include <sawConstraintController/mtsVFDataBase.h>
+// Always include last!
+#include <sawConstraintController/sawConstraintControllerExport.h>
+}
+
+class {
+    name mtsVFDataSensorCompliance;
+    attribute CISST_EXPORT;
+
+    base-class {
+      type mtsVFDataBase;
+    }
+
+    member {
+      name Gain;
+      type vctDoubleVec;
+      visibility public;
+    }
+}

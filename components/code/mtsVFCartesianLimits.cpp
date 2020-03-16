@@ -34,7 +34,7 @@ void mtsVFCartesianLimits::FillInTableauRefs(const CONTROLLERMODE mode, const do
     CurrentKinematics = Kinematics.at(0);
     vctDoubleMat Jacobian = CurrentKinematics->Jacobian;
 
-    mtsVFDataJointLimits * limitData = (mtsVFDataJointLimits*)(Data);
+    mtsVFDataJointLimits * limitData = reinterpret_cast<mtsVFDataJointLimits*>(Data);
 
     size_t numLimits = limitData->LowerLimits.size();
 

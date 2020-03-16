@@ -41,7 +41,7 @@ void mtsVFCartesianOrientation::FillInTableauRefs(const mtsVFBase::CONTROLLERMOD
     }
 
     // Convert base class of VF data to a cartesian VF data subclass to access OffsetVector
-    mtsVFDataCartesian * CartData = (mtsVFDataCartesian *)Data;
+    mtsVFDataCartesian * CartData = reinterpret_cast<mtsVFDataCartesian*>(Data);
 
     //m = R*v is the frame rotation multiplied by the offset vector input
     m.Assign(Kinematics.at(0)->Frame.Rotation()*CartData->OffsetVector);

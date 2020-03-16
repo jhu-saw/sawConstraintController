@@ -2,7 +2,7 @@
 /* ex: set filetype=cpp softtabstop=4 shiftwidth=4 tabstop=4 cindent expandtab: */
 
 /*
-  Author(s):  Zhaoshuo Li
+  Author(s):  Max Zhaoshuo Li
   Created on: 2019
 
   (C) Copyright 2019 Johns Hopkins University (JHU), All Rights Reserved.
@@ -25,7 +25,7 @@ CMN_IMPLEMENT_SERVICES(mtsVFLimitsConstraint)
 /*! FillInTableauRefs
 */
 void mtsVFLimitsConstraint::FillInTableauRefs(const CONTROLLERMODE mode,
-                                              const double TickTime)
+                                              const double CMN_UNUSED(tickTime))
 {
     if(Kinematics.size() < 1)
     {
@@ -36,19 +36,19 @@ void mtsVFLimitsConstraint::FillInTableauRefs(const CONTROLLERMODE mode,
     vctDoubleVec jointPositions;
     Kinematics.at(0)->JointState->GetPosition(jointPositions);
 
-    mtsVFDataJointLimits * limitData = (mtsVFDataJointLimits*)(Data);
+    mtsVFDataJointLimits * limitData = reinterpret_cast<mtsVFDataJointLimits*>(Data);
     size_t numLimits = limitData->LowerLimits.size();
 
     IneqConstraintMatrixRef.SetAll(0.0);
 
-    if(mode == JPOS || mode == CARTPOS) {
+    if((mode == JPOS || mode == CARTPOS) && limitData->AbsoluteLimit) {
         for(size_t i = 0; i < numLimits; i++) {
             IneqConstraintMatrixRef.at(i,i) = 1.0;
             IneqConstraintMatrixRef.at(i+numLimits,i) = -1.0;
             IneqConstraintVectorRef.at(i) = limitData->LowerLimits.at(i) - jointPositions.at(i);
             IneqConstraintVectorRef.at(i+numLimits) = -limitData->UpperLimits.at(i) + jointPositions.at(i);
         }
-    } else if(mode == JVEL || mode == CARTVEL) {
+    } else if(mode == JVEL || mode == CARTVEL || !limitData->AbsoluteLimit) {
         for(size_t i = 0; i < numLimits; i++) {
             IneqConstraintMatrixRef.at(i,i) = 1.0;
             IneqConstraintMatrixRef.at(i+numLimits,i) = -1.0;
@@ -58,8 +58,8 @@ void mtsVFLimitsConstraint::FillInTableauRefs(const CONTROLLERMODE mode,
     }
 }
 
-void mtsVFLimitsConstraint::ConvertRefs(const CONTROLLERMODE mode,
-                                        const double TickTime)
+void mtsVFLimitsConstraint::ConvertRefs(const CONTROLLERMODE CMN_UNUSED(mode),
+                                        const double CMN_UNUSED(tickTime))
 {
 
 }

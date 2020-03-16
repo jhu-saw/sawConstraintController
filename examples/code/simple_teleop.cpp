@@ -1,8 +1,5 @@
-/* -*- Mode: C++; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-    */
-/* ex: set filetype=cpp softtabstop=4 shiftwidth=4 tabstop=4 cindent expandtab: */
-
 /*
-  Author(s):  Zhaoshuo Li
+  Author(s):  Max Zhaoshuo Li
   Created on: 2019-10-21
 
   (C) Copyright 2019 Johns Hopkins University (JHU), All Rights
@@ -18,38 +15,41 @@ http://www.cisst.org/cisst/license.txt.
 */
 
 #include <cstdio>
-#include "simpleRobot.h"
+#include "simple_teleop.h"
 
-#include <cisstCommon/cmnConstants.h>
+#include <cisstCommon/cmnUnits.h>
 #include <cisstMultiTask/mtsInterfaceProvided.h>
 
-simpleRobot::simpleRobot(const std::string & componentName, double periodInSeconds):
+simpleTeleop::simpleTeleop(const std::string & componentName, double periodInSeconds):
     mtsTaskPeriodic(componentName, periodInSeconds)
 {
-    init();
+    Init();
 }
 
-void simpleRobot::init() {
-    setupRobot();
-    setupVF();
+void simpleTeleop::Init() {
+    SetupRobot();
+    SetupVF();
 
     StateTable.AddData(mJacobian,"Jacobian");
     StateTable.AddData(mMeasuredCartesianPosition,"MeasuredCartesianPosition");
 
     mtsInterfaceProvided * interfaceProvided = AddInterfaceProvided("ProvidesSimpleRobot");
     if (interfaceProvided){
-        interfaceProvided->AddCommandWrite(&simpleRobot::servoCartesianPosition, this, "ServoCartesianPosition");
+        interfaceProvided->AddCommandWrite(&simpleTeleop::ServoCartesianPosition, this, "ServoCartesianPosition");
         interfaceProvided->AddCommandReadState(StateTable, mMeasuredCartesianPosition, "GetMeasuredCartesianPosition");
     }
+
+    std::cout << "Robot running"<< std::endl;
 }
 
-void simpleRobot::setupRobot() {
+void simpleTeleop::SetupRobot() {
     mNumDof = 6;
     mNumJoints = 6;
 
     // joint values
     mJointPosition.SetSize(mNumJoints);
     mJointPosition.SetAll(0.0);
+    mJointPosition.Ref(3,0).Assign(-30.0,-30.0,-30.0).Multiply(cmn_mm);
 
     // fixed jacobian
     mJacobian.SetSize(mNumDof,mNumJoints);
@@ -59,12 +59,12 @@ void simpleRobot::setupRobot() {
     }
 
     // initialize cartesian
-    forwardKinematics(mJointPosition);
+    ForwardKinematics(mJointPosition);
     mMeasuredCartesianPosition.SetReferenceFrame("map");
     mMeasuredCartesianPosition.Valid() = true;
 }
 
-void simpleRobot::setupVF() {
+void simpleTeleop::SetupVF() {
     // initialize controller
     mController = new mtsVFController(mNumJoints, mtsVFBase::JPOS);
 
@@ -87,62 +87,62 @@ void simpleRobot::setupVF() {
     // use the names defined above to relate kinematics data
     mTeleopObjective.KinNames.push_back("MeasuredKinematics"); // measured kinematics needs to be first according to mtsVFFollow.cpp
     mTeleopObjective.KinNames.push_back("GoalKinematics"); // goal kinematics needs to be second
+    mController->AddVFFollow(mTeleopObjective);
 
     // joint limit constraint
     mJointLimitsConstraint.Name = "Joint Limit";
-    mJointLimitsConstraint.LowerLimits.SetSize(mNumJoints);
-    mJointLimitsConstraint.LowerLimits.Assign(-10.0, -10.0, -10.0, -2.0, -2.0, -2.0);
-    mJointLimitsConstraint.UpperLimits.SetSize(mNumJoints);
-    mJointLimitsConstraint.UpperLimits.Assign(10.0, 10.0, 10.0, 2.0, 2.0, 2.0);
     mJointLimitsConstraint.IneqConstraintRows = 2 * mNumJoints;
+    mJointLimitsConstraint.LowerLimits.SetSize(mNumJoints);
+    mJointLimitsConstraint.LowerLimits.Assign(-150.0, -150.0, -150.0, -2.0, -2.0, -2.0).Multiply(1E-3);
+    mJointLimitsConstraint.UpperLimits.SetSize(mNumJoints);
+    mJointLimitsConstraint.UpperLimits.Assign(150.0, 150.0, 150.0, 2.0, 2.0, 2.0).Multiply(1E-3);
     mJointLimitsConstraint.KinNames.clear(); // sanity
     // use the names defined above to relate kinematics data
     mJointLimitsConstraint.KinNames.push_back("MeasuredKinematics"); // measured kinematics needs to be first according to mtsVFLimitsConstraint.cpp
+    mController->AddVFLimits(mJointLimitsConstraint);
 
-    // plane constraint
-    mPlaneConstraint.Name = "PlaneConstraint";
-    mPlaneConstraint.IneqConstraintRows = 1;
-    mPlaneConstraint.Normal.Assign(0.0,0.0,1.0);
-    mPlaneConstraint.PointOnPlane.Assign(0.0, 0.0, -5.0);
-    // use the names defined above to relate kinematics data
-    mPlaneConstraint.KinNames.push_back("MeasuredKinematics"); // need measured kinematics according to mtsVFPlane.cpp
-    // TODO: slack optimization is still not working yet
-//    mPlaneConstraint.NumSlacks = 1;
-//    mPlaneConstraint.SlackCosts = 1.0;
-//    mPlaneConstraint.SlackLimits.SetSize(1);
-//    mPlaneConstraint.SlackLimits.Assign(vctDouble1(1.0));
+   // plane constraint
+   mPlaneConstraint.Name = "PlaneConstraint";
+   mPlaneConstraint.IneqConstraintRows = 1;
+   mPlaneConstraint.Normal.Assign(1.0,0.0,1.0).NormalizedSelf();
+   mPlaneConstraint.PointOnPlane.Assign(0.0, 0.0, -5.0);
+   mPlaneConstraint.NumJoints = mNumJoints;
+   // use the names defined above to relate kinematics data
+   mPlaneConstraint.KinNames.push_back("MeasuredKinematics"); // need measured kinematics according to mtsVFPlane.cpp
+   mController->AddVFPlane(mPlaneConstraint);
 
-    // add objective and constraint to optimizer
-    // first, we check if we can set the data. If not, we insert it.
-    if (!mController->SetVFData(mTeleopObjective, typeid(mtsVFFollow)))
-    {
-        // Adds a new virtual fixture to the active vector
-        mController->VFMap.insert(std::pair<std::string,mtsVFFollow *>(mTeleopObjective.Name,new mtsVFFollow(mTeleopObjective.Name,new mtsVFDataBase(mTeleopObjective))));
-        // Increment users of each kinematics and sensor object found
-        mController->IncrementUsers(mTeleopObjective.KinNames, mTeleopObjective.SensorNames);
-    }
-    if (!mController->SetVFData(mJointLimitsConstraint, typeid(mtsVFLimitsConstraint)))
-    {
-        // Adds a new virtual fixture to the active vector
-        mController->VFMap.insert(std::pair<std::string,mtsVFLimitsConstraint *>(mJointLimitsConstraint.Name,new mtsVFLimitsConstraint(mJointLimitsConstraint.Name,new mtsVFDataJointLimits(mJointLimitsConstraint))));
-        // Increment users of each kinematics and sensor object found
-        mController->IncrementUsers(mJointLimitsConstraint.KinNames, mJointLimitsConstraint.SensorNames);
-    }
-    if (!mController->SetVFData(mPlaneConstraint, typeid(mtsVFPlane)))
-    {
-        mController->VFMap.insert(std::pair<std::string, mtsVFPlane*>(mPlaneConstraint.Name, new mtsVFPlane(mPlaneConstraint.Name, new mtsVFDataPlane(mPlaneConstraint))));
-        mController->IncrementUsers(mPlaneConstraint.KinNames, mPlaneConstraint.SensorNames);
-    }
+   // cylindrical constraint
+   vct3 origin(-55,-30,0), left(15,-27,3),right(-15,-27,3),end(0,27,3);
+   mNerveLeft.Name = "Nerve Left";
+   mNerveLeft.IneqConstraintRows = 1;
+   mNerveLeft.Axis.Assign(left-end);
+   mNerveLeft.Point.Assign(left-origin);
+   mNerveLeft.Radius = 5.0;
+   mNerveLeft.NumJoints = mNumJoints;
+   mNerveLeft.KinNames.clear(); // sanity
+   // use the names defined above to relate kinematics data
+   mNerveLeft.KinNames.push_back("MeasuredKinematics");
+   mController->AddVFCylinder(mNerveLeft);
 
+   mNerveRight.Name = "Nerve Right";
+   mNerveRight.IneqConstraintRows = 1;
+   mNerveRight.Axis.Assign(right-end);
+   mNerveRight.Point.Assign(right-origin);
+   mNerveRight.Radius = 5.0;
+   mNerveRight.NumJoints = mNumJoints;
+   mNerveRight.KinNames.clear(); // sanity
+   // use the names defined above to relate kinematics data
+   mNerveRight.KinNames.push_back("MeasuredKinematics");
+   mController->AddVFCylinder(mNerveRight);
 }
 
-void simpleRobot::forwardKinematics(vctDoubleVec& jointPosition) {
+void simpleTeleop::ForwardKinematics(vctDoubleVec& jointPosition) {
     // TODO: how to access part of the vector?
     mMeasuredCartesianPosition.Position().Translation() = jointPosition.Ref(3,0);
     // TODO: update rotation
 }
 
-void simpleRobot::Run() {
+void simpleTeleop::Run() {
     ProcessQueuedCommands();
     ProcessQueuedEvents();
 
@@ -151,24 +151,26 @@ void simpleRobot::Run() {
 
     // solve for next movement
     vctDoubleVec dq;
-    std::cout << "Solve" << std::endl;
-    nmrConstraintOptimizer::STATUS optimizerStatus =solve(dq);
-    std::cout << "solution obtained" << std::endl;
+    nmrConstraintOptimizer::STATUS optimizerStatus =Solve(dq);
 
     if (optimizerStatus == nmrConstraintOptimizer::STATUS::NMR_OK){
         mJointPosition += dq.Ref(6,0);
-        std::cout << dq << std::endl;
         // move
-        forwardKinematics(mJointPosition);
+        ForwardKinematics(mJointPosition);
     }
     else{
-        std::cout << "No solution found" << std::endl;
-        std::cout << optimizerStatus << std::endl;
+        CMN_LOG_CLASS_RUN_ERROR << "No solution found" << std::endl;
+        CMN_LOG_CLASS_RUN_ERROR << optimizerStatus << std::endl;
+
+        if (optimizerStatus==nmrConstraintOptimizer::STATUS::NMR_INEQ_CONTRADICTION){
+            CMN_LOG_CLASS_RUN_ERROR << "inqeuality rows " << mController->Optimizer.GetIneqConstraintMatrix().rows() << "cols "<<mController->Optimizer.GetIneqConstraintMatrix().cols()<< std::endl;
+            CMN_LOG_CLASS_RUN_ERROR << "inqeuality vector " << mController->Optimizer.GetIneqConstraintVector().size() << std::endl;
+        }
 
     }
 }
 
-void simpleRobot::updateOptimizerKinematics() {
+void simpleTeleop::UpdateOptimizerKinematics() {
     // update cartesian position and jacobian
     mMeasuredKinematics.Frame.FromNormalized(mMeasuredCartesianPosition.Position());
     mMeasuredKinematics.Jacobian.Assign(mJacobian);
@@ -179,22 +181,20 @@ void simpleRobot::updateOptimizerKinematics() {
     mController->SetKinematics(mGoalKinematics);
 }
 
-nmrConstraintOptimizer::STATUS simpleRobot::solve(vctDoubleVec &dq) {
+nmrConstraintOptimizer::STATUS simpleTeleop::Solve(vctDoubleVec &dq) {
     // update optimizer kinematics
-    updateOptimizerKinematics();
+    UpdateOptimizerKinematics();
 
     // update sensor data if needed
     // update vf data if needed
 
     // update optimizer
-    std::cout << "update optimizer" << std::endl;
     mController->UpdateOptimizer(StateTable.GetAveragePeriod());
-    std::cout << "updated optimizer" << std::endl;
 
     // solve
     return mController->Solve(dq);
 }
 
-void simpleRobot::servoCartesianPosition(const vctFrm4x4 & newGoal) {
+void simpleTeleop::ServoCartesianPosition(const vctFrm4x4 & newGoal) {
     mGoalKinematics.Frame.FromNormalized(newGoal);
 }
