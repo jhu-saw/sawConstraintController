@@ -7,7 +7,7 @@
   <maintainer email="zli122@jhu.edu">Max Zhaoshuo Li</maintainer>
   <license>cisst</license>
 
-  <build_depend>catkin</build_depend>
+  <buildtool_depend>catkin</buildtool_depend>
   <build_depend>cisst</build_depend>
   <build_depend>cisst_ros_bridge</build_depend>
   <build_depend>saw_constraint_controller</build_depend>
