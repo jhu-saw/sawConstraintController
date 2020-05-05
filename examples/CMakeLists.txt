@@ -61,7 +61,7 @@ if (cisst_FOUND)
 # mesh depends on cisstICP
 if (USE_MESH)
     message("Use mesh constraint")
-    find_package(cisstICP)
+    find_package(cisstICP REQUIRED)
     include_directories(${cisstICP_INCLUDE_DIR})
     link_directories(${cisstICP_LIBRARY_DIR})
 endif(USE_MESH)
