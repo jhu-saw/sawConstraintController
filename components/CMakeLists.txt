@@ -12,14 +12,13 @@
 project (sawConstraintController)
 
 cmake_minimum_required (VERSION 2.8)
-set(CMAKE_CXX_STANDARD 11)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-
-option(USE_MESH "If mesh constraint is used, it depends on cisstICP" OFF)
+set (CMAKE_CXX_STANDARD 11)
+set (CMAKE_CXX_STANDARD_REQUIRED ON)
 
 set (REQUIRED_CISST_LIBRARIES
      cisstCommon
      cisstVector
+     cisstMesh
      cisstOSAbstraction
      cisstMultiTask
      cisstParameterTypes     
@@ -55,21 +54,21 @@ if (cisst_FOUND_AS_REQUIRED)
 
   # create data type using the data generator
   set (CDG_FILES
-      code/cdg/prmKinematicsOffsetState.cdg
-      code/cdg/prmForceOffsetState.cdg
-      code/cdg/prmKinematicsState.cdg
-      code/cdg/prmOffsetState.cdg
-      code/cdg/prmSensorState.cdg
-
-      code/cdg/mtsVFDataBase.cdg
-      code/cdg/mtsVFDataSensorCompliance.cdg
-      code/cdg/mtsVFDataCartesianTranslation.cdg
-      code/cdg/mtsVFDataPlane.cdg
-      code/cdg/mtsVFDataJointLimits.cdg
-      code/cdg/mtsVFDataAbsoluteJointLimits.cdg
-      code/cdg/mtsVFDataRCM.cdg
-      code/cdg/mtsVFDataCylinder.cdg
-    )
+       code/cdg/prmKinematicsOffsetState.cdg
+       code/cdg/prmForceOffsetState.cdg
+       code/cdg/prmKinematicsState.cdg
+       code/cdg/prmOffsetState.cdg
+       code/cdg/prmSensorState.cdg
+       code/cdg/mtsVFDataBase.cdg
+       code/cdg/mtsVFDataSensorCompliance.cdg
+       code/cdg/mtsVFDataCartesianTranslation.cdg
+       code/cdg/mtsVFDataPlane.cdg
+       code/cdg/mtsVFDataJointLimits.cdg
+       code/cdg/mtsVFDataAbsoluteJointLimits.cdg
+       code/cdg/mtsVFDataRCM.cdg
+       code/cdg/mtsVFDataCylinder.cdg
+       code/cdg/mtsVFDataMesh.cdg
+       )
 
   include_directories (${sawConstraintController_INCLUDE_DIR})
   set (sawConstraintController_HEADER_DIR "include/sawConstraintController")
@@ -89,6 +88,7 @@ if (cisst_FOUND_AS_REQUIRED)
        ${sawConstraintController_HEADER_DIR}/mtsVFLimitsConstraint.h
        ${sawConstraintController_HEADER_DIR}/mtsVFRCM.h
        ${sawConstraintController_HEADER_DIR}/mtsVFCylinder.h
+       ${sawConstraintController_HEADER_DIR}/mtsVFMesh.h
        )
 
   set (SOURCE_FILES
@@ -106,7 +106,8 @@ if (cisst_FOUND_AS_REQUIRED)
       code/mtsVFLimitsConstraint.cpp
       code/mtsVFRCM.cpp
       code/mtsVFCylinder.cpp
-)
+      code/mtsVFMesh.cpp
+      )
 
 if(USE_EIGEN)
     set (HEADER_FILES
@@ -120,26 +121,6 @@ if(USE_EIGEN)
     set(EIGEN3_INCLUDE_DIR "Eigen include directory" CACHE PATH "")
     include_directories(${EIGEN3_INCLUDE_DIR})
 endif(USE_EIGEN)
-
-# mesh depends on cisstICP
-if (USE_MESH)
-    message("Use mesh constraint")
-    set (HEADER_FILES
-        ${HEADER_FILES}
-        ${sawConstraintController_HEADER_DIR}/mtsVFMesh.h
-        )
-    set (SOURCE_FILES
-        ${SOURCE_FILES}
-         code/mtsVFMesh.cpp
-         )
-    set(CDG_FILES
-        ${CDG_FILES}
-        code/cdg/mtsVFDataMesh.cdg
-        )
-    find_package(cisstICP REQUIRED)
-    include_directories(${cisstICP_INCLUDE_DIR})
-    link_directories(${cisstICP_LIBRARY_DIR})
-endif(USE_MESH)
 
     cisst_data_generator (sawConstraintController
                       "${sawConstraintController_BINARY_DIR}/include" # where to save the file
@@ -155,11 +136,6 @@ endif(USE_MESH)
 
     set_property (TARGET sawConstraintController PROPERTY FOLDER "sawConstraintController")
     cisst_target_link_libraries (sawConstraintController ${REQUIRED_CISST_LIBRARIES})
-
-# mesh depends on cisstICP
-if(USE_MESH)
-    target_link_libraries(sawConstraintController ${cisstICP_LIBRARIES})
-endif(USE_MESH)
 
     set (sawConstraintController_CMAKE_CONFIG_FILE "${sawConstraintController_CONFIG_FILE_DIR}/sawConstraintControllerConfig.cmake")
     configure_file ("${CMAKE_CURRENT_SOURCE_DIR}/cmake/sawConstraintControllerConfig.cmake.in"

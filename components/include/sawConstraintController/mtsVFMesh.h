@@ -8,9 +8,9 @@
 #include <sawConstraintController/mtsVFCartVel.h>
 #include <sawConstraintController/mtsVFDataMesh.h>
 
-#include <PDTree_Mesh.h>
-#include <algPDTree_CP_Mesh.h>
-#include <cisstMesh.h>
+#include <cisstMesh/PDTree_Mesh.h>
+#include <cisstMesh/algPDTree_CP_Mesh.h>
+#include <cisstMesh/mshMesh.h>
 
 class CISST_EXPORT mtsVFMesh : public mtsVFCartesianTranslation
 {
