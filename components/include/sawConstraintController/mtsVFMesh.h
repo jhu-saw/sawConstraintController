@@ -21,7 +21,7 @@ public:
     /*! Constructor
     \param name String name of object
     */
-    mtsVFMesh(const std::string & name, mtsVFDataBase * data, cisstMesh & mesh);
+    mtsVFMesh(const std::string & name, mtsVFDataBase * data, msh3Mesh & mesh);
 
     //! Updates co with virtual fixture data.
     /*! FillInTableauRefs
@@ -31,8 +31,8 @@ public:
 
     void ConvertRefs(const mtsVFBase::CONTROLLERMODE mode, const double tickTime) override;
 
-    void TransformMesh(const vctFrm4x4 & transformation, cisstMesh & mesh);
-    void ConstructPDTree(cisstMesh& mesh);
+    void TransformMesh(const vctFrm4x4 & transformation, msh3Mesh & mesh);
+    void ConstructPDTree(msh3Mesh & mesh);
 
 protected:
     prmKinematicsState * CurrentKinematics;

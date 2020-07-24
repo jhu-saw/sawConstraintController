@@ -5,7 +5,7 @@ CMN_IMPLEMENT_SERVICES(mtsVFMesh)
 mtsVFMesh::mtsVFMesh() : mtsVFCartesianTranslation(){}
 
 
-mtsVFMesh::mtsVFMesh(const std::string &name, mtsVFDataBase *data, cisstMesh &mesh) : mtsVFCartesianTranslation(name,data) {
+mtsVFMesh::mtsVFMesh(const std::string &name, mtsVFDataBase *data, msh3Mesh & mesh) : mtsVFCartesianTranslation(name,data) {
     ConstructPDTree(mesh);
 }
 
@@ -84,13 +84,13 @@ void mtsVFMesh::ConvertRefs(const mtsVFBase::CONTROLLERMODE CMN_UNUSED(mode), co
 
 }
 
-void mtsVFMesh::TransformMesh(const vctFrm4x4 &transformation, cisstMesh & mesh)
+void mtsVFMesh::TransformMesh(const vctFrm4x4 &transformation, msh3Mesh & mesh)
 {
     mesh.TransformTriangle(transformation);
     ConstructPDTree(mesh);
 }
 
-void mtsVFMesh::ConstructPDTree(cisstMesh &mesh)
+void mtsVFMesh::ConstructPDTree(msh3Mesh & mesh)
 {
     mtsVFDataMesh* meshData = reinterpret_cast<mtsVFDataMesh*>(Data);
     // construct PD-Tree
