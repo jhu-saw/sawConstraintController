@@ -8,9 +8,9 @@
 #include <sawConstraintController/mtsVFCartVel.h>
 #include <sawConstraintController/mtsVFDataMesh.h>
 
-#include <cisstMesh/PDTree_Mesh.h>
-#include <cisstMesh/algPDTree_CP_Mesh.h>
-#include <cisstMesh/mshMesh.h>
+#include <cisstMesh/msh3PDTreeMesh.h>
+#include <cisstMesh/msh3AlgPDTreeCPMesh.h>
+#include <cisstMesh/msh3Mesh.h>
 
 class CISST_EXPORT mtsVFMesh : public mtsVFCartesianTranslation
 {
@@ -36,8 +36,8 @@ public:
 
 protected:
     prmKinematicsState * CurrentKinematics;
-    PDTree_Mesh* pTreeMesh;
-    algPDTree_CP_Mesh* pAlgMesh;
+    msh3PDTreeMesh* pTreeMesh;
+    msh3AlgPDTreeCPMesh* pAlgMesh;
     vct3 mCurrentPosition;
 };
 

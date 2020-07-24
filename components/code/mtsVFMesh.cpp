@@ -94,8 +94,8 @@ void mtsVFMesh::ConstructPDTree(cisstMesh &mesh)
 {
     mtsVFDataMesh* meshData = reinterpret_cast<mtsVFDataMesh*>(Data);
     // construct PD-Tree
-    pTreeMesh = new PDTree_Mesh(mesh, meshData->NumTrianglesInNode, meshData->DiagonalDistanceOfNode);
-    pAlgMesh = new algPDTree_CP_Mesh(pTreeMesh);
+    pTreeMesh = new msh3PDTreeMesh(mesh, meshData->NumTrianglesInNode, meshData->DiagonalDistanceOfNode);
+    pAlgMesh = new msh3AlgPDTreeCPMesh(pTreeMesh);
     pTreeMesh->SetSearchAlgorithm(pAlgMesh);
 
 }
