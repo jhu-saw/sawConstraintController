@@ -136,7 +136,7 @@ if (USE_MESH)
         ${CDG_FILES}
         code/cdg/mtsVFDataMesh.cdg
         )
-    find_package(cisstICP)
+    find_package(cisstICP REQUIRED)
     include_directories(${cisstICP_INCLUDE_DIR})
     link_directories(${cisstICP_LIBRARY_DIR})
 endif(USE_MESH)

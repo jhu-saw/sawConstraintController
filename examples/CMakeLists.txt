@@ -12,6 +12,10 @@
 # --- end cisst license ---
 
 cmake_minimum_required(VERSION 2.8.3)
+set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+option(USE_MESH "If mesh constraint is used, it depends on cisstICP" OFF)
 
 project(saw_constraint_controller_examples)
 
@@ -54,6 +58,14 @@ if (cisst_FOUND)
     include_directories(${sawConstraintController_INCLUDE_DIR})
     link_directories(${sawConstraintController_LIBRARY_DIR})
 
+# mesh depends on cisstICP
+if (USE_MESH)
+    message("Use mesh constraint")
+    find_package(cisstICP REQUIRED)
+    include_directories(${cisstICP_INCLUDE_DIR})
+    link_directories(${cisstICP_LIBRARY_DIR})
+endif(USE_MESH)
+
     # add executable
     add_executable(simpleCoop
             code/main_coop.cpp
@@ -63,6 +75,11 @@ if (cisst_FOUND)
             code/main_teleop.cpp
             code/simple_teleop.h
             code/simple_teleop.cpp)
+
+if (USE_MESH)
+    target_link_libraries(simpleCoop ${cisstICP_LIBRARIES})
+    target_link_libraries(simpleTeleop ${cisstICP_LIBRARIES})
+endif(USE_MESH)
 
     # link libraries
     cisst_target_link_libraries(simpleCoop ${REQUIRED_CISST_LIBRARIES})
@@ -74,4 +91,5 @@ if (cisst_FOUND)
     target_link_libraries(simpleTeleop
             ${sawConstraintController_LIBRARIES}
             ${catkin_LIBRARIES})
+
 endif(cisst_FOUND)
