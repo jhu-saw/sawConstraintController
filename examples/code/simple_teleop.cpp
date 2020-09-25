@@ -18,6 +18,7 @@ http://www.cisst.org/cisst/license.txt.
 #include "simple_teleop.h"
 
 #include <cisstCommon/cmnUnits.h>
+#include <cisstCommon/cmnPath.h>
 #include <cisstMultiTask/mtsInterfaceProvided.h>
 
 simpleTeleop::simpleTeleop(const std::string & componentName, double periodInSeconds):
@@ -93,9 +94,9 @@ void simpleTeleop::SetupVF() {
     mJointLimitsConstraint.Name = "Joint Limit";
     mJointLimitsConstraint.IneqConstraintRows = 2 * mNumJoints;
     mJointLimitsConstraint.LowerLimits.SetSize(mNumJoints);
-    mJointLimitsConstraint.LowerLimits.Assign(-150.0, -150.0, -150.0, -2.0, -2.0, -2.0).Multiply(1E-3);
+    mJointLimitsConstraint.LowerLimits.Assign(-150.0, -150.0, -150.0, -2.0, -2.0, -2.0).Multiply(cmn_mm);
     mJointLimitsConstraint.UpperLimits.SetSize(mNumJoints);
-    mJointLimitsConstraint.UpperLimits.Assign(150.0, 150.0, 150.0, 2.0, 2.0, 2.0).Multiply(1E-3);
+    mJointLimitsConstraint.UpperLimits.Assign(150.0, 150.0, 150.0, 2.0, 2.0, 2.0).Multiply(cmn_mm);
     mJointLimitsConstraint.KinNames.clear(); // sanity
     // use the names defined above to relate kinematics data
     mJointLimitsConstraint.KinNames.push_back("MeasuredKinematics"); // measured kinematics needs to be first according to mtsVFLimitsConstraint.cpp
@@ -111,23 +112,13 @@ void simpleTeleop::SetupVF() {
    mPlaneConstraint.KinNames.push_back("MeasuredKinematics"); // need measured kinematics according to mtsVFPlane.cpp
    mController->AddVFPlane(mPlaneConstraint);
 
-   // cylindrical constraint
-   vct3 origin(-55,-30,0), left(15,-27,3),end(0,27,3);
-   mCylinderConstraint.Name = "Nerve Left";
-   mCylinderConstraint.IneqConstraintRows = 1;
-   mCylinderConstraint.Axis.Assign(left-end);
-   mCylinderConstraint.Point.Assign(left-origin);
-   mCylinderConstraint.Radius = 5.0;
-   mCylinderConstraint.NumJoints = mNumJoints;
-   mCylinderConstraint.KinNames.clear(); // sanity
-   // use the names defined above to relate kinematics data
-   mCylinderConstraint.KinNames.push_back("MeasuredKinematics");
-   mController->AddVFCylinder(mCylinderConstraint);
-
-#if USE_MESH
    // mesh constraint
-   mMeshFile = cisstMesh(true); // error in mm
-   if (mMeshFile.LoadMeshFromSTLFile("/home/max/dvrk_ws/src/USAblation/mesh/Skull.stl")==-1){
+   mMeshFile = msh3Mesh(true); // convert mesh unit from mm to m
+   cmnPath path;
+   path.AddRelativeToCisstShare("/models/meshes");
+   std::string meshFile = "Cube.STL";
+   std::string fullPath = path.Find(meshFile);
+   if (mMeshFile.LoadMeshFromSTLFile(fullPath)==-1){
        CMN_LOG_CLASS_RUN_ERROR << "Cannot load STL file" << std::endl;
        cmnThrow("Cannot load STL file");
    }
@@ -146,13 +137,10 @@ void simpleTeleop::SetupVF() {
            mController->VFMap.insert(std::pair<std::string, mtsVFMesh*>(mMesh.Name, new mtsVFMesh(mMesh.Name, &mMesh, mMeshFile)));
        }
    }
-#endif
 }
 
 void simpleTeleop::ForwardKinematics(vctDoubleVec& jointPosition) {
-    // TODO: how to access part of the vector?
     mMeasuredCartesianPosition.Position().Translation() = jointPosition.Ref(3,0);
-    // TODO: update rotation
 }
 
 void simpleTeleop::Run() {

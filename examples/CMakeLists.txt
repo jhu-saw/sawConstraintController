@@ -32,6 +32,7 @@ find_package(catkin REQUIRED COMPONENTS
 set (REQUIRED_CISST_LIBRARIES
         cisstCommon
         cisstVector
+        cisstMesh
         cisstMultiTask
         cisstNumerical
         cisstParameterTypes
