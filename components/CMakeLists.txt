@@ -109,19 +109,6 @@ if (cisst_FOUND_AS_REQUIRED)
       code/mtsVFMesh.cpp
       )
 
-if(USE_EIGEN)
-    set (HEADER_FILES
-        ${HEADER_FILES}
-        ${sawConstraintController_HEADER_DIR}/constraintOptimizer.h
-        )
-    set (SOURCE_FILES
-        ${SOURCE_FILES}
-        code/eiquadprog.hpp
-        )
-    set(EIGEN3_INCLUDE_DIR "Eigen include directory" CACHE PATH "")
-    include_directories(${EIGEN3_INCLUDE_DIR})
-endif(USE_EIGEN)
-
     cisst_data_generator (sawConstraintController
                       "${sawConstraintController_BINARY_DIR}/include" # where to save the file
                       "sawConstraintController/"    # sub directory for include
