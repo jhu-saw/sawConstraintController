@@ -8,6 +8,6 @@
     version: devel
 
 - git:
-    local-name: cisst-saw/sawConstraintControllers
-    uri: https://github.com/jhu-saw/sawConstraintControllers
+    local-name: cisst-saw/sawConstraintController
+    uri: https://github.com/jhu-saw/sawConstraintController
     version: devel
