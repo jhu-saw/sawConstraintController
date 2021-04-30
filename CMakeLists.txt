@@ -12,6 +12,5 @@
 cmake_minimum_required (VERSION 2.8)
 
 add_subdirectory (components)
-add_subdirectory (examples)
 
 option(SAW_sawConstraintController_USE_EIGEN "Use eigen libraries for the solver instead of netlib" OFF)
