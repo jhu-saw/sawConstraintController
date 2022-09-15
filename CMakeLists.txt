@@ -1,5 +1,5 @@
 #
-# (C) Copyright 2014-2016 Johns Hopkins University (JHU), All Rights Reserved.
+# (C) Copyright 2014-2022 Johns Hopkins University (JHU), All Rights Reserved.
 #
 # --- begin cisst license - do not edit ---
 #
@@ -9,8 +9,18 @@
 #
 # --- end cisst license ---
 
-cmake_minimum_required (VERSION 2.8)
+cmake_minimum_required(VERSION 3.10)
+project (sawConstraintControllerAll VERSION 1.1.0)
+
+find_package (cisst REQUIRED)
+include (${CISST_USE_FILE})
+cisst_cpack_settings (
+  VENDOR "JHU"
+  MAINTAINER "anton.deguet@jhu.edu")
 
 add_subdirectory (components)
 
-option(SAW_sawConstraintController_USE_EIGEN "Use eigen libraries for the solver instead of netlib" OFF)
+include (CPack)
+cpack_add_component (sawConstraintController)
+cpack_add_component (sawConstraintController-dev
+                     DEPENDS sawConstraintController)

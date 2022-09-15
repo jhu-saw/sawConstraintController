@@ -5,7 +5,7 @@
   Author(s):  Paul Wilkening
   Created on: 2014
 
- (C) Copyright 2014 Johns Hopkins University (JHU), All Rights Reserved.
+  (C) Copyright 2014-2022 Johns Hopkins University (JHU), All Rights Reserved.
 
  --- begin cisst license - do not edit ---
 
@@ -18,12 +18,6 @@
 
 #ifndef _mtsVFController_h
 #define _mtsVFController_h
-
-#if sawConstraintController_USE_EIGEN
-#include <sawConstraintController/constraintOptimizer.h>
-#else
-#include <cisstNumerical/nmrConstraintOptimizer.h>
-#endif
 
 #include <sawConstraintController/mtsVFBase.h>
 #include <sawConstraintController/mtsVFJointVel.h>
@@ -74,7 +68,7 @@ public:
     */
     mtsVFController(size_t num_joints, mtsVFBase::CONTROLLERMODE cm):
         Optimizer(num_joints)
-    {        
+    {
         ControllerMode = cm;
     }
 
@@ -82,19 +76,19 @@ public:
     {
         std::map<std::string,mtsVFBase *>::iterator itVF;
         for(itVF = VFMap.begin(); itVF != VFMap.end(); itVF++)
-        {       
+        {
             delete itVF->second;
         }
 
         std::map<std::string,prmKinematicsState *>::iterator itKin;
         for(itKin = Kinematics.begin(); itKin != Kinematics.end(); itKin++)
-        {       
+        {
             delete itKin->second;
         }
 
         std::map<std::string,prmSensorState *>::iterator itSens;
         for(itSens = Sensors.begin(); itSens != Sensors.end(); itSens++)
-        {       
+        {
             delete itSens->second;
         }
     }
@@ -103,7 +97,7 @@ public:
 
     bool ActivateVF(const std::string & s);
 
-    void DeactivateAll(); 
+    void DeactivateAll();
 
     //! Adds/Updates a vf data object
     void AddVFJointVelocity(const mtsVFDataBase & vf);

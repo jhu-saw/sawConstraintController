@@ -1,5 +1,5 @@
 #
-# (C) Copyright 2014-2021Johns Hopkins University (JHU), All Rights Reserved.
+# (C) Copyright 2014-2022 Johns Hopkins University (JHU), All Rights Reserved.
 #
 # --- begin cisst license - do not edit ---
 #
@@ -9,9 +9,9 @@
 #
 # --- end cisst license ---
 
-project (sawConstraintController)
+cmake_minimum_required (VERSION 3.10)
+project (sawConstraintController VERSION 1.1.0)
 
-cmake_minimum_required (VERSION 2.8)
 set (CMAKE_CXX_STANDARD 11)
 set (CMAKE_CXX_STANDARD_REQUIRED ON)
 
@@ -21,7 +21,7 @@ set (REQUIRED_CISST_LIBRARIES
      cisstMesh
      cisstOSAbstraction
      cisstMultiTask
-     cisstParameterTypes     
+     cisstParameterTypes
      cisstNumerical
      )
 
@@ -33,13 +33,7 @@ if (cisst_FOUND_AS_REQUIRED)
   include (${CISST_USE_FILE})
 
   # catkin/ROS paths
-  cisst_is_catkin_build (sawConstraintController_IS_CATKIN_BUILT)
-  if (sawConstraintController_IS_CATKIN_BUILT)
-    set (sawConstraintController_CONFIG_FILE_DIR "${CATKIN_DEVEL_PREFIX}/share/sawConstraintController/cmake")
-    set (LIBRARY_OUTPUT_PATH "${sawConstraintController_BINARY_DIR}/lib")
-  else ()
-    set (sawConstraintController_CONFIG_FILE_DIR "${sawConstraintController_BINARY_DIR}")
-  endif ()
+  cisst_set_output_path ()
 
   # create/configure file for find_package (sawConstraintController)
   set (sawConstraintController_INCLUDE_DIR
@@ -49,8 +43,7 @@ if (cisst_FOUND_AS_REQUIRED)
   set (sawConstraintController_LIBRARIES sawConstraintController)
 
   # Generate sawConstraintControllerRevision.h
-  configure_file ("${sawConstraintController_SOURCE_DIR}/code/sawConstraintControllerRevision.h.in"
-                  "${sawConstraintController_BINARY_DIR}/include/sawConstraintController/sawConstraintControllerRevision.h")
+  cisst_add_config_files (sawConstraintController)
 
   # create data type using the data generator
   set (CDG_FILES
@@ -109,44 +102,35 @@ if (cisst_FOUND_AS_REQUIRED)
       code/mtsVFMesh.cpp
       )
 
-    cisst_data_generator (sawConstraintController
+  cisst_data_generator (sawConstraintController
                       "${sawConstraintController_BINARY_DIR}/include" # where to save the file
                       "sawConstraintController/"    # sub directory for include
                       ${CDG_FILES}
                       )
 
-    add_library (sawConstraintController
+  add_library (sawConstraintController
                ${HEADER_FILES}
                ${SOURCE_FILES}
                ${sawConstraintController_CISST_DG_SRCS}
                ${sawConstraintController_CISST_DG_HDRS})
 
-    set_property (TARGET sawConstraintController PROPERTY FOLDER "sawConstraintController")
-    cisst_target_link_libraries (sawConstraintController ${REQUIRED_CISST_LIBRARIES})
+  set_target_properties (sawConstraintController PROPERTIES
+                         VERSION ${sawConstraintController_VERSION}
+                         FOLDER "sawConstraintController")
+  cisst_target_link_libraries (sawConstraintController ${REQUIRED_CISST_LIBRARIES})
 
-    set (sawConstraintController_CMAKE_CONFIG_FILE "${sawConstraintController_CONFIG_FILE_DIR}/sawConstraintControllerConfig.cmake")
-    configure_file ("${CMAKE_CURRENT_SOURCE_DIR}/cmake/sawConstraintControllerConfig.cmake.in"
-                  "${sawConstraintController_CMAKE_CONFIG_FILE}"
-                  @ONLY)
-
-    cisst_add_config_version ("${sawConstraintController_CONFIG_FILE_DIR}/sawConstraintControllerConfigVersion.cmake"
-                            DESTINATION "share/sawConstraintController"
-                            COMPONENT sawConstraintController)
-
-    # Install targets for headers and library
-    install (DIRECTORY
+  # Install targets for headers and library
+  install (DIRECTORY
            "${sawConstraintController_SOURCE_DIR}/include/sawConstraintController"
            "${sawConstraintController_BINARY_DIR}/include/sawConstraintController"
            DESTINATION include
+	   COMPONENT sawConstraintController-dev
            PATTERN .svn EXCLUDE)
 
-    install (TARGETS sawConstraintController
+  install (TARGETS sawConstraintController COMPONENT sawConstraintController
            RUNTIME DESTINATION bin
            LIBRARY DESTINATION lib
            ARCHIVE DESTINATION lib)
-
-    install (FILES "${sawConstraintController_CMAKE_CONFIG_FILE}"
-           DESTINATION "share/sawConstraintController")
 
 else (cisst_FOUND_AS_REQUIRED)
   message ("Information: code in ${CMAKE_CURRENT_SOURCE_DIR} will not be compiled, it requires ${REQUIRED_CISST_LIBRARIES}")
