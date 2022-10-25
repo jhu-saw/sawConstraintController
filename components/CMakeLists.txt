@@ -82,6 +82,13 @@ if (cisst_FOUND_AS_REQUIRED)
        ${sawConstraintController_HEADER_DIR}/mtsVFRCM.h
        ${sawConstraintController_HEADER_DIR}/mtsVFCylinder.h
        ${sawConstraintController_HEADER_DIR}/mtsVFMesh.h
+       ${sawConstraintController_HEADER_DIR}/mtsConstraintBase.h
+       ${sawConstraintController_HEADER_DIR}/constraintControllerLite.h
+       ${sawConstraintController_HEADER_DIR}/mtsConstraintFollowPositionTraj.h
+       ${sawConstraintController_HEADER_DIR}/mtsConstraintAbsoluteJointLimits.h
+       ${sawConstraintController_HEADER_DIR}/mtsConstraintFixOrientation.h
+       ${sawConstraintController_HEADER_DIR}/mtsConstraintJointVelLimits.h
+       ${sawConstraintController_HEADER_DIR}/mtsConstraintStayOnAxis.h
        )
 
   set (SOURCE_FILES
@@ -100,6 +107,13 @@ if (cisst_FOUND_AS_REQUIRED)
       code/mtsVFRCM.cpp
       code/mtsVFCylinder.cpp
       code/mtsVFMesh.cpp
+      code/ccl_helper.cpp
+      code/constraintControllerLite.cpp
+      code/mtsConstraintFollowPositionTraj.cpp
+      code/mtsConstraintAbsoluteJointLimits.cpp
+      code/mtsConstraintFixOrientation.cpp
+      code/mtsConstraintJointVelLimits.cpp
+      code/mtsConstraintStayOnAxis.cpp
       )
 
   cisst_data_generator (sawConstraintController

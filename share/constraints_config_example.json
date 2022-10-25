@@ -1,0 +1,65 @@
+{
+    "constraints": 
+    [
+        {
+            "type": "follow_position_trajectory",            
+            "name": "follow_position_trajectory", 
+            "goal_linear_velocity_m/s": 0.005,
+            "current_kinematics": "system",
+            "goal_kinematics": "systemGoal",
+            "active": true
+        },       
+        {
+            "type": "absolute_joint_limits",            
+            "name": "absolute_joint_limits", 
+            "lower_limits": [-6.283, -6.283, -6.283, -6.283, -6.283, -6.283, 0.0],
+            "upper_limits": [6.283, 6.283, 6.283, 6.283, 6.283, 6.283, 0.26],
+            "kinematics": "system",
+            "active": true
+         },
+         {
+            "type": "joint_velocity_limits",            
+            "name": "joint_velocity_limits", 
+            "lower_limits": [-0.05, -0.05, -0.05, -0.05, -0.05, -0.05, -0.005],
+            "upper_limits": [0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.005],
+            "kinematics": "system",
+            "active": true
+         },
+         {
+            "type": "stay_on_axis",            
+            "name": "stay_on_axis",
+            "kinematics_for_last_joint_that_moves_frame_of_interest": "URInterface",
+            "offset_from_kinematics_to_frame_of_interest":
+                {
+                    "Rotation" : [[1, 0, 0],[0, 1, 0], [0, 0, 1]],
+                    "Translation" : [0, 0.01, 0] 
+                }, 
+            "desired_axis": [-0.38, 0.923879532511287, 0.0],
+            "point_on_desired_axis": [0.547634171618254,   0.283806023374436,   0.352100000000000],
+            "num_joints_system": 7,
+            "importance_gain": 1.0,
+            "active": true
+         },
+         {
+            "type": "fix_orientation",            
+            "name": "fix_orientation",
+            "kinematics_for_last_joint_that_moves_frame_of_interest": "URInterface",
+            "offset_from_kinematics_to_frame_of_interest":
+                {
+                    "Rotation" : [[1, 0, 0],[0, 1, 0], [0, 0, 1]],
+                    "Translation" : [0, 0.01, 0] 
+                },
+            "desired_orientation": 
+            [
+                [0.923879532511287,-0.382683432365090,0], 
+                [0.382683432365090, 0.923879532511287, 0],
+                [0, 0, 1.000000000000000]
+            ],
+            "num_joints_system": 7,
+            "importance_gain": 1.0,
+            "active": true
+         }         
+         
+    ]
+}
+

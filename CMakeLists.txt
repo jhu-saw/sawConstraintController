@@ -20,7 +20,12 @@ cisst_cpack_settings (
 
 add_subdirectory (components)
 
+# Examples of config files
+add_subdirectory (share)
+
 include (CPack)
 cpack_add_component (sawConstraintController)
 cpack_add_component (sawConstraintController-dev
+                     DEPENDS sawConstraintController)
+cpack_add_component (sawConstraintController-Share
                      DEPENDS sawConstraintController)
