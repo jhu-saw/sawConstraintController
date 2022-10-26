@@ -25,7 +25,7 @@ namespace ccl_helper
         vctDoubleMat jac_out = jacobian;
         vctRot3 self_FK_R = self_fk.Rotation();
 
-        vctRot3 R = offset.Rotation();
+        // vctRot3 R = offset.Rotation();
 
         for (size_t i = 0; i < jac_out.cols(); i++)
         {

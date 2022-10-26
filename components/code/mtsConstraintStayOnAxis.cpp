@@ -90,7 +90,7 @@ mtsConstraintStayOnAxis::mtsConstraintStayOnAxis(const Json::Value &config_param
 }
 
 
-void mtsConstraintStayOnAxis::FillInTableauRefs(const CONTROLLERMODE mode, const double TickTime)
+void mtsConstraintStayOnAxis::FillInTableauRefs(const CONTROLLERMODE CMN_UNUSED(mode), const double CMN_UNUSED(TickTime))
 {
     // Calculate pose and jacobian at point of interest (the point you are trying to get to stay on the axis)
     // Note this jacobian is for all joints in the full system, columns associated with more distal joints are set to zero
