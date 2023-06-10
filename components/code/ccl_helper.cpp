@@ -18,14 +18,18 @@ http://www.cisst.org/cisst/license.txt.
 
 namespace ccl_helper
 {
-    vctDoubleMat ChangeJacobianByOffset(const vctDoubleMat &jacobian, const vctFrm3 &offset, const vctFrm3 &self_fk)
+    /**
+     * @brief Change the location of the 'body'/'tool' reference frame of the MLS 'Hybrid'/Spong Manipulator Jacobian using a transformation from its current to new reference frames
+     *
+     * @param jacobian Matrix mapping joint velocities to cartesian velocities
+     * @param transform Transform mapping from current to new base reference frames
+     * @return vctDoubleMat Jacobian in new reference frame
+     * @details The Jacobian used here is the what Spong calls the 'Jacobian' and what Mathematical Introduction to Robotic Manipulation (Murray, Li, Sastry 1994) calls the 'Hybrid Jacobian'.
+     */
+    vctDoubleMat GetJacobianAtTransformedBodyReference(const vctDoubleMat &jacobian, const vctFrm3 &offset, const vctFrm3 &self_fk)
     {
-        // Here Jacobian is defined as in Spong, This is the so-called "hybrid-velocity" Jacobian as defined in MLS Mathematical Introduction to Robot...
-
         vctDoubleMat jac_out = jacobian;
         vctRot3 self_FK_R = self_fk.Rotation();
-
-        vctRot3 R = offset.Rotation();
 
         for (size_t i = 0; i < jac_out.cols(); i++)
         {
@@ -63,6 +67,12 @@ namespace ccl_helper
         mat(0, 1) = -mat(1, 0); //-z
     }
 
+    /**
+     * @brief Mathematical skew or 'hat' operator taking vector to matrix (e.g. rotation vector axis*angle to element of so(3))
+     *
+     * @param vector Vector in R3
+     * @param mat Resulting skew / hat matrix
+     */ 
     void Skew3VecTo3x3Mat(const vct3 &vector, vctDoubleMat &mat)
     {
         mat.resize(3, 3);
@@ -76,6 +86,12 @@ namespace ccl_helper
         mat(0, 1) = -mat(1, 0); //-z
     }
 
+    /**
+     * @brief Inverse of the skew or 'hat' operator taking matrix to vector (e.g. element of so(3) to axis angle rotation vector)
+     *
+     * @param mat Resulting skew / hat matrix
+     * @param vector Vector in R3
+     */
     void InvSkew3x3MatTo3Vec(const vctDouble3x3 &mat, vct3 &vector)
     {
         // could check to be sure diags are zero here
@@ -84,14 +100,28 @@ namespace ccl_helper
         vector(2) = mat(1, 0); // z
     }
 
-    void ExtractAngularJacobianToArbitrarySize(vctDoubleMat &full_jacobian, vctDoubleMat &out_jacobian, int out_cols)
+    /**
+     * @brief Take a 6xN Jacobian and extract last 3 rows (angular velocity part), and zero pad at right to arbitrary size
+     *
+     * @param full_jacobian 6xN Jacobian input
+     * @param out_jacobian 3xN Jacobian output
+     * @param out_cols Number of columns in output Jacobian (additional will be zero padded at right)
+     */
+    void ExtractAngularJacobianToArbitrarySize(const vctDoubleMat &full_jacobian, vctDoubleMat &out_jacobian, const int out_cols)
     {
         out_jacobian.resize(3, out_cols);
         out_jacobian.SetAll(0.0);
         out_jacobian.Ref(3, full_jacobian.cols()) = full_jacobian.Ref(3, full_jacobian.cols(), 3, 0);
     }
 
-    void ExtractPositionalJacobianToArbitrarySize(vctDoubleMat &full_jacobian, vctDoubleMat &out_jacobian, int out_cols)
+    /**
+     * @brief Take a 6xN Jacobian and extract first 3 rows (linear velocity part), and zero pad at right to arbitrary size
+     *
+     * @param full_jacobian 6xN Jacobian input
+     * @param out_jacobian 3xN Jacobian output
+     * @param out_cols Number of columns in output Jacobian (additional will be zero padded at right)
+     */
+    void ExtractPositionalJacobianToArbitrarySize(const vctDoubleMat &full_jacobian, vctDoubleMat &out_jacobian, const int out_cols)
     {
         out_jacobian.resize(3, out_cols);
         out_jacobian.SetAll(0.0);

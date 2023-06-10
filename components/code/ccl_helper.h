@@ -23,11 +23,11 @@ http://www.cisst.org/cisst/license.txt.
 // some helpers used in constraint controller lite implementation. They may be replacable by existing functionality from elsewhere
 namespace ccl_helper
 {
-    vctDoubleMat ChangeJacobianByOffset(const vctDoubleMat &jacobian, const vctFrm3 &transform, const vctFrm3 &self_fk);
+    vctDoubleMat GetJacobianAtTransformedBodyReference(const vctDoubleMat &jacobian, const vctFrm3 &transform, const vctFrm3 &self_fk);
     void Skew3VecTo3x3Mat(const vct3 &vector, vctDouble3x3 &mat);
     void Skew3VecTo3x3Mat(const vct3 &vector, vctDoubleMat &mat);
     void InvSkew3x3MatTo3Vec(const vctDouble3x3 &mat, vct3 &vector);
-    void ExtractAngularJacobianToArbitrarySize(vctDoubleMat &full_jacobian, vctDoubleMat &out_jacobian, int out_cols);
-    void ExtractPositionalJacobianToArbitrarySize(vctDoubleMat &full_jacobian, vctDoubleMat &out_jacobian, int out_cols);
+    void ExtractAngularJacobianToArbitrarySize(const vctDoubleMat &full_jacobian, vctDoubleMat &out_jacobian, const int out_cols);
+    void ExtractPositionalJacobianToArbitrarySize(const vctDoubleMat &full_jacobian, vctDoubleMat &out_jacobian, const int out_cols);
 }
 #endif // constraintControllerLite_HELPER_H

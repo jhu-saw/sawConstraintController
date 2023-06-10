@@ -95,7 +95,7 @@ void mtsConstraintStayOnAxis::FillInTableauRefs(const CONTROLLERMODE mode, const
     // Calculate pose and jacobian at point of interest (the point you are trying to get to stay on the axis)
     // Note this jacobian is for all joints in the full system, columns associated with more distal joints are set to zero
     vctFrm3 frame_of_interest = kinematics_for_last_joint_that_moves_frame_of_interest->Frame * offset_from_kinematics_to_frame_of_interest;
-    vctDoubleMat jacobian_of_interest = ccl_helper::ChangeJacobianByOffset(kinematics_for_last_joint_that_moves_frame_of_interest->Jacobian,
+    vctDoubleMat jacobian_of_interest = ccl_helper::GetJacobianAtTransformedBodyReference(kinematics_for_last_joint_that_moves_frame_of_interest->Jacobian,
         offset_from_kinematics_to_frame_of_interest,
         kinematics_for_last_joint_that_moves_frame_of_interest->Frame);
     vctDoubleMat system_positional_jacobian_at_frame_of_reference;
