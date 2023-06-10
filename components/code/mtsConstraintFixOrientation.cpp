@@ -85,7 +85,7 @@ mtsConstraintFixOrientation::mtsConstraintFixOrientation(const Json::Value &conf
 }
 
 
-void mtsConstraintFixOrientation::FillInTableauRefs(const CONTROLLERMODE mode, const double TickTime)
+void mtsConstraintFixOrientation::FillInTableauRefs(const CONTROLLERMODE CMN_UNUSED(mode), const double CMN_UNUSED(TickTime))
 {
     // Calculate pose and jacobian at frame of interest (the frame you are trying to set the orientation of)
     // Note this jacobian is for all joints in the full system, columns associated with more distal joints are set to zero

@@ -18,7 +18,7 @@ Adds an inequatlity constraint (i.e. fills in 'C' and 'd' terms) to the constain
 argmin_x: ||Ax+b||, s.t. Cx>d, Ex=f
 
 Ensures bounded joint angle:
-(L-p)*dt < x < (U-p)*dt 
+(L-p)*dt < x < (U-p)*dt
 
 | I   0 |   | |    |(L-p) / dt|
 |       | . |x| >  |          |
@@ -106,7 +106,7 @@ mtsConstraintAbsoluteJointLimits::mtsConstraintAbsoluteJointLimits(const Json::V
 }
 
 
-void mtsConstraintAbsoluteJointLimits::FillInTableauRefs(const CONTROLLERMODE mode, const double TickTime)
+void mtsConstraintAbsoluteJointLimits::FillInTableauRefs(const CONTROLLERMODE CMN_UNUSED(mode), const double TickTime)
 {
     // Joint position constraint
     IneqConstraintMatrixRef.SetAll(0.0);

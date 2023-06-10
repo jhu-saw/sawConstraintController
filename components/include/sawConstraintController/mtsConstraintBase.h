@@ -31,12 +31,13 @@ public:
     typedef std::map<std::string, prmKinematicsState *> kinematics_map;
     mtsConstraintBase(){};
     virtual ~mtsConstraintBase(){};
-    virtual void PrepareDataForBridging(mtsInterfaceProvided* provided){};
+    virtual void PrepareDataForBridging(mtsInterfaceProvided* CMN_UNUSED(provided)) {};
 
     using mtsVFBase::Name; // clarify ambiguity as both have this member
 
 private:
-    virtual void ConvertRefs(const mtsVFBase::CONTROLLERMODE mode, const double TickTime){}; // Required by mtsVFBase, but won't be using
+    virtual void ConvertRefs(const mtsVFBase::CONTROLLERMODE CMN_UNUSED(mode),
+                             const double CMN_UNUSED(TickTime)) {}; // Required by mtsVFBase, but won't be using
 
 protected:
 };

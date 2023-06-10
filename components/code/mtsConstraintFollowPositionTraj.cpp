@@ -78,7 +78,7 @@ mtsConstraintFollowPositionTraj::mtsConstraintFollowPositionTraj(const Json::Val
 }
 
 
-void mtsConstraintFollowPositionTraj::FillInTableauRefs(const CONTROLLERMODE mode, const double TickTime)
+void mtsConstraintFollowPositionTraj::FillInTableauRefs(const CONTROLLERMODE CMN_UNUSED(mode), const double TickTime)
 {
     double dt = TickTime;
     vct3 p_to_goal = goal_kinematics->Frame.Translation() - current_kinematics->Frame.Translation();

@@ -31,8 +31,8 @@ public:
     std::vector<std::shared_ptr<mtsConstraintBase>> constraint_list;
     void SetupConstrainedProblem(double TickTime);
     void PrintProblem();
-    int num_joints;
     nmrConstraintOptimizer Optimizer;
+    int num_joints;
     mtsInterfaceProvided* provided;
     bool SolveConstrainedProblem(vctDoubleVec &dq);
 

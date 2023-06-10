@@ -80,7 +80,8 @@ mtsConstraintJointVelLimits::mtsConstraintJointVelLimits(const Json::Value &conf
 }
 
 
-void mtsConstraintJointVelLimits::FillInTableauRefs(const CONTROLLERMODE mode, const double TickTime)
+void mtsConstraintJointVelLimits::FillInTableauRefs(const CONTROLLERMODE CMN_UNUSED(mode),
+                                                    const double CMN_UNUSED(TickTime))
 {
     IneqConstraintMatrixRef.SetAll(0.0);
     for (size_t i = 0; i < num_joints; i++)
