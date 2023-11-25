@@ -12,6 +12,9 @@
 #include <cisstMesh/msh3AlgPDTreeCPMesh.h>
 #include <cisstMesh/msh3Mesh.h>
 
+// Always include last!
+#include <sawConstraintController/sawConstraintControllerExport.h>
+
 class CISST_EXPORT mtsVFMesh : public mtsVFCartesianTranslation
 {
     CMN_DECLARE_SERVICES(CMN_DYNAMIC_CREATION, CMN_LOG_LOD_RUN_VERBOSE);
