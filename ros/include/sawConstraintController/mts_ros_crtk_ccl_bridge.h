@@ -5,7 +5,7 @@
   Author(s):  Anton Deguet, Henry Phalen
   Created on: 2017-11-28
 
-  (C) Copyright 2017-2021 Johns Hopkins University (JHU), All Rights Reserved.
+  (C) Copyright 2017-2024 Johns Hopkins University (JHU), All Rights Reserved.
 
   --- begin cisst license - do not edit ---
 
@@ -29,11 +29,11 @@ class mts_ros_crtk_ccl_bridge: public mts_ros_crtk_bridge_provided
 
 public:
     inline mts_ros_crtk_ccl_bridge(const std::string & _component_name,
-                                   ros::NodeHandle * _node_handle,
+                                   cisst_ral::node_ptr_t _node_handle,
                                    const double _period_in_seconds = 5.0 * cmn_ms):
         mts_ros_crtk_bridge_provided(_component_name, _node_handle, _period_in_seconds)
     {}
-    
+
     std::map<std::string, std::type_index> bridge_map;
 
     inline ~mts_ros_crtk_ccl_bridge() {}

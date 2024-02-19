@@ -19,26 +19,29 @@ int main(int argc, char ** argv){
     componentManger->AddComponent(&robot);
 
     // add ros bridge
-    ros::init(argc, argv, "cisst_ros_bridge_example", ros::init_options::AnonymousName);
-    ros::NodeHandle rosNodeHandle;
-    mtsROSBridge * subscribers = new mtsROSBridge("subscribers", 0.1 * cmn_ms, &rosNodeHandle);
+    cisst_ral::ral ral(argc, argv, "cisst_ros_bridge_example");
+    auto rosNode = ral.node();
+
+    mtsROSBridge * subscribers = new mtsROSBridge("subscribers", 0.1 * cmn_ms, rosNode);
     subscribers->PerformsSpin(true);
-    subscribers->AddSubscriberToCommandWrite<mtsDoubleVec, geometry_msgs::Wrench>("RequiresSimpleRobot",
-                                             "ServoCartesianForce",
-                                             "/simple_robot/servo_cf");
+    subscribers->AddSubscriberToCommandWrite<mtsDoubleVec,
+                                             CISST_RAL_MSG(geometry_msgs, Wrench)>("RequiresSimpleRobot",
+                                                                                   "ServoCartesianForce",
+                                                                                   "/simple_robot/servo_cf");
     componentManger->AddComponent(subscribers);
 
-    mtsROSBridge * publishers = new mtsROSBridge("publishers", 5 * cmn_ms, &rosNodeHandle);
-    publishers->AddPublisherFromCommandRead<prmPositionCartesianGet, geometry_msgs::PoseStamped>("RequiresSimpleRobot",
-                                             "GetMeasuredCartesianPosition",
-                                             "/simple_robot/measured_cp");
+    mtsROSBridge * publishers = new mtsROSBridge("publishers", 5 * cmn_ms, rosNode);
+    publishers->AddPublisherFromCommandRead<prmPositionCartesianGet,
+                                            CISST_RAL_MSG(geometry_msgs, PoseStamped)>("RequiresSimpleRobot",
+                                                                                       "GetMeasuredCartesianPosition",
+                                                                                       "/simple_robot/measured_cp");
     componentManger->AddComponent(publishers);
 
     // connect components
     componentManger->Connect(subscribers->GetName(), "RequiresSimpleRobot",
-            robot.GetName(), "ProvidesSimpleRobot");
+                             robot.GetName(), "ProvidesSimpleRobot");
     componentManger->Connect(publishers->GetName(), "RequiresSimpleRobot",
-            robot.GetName(), "ProvidesSimpleRobot");
+                             robot.GetName(), "ProvidesSimpleRobot");
 
     // create components
     componentManger->CreateAll();
@@ -49,7 +52,7 @@ int main(int argc, char ** argv){
     componentManger->WaitForStateAll(mtsComponentState::ACTIVE, 2.0*cmn_s);
 
     // ros::spin() callback for subscribers
-    ros::spin();
+    cisst_ral::spin(rosNode);
 
     // cleanup
     componentManger->KillAll();

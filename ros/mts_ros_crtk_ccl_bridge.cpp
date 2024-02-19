@@ -5,7 +5,7 @@
   Author(s):  Anton Deguet, Henry Phalen
   Created on: 2017-11-28
 
-  (C) Copyright 2017-2021 Johns Hopkins University (JHU), All Rights Reserved.
+  (C) Copyright 2017-2024 Johns Hopkins University (JHU), All Rights Reserved.
 
 --- begin cisst license - do not edit ---
 
@@ -35,7 +35,7 @@ void mts_ros_crtk_ccl_bridge::bridge(const std::string & _component_name,
 {
     // clean ROS namespace
     std::string _clean_namespace = _component_name;
-    cisst_ros_crtk::clean_namespace(_clean_namespace);
+    cisst_ral::clean_namespace(_clean_namespace);
 
     // controller specific topics, some might be CRTK compliant
     this->bridge_interface_provided(_component_name,
@@ -61,7 +61,7 @@ void mts_ros_crtk_ccl_bridge::bridge(const std::string & _component_name,
         return;
     }
 
-    
+
     // non CRTK topics
     // add trailing / for clean namespace
     if (!_clean_namespace.empty()) {
