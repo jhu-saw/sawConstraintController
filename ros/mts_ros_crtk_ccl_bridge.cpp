@@ -35,7 +35,7 @@ void mts_ros_crtk_ccl_bridge::bridge(const std::string & _component_name,
 {
     // clean ROS namespace
     std::string _clean_namespace = _component_name;
-    cisst_ros_crtk::clean_namespace(_clean_namespace);
+    cisst_ral::clean_namespace(_clean_namespace);
 
     // controller specific topics, some might be CRTK compliant
     this->bridge_interface_provided(_component_name,
@@ -76,28 +76,28 @@ void mts_ros_crtk_ccl_bridge::bridge(const std::string & _component_name,
 
         if (cmd_type_id_name == typeid(mtsGenericObjectProxy<bool>).name())
         {
-            m_subscribers_bridge->AddSubscriberToCommandWrite<bool, std_msgs::Bool>
+            m_subscribers_bridge->AddSubscriberToCommandWrite<bool, CISST_RAL_MSG(std_msgs, Bool)>
                 (_required_interface_name, command_name, _clean_namespace + command_name);
         }
         else if (cmd_type_id_name == typeid(mtsGenericObjectProxy<double>).name())
         {
-            m_subscribers_bridge->AddSubscriberToCommandWrite<double, std_msgs::Float64>
+            m_subscribers_bridge->AddSubscriberToCommandWrite<double, CISST_RAL_MSG(std_msgs, Float64)>
                 (_required_interface_name, command_name, _clean_namespace + command_name);
         }
 
         else if ( cmd_type_id_name == typeid(mtsGenericObjectProxy<vctDoubleVec>).name() )
         {
-            m_subscribers_bridge->AddSubscriberToCommandWrite<vctDoubleVec, std_msgs::Float64MultiArray>
+            m_subscribers_bridge->AddSubscriberToCommandWrite<vctDoubleVec, CISST_RAL_MSG(std_msgs, Float64MultiArray)>
                 (_required_interface_name, command_name, _clean_namespace + command_name);
         }
         else if ( cmd_type_id_name == typeid(mtsGenericObjectProxy<vctRot3>).name() )
         {
-            m_subscribers_bridge->AddSubscriberToCommandWrite<vctRot3, geometry_msgs::Quaternion>
+            m_subscribers_bridge->AddSubscriberToCommandWrite<vctRot3, CISST_RAL_MSG(geometry_msgs, Quaternion)>
                 (_required_interface_name, command_name, _clean_namespace + command_name);
         }
         else if ( cmd_type_id_name == typeid(mtsGenericObjectProxy<vct3>).name() )
         {
-             m_subscribers_bridge->AddSubscriberToCommandWrite<vct3, geometry_msgs::Vector3>
+            m_subscribers_bridge->AddSubscriberToCommandWrite<vct3, CISST_RAL_MSG(geometry_msgs, Vector3)>
                 (_required_interface_name, command_name, _clean_namespace + command_name);
         }
         else

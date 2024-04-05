@@ -29,7 +29,7 @@ class mts_ros_crtk_ccl_bridge: public mts_ros_crtk_bridge_provided
 
 public:
     inline mts_ros_crtk_ccl_bridge(const std::string & _component_name,
-                                   ros::NodeHandle * _node_handle,
+                                   cisst_ral::node_ptr_t _node_handle,
                                    const double _period_in_seconds = 5.0 * cmn_ms):
         mts_ros_crtk_bridge_provided(_component_name, _node_handle, _period_in_seconds)
     {}
