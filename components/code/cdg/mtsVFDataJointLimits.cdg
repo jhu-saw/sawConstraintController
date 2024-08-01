@@ -12,6 +12,7 @@ class {
     // All VF data objects are subclasses of mtsVFDataBase
     base-class {
       type mtsVFDataBase;
+      is-data false;
     }
 
     // This vector represents the lower joint limits (I*dq >= L)

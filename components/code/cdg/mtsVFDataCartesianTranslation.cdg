@@ -11,6 +11,7 @@ class {
     // All VF data objects are subclasses of mtsVFDataBase
     base-class {
       type mtsVFDataBase;
+      is-data false;
     }
 
     // We have one extra member, which is the offset from the kinematics frame being used

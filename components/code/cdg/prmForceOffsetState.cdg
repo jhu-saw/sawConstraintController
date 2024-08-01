@@ -6,6 +6,7 @@ class {
 
     base-class {
       type prmOffsetState;
+      is-data false;
     }
 
     inline-header{

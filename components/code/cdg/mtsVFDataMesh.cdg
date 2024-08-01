@@ -10,6 +10,7 @@ class {
 
     base-class {
       type mtsVFDataBase;
+      is-data false;
     }
 
     member {

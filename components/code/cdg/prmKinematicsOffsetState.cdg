@@ -6,15 +6,16 @@ class {
 
     base-class {
       type prmKinematicsState;
+      is-data false;
     }
 
-    member {    
+    member {
       name baseName;
       type std::string;
       visibility protected;
     }
 
-    member {    
+    member {
       name baseKinematics;
       type prmKinematicsState*;
       default 0;
@@ -23,7 +24,7 @@ class {
       accessors none;
     }
 
-    member {    
+    member {
       name offset;
       type vctFrm3;
       visibility protected;
@@ -51,15 +52,15 @@ class {
 inline-code {
 
 /*! Constructor
-*/ 
+*/
 prmKinematicsOffsetState::prmKinematicsOffsetState(const std::string & n, const std::string & bn, const vctFrm3 & o) : prmKinematicsState()
-{	
+{
 	Name = n;
 	UserCount = 0;
     moffset = o;
     mbaseName = bn;
 	NeedsBase = true;
-}	
+}
 
 //! Finds the base kinematics object by name and assigns it to the base kinematics pointer
 /*! LookupKinematics
@@ -81,4 +82,3 @@ void prmKinematicsOffsetState::LookupKinematics(const std::map<std::string,prmKi
 }
 
 }
-

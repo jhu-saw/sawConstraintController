@@ -12,6 +12,7 @@ class {
     // All VF data objects are subclasses of mtsVFDataBase
     base-class {
       type mtsVFDataBase;
+      is-data false;
     }
 
     // This vct3 object represents a point in the central axis of the cochlea that we want the probe to stick close to
