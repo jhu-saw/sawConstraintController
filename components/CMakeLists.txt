@@ -29,9 +29,6 @@ find_package (cisst 1.2.0 COMPONENTS ${REQUIRED_CISST_LIBRARIES})
 
 if (cisst_FOUND_AS_REQUIRED)
 
-  # load cisst configuration
-  include (${CISST_USE_FILE})
-
   # catkin/ROS paths
   cisst_set_output_path ()
 
@@ -131,7 +128,15 @@ if (cisst_FOUND_AS_REQUIRED)
   set_target_properties (sawConstraintController PROPERTIES
                          VERSION ${sawConstraintController_VERSION}
                          FOLDER "sawConstraintController")
-  cisst_target_link_libraries (sawConstraintController ${REQUIRED_CISST_LIBRARIES})
+  target_link_libraries (sawConstraintController
+                         PRIVATE
+                         cisst::cisstCommon
+                         cisst::cisstVector
+                         cisst::cisstMesh
+                         cisst::cisstOSAbstraction
+                         cisst::cisstMultiTask
+                         cisst::cisstParameterTypes
+                         cisst::cisstNumerical)
 
   # Install targets for headers and library
   install (DIRECTORY

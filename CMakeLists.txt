@@ -13,7 +13,6 @@ cmake_minimum_required(VERSION 3.10)
 project (sawConstraintControllerAll VERSION 1.1.0)
 
 find_package (cisst REQUIRED)
-include (${CISST_USE_FILE})
 cisst_cpack_settings (
   VENDOR "JHU"
   MAINTAINER "anton.deguet@jhu.edu")
