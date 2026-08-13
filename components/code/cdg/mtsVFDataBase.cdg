@@ -1,0 +1,144 @@
+inline-header {
+// Always include last!
+#include <sawConstraintController/sawConstraintControllerExport.h>
+}
+class {
+    name mtsVFDataBase;
+    attribute CISST_EXPORT;
+
+    //! The name of the data object
+    member {
+      name Name;
+      type std::string;
+      visibility public;
+    }
+
+    //! The "importance" or gain associated with this virtual fixture
+    member {
+      default 1.0;
+      name Importance;
+      type double;
+      visibility public;
+    }
+
+    //! If this virtual fixture is active or not
+    member {
+      default true;
+      name Active;
+      type bool;
+      visibility public;
+    }
+
+    //! The names of the kinematics dependencies of the virtual fixture
+    member {
+      name KinNames;
+      type std::vector<std::string>;
+      visibility public;
+    }
+
+    //! The names of the sensor dependencies of the virtual fixture
+    member {
+      name SensorNames;
+      type std::vector<std::string>;
+      visibility public;
+    }
+
+    //! The limits of the virtual fixture's slack variables
+    member {
+      name SlackLimits;
+      type vctDynamicVector<double>;
+      visibility public;
+    }
+
+    //! The costs associated with the virtual fixture's slack variables
+    member {
+      name SlackCosts;
+      type vctDynamicVector<double>;
+      visibility public;
+    }
+
+    //! The number of slack variables associated with the virtual fixture
+    member {
+      default 0;
+      is-size_t true;
+      name NumSlacks;
+      type size_t;
+      visibility public;
+    }
+
+    //! The degrees of freedom used in the virtual fixture
+    member {
+      name NumJoints;
+      type int;
+      visibility public;
+    }
+
+    //! The number of rows needed for the objective
+    member {
+      default 0;
+      is-size_t true;
+      name ObjectiveRows;
+      type size_t;
+      visibility public;
+    }
+
+    //! The number of rows needed for the inequality constraint
+    member {
+      default 0;
+      is-size_t true;
+      name IneqConstraintRows;
+      type size_t;
+      visibility public;
+    }
+
+    //! The number of rows needed for the equality constraint
+    member {
+      default 0;
+      is-size_t true;
+      name EqConstraintRows;
+      type size_t;
+      visibility public;
+    }
+
+    //! The matrix associated with the objective
+    member {
+      name ObjectiveMatrix;
+      type vctDynamicMatrix<double>;
+      visibility public;
+    }
+
+    //! The vector associated with the objective
+    member {
+      name ObjectiveVector;
+      type vctDynamicVector<double>;
+      visibility public;
+    }
+
+    //! The matrix associated with the inequality constraint
+    member {
+      name IneqConstraintMatrix;
+      type vctDynamicMatrix<double>;
+      visibility public;
+    }
+
+    //! The vector associated with the inequality constraint
+    member {
+      name IneqConstraintVector;
+      type vctDynamicVector<double>;
+      visibility public;
+    }
+
+    //! The matrix associated with the equality constraint
+    member {
+      name EqConstraintMatrix;
+      type vctDynamicMatrix<double>;
+      visibility public;
+    }
+
+    //! The vector associated with the equality constraint
+    member {
+      name EqConstraintVector;
+      type vctDynamicVector<double>;
+      visibility public;
+    }
+}

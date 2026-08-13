@@ -2,8 +2,8 @@
 /* ex: set filetype=cpp softtabstop=4 shiftwidth=4 tabstop=4 cindent expandtab: */
 
 /*
-  Author(s):  Preetham Chalasani
-  Created on: 2014
+  Author(s):  Preetham Chalasani, Max Zhaoshuo Li
+  Created on: 2020
 
   (C) Copyright 2014 Johns Hopkins University (JHU), All Rights Reserved.
 
@@ -23,7 +23,14 @@ CMN_IMPLEMENT_SERVICES(mtsVFPlane)
 //! Updates co with virtual fixture data.
 /*! FillInTableauRefs
 */
-void mtsVFPlane::FillInTableauRefs(const CONTROLLERMODE mode, const double TickTime)
+mtsVFPlane::mtsVFPlane() : mtsVFCartesianTranslation(){}
+
+mtsVFPlane::mtsVFPlane(const std::string &name, mtsVFDataBase *data) : mtsVFCartesianTranslation(name,data)
+{
+    IsFrameSet = false;
+}
+
+void mtsVFPlane::FillInTableauRefs(const CONTROLLERMODE mode, const double CMN_UNUSED(tickTime))
 {    
     /*
          Fill in refs
@@ -48,7 +55,7 @@ void mtsVFPlane::FillInTableauRefs(const CONTROLLERMODE mode, const double TickT
     CurrentKinematics = Kinematics.at(0);
     vct3 CurrentPos(CurrentKinematics->Frame.Translation());
 
-    mtsVFDataPlane *planeData = (mtsVFDataPlane*)(Data);
+    mtsVFDataPlane *planeData = reinterpret_cast<mtsVFDataPlane*>(Data);
 
     if(!planeData)
     {
@@ -78,25 +85,35 @@ void mtsVFPlane::FillInTableauRefs(const CONTROLLERMODE mode, const double TickT
     }    
 
 
-    vctDynamicMatrix<double> Jacobian3x6( 3, 6, VCT_COL_MAJOR );
-    for (int i = 0; i < Jacobian3x6.rows(); ++i)
-        for (int j = 0; j < Jacobian3x6.cols(); ++j)
-            Jacobian3x6.at(i,j) = CurrentKinematics->Jacobian.at(i,j);
-
     IneqConstraintVectorRef.Assign(vct1(d - vct1(vctDotProduct(planeData->Normal, CurrentPos))));
 
-    IneqConstraintMatrixRef.Assign(N * Jacobian3x6);
-//    IneqConstraintMatrixRef.Assign(N);
+    // TODO: this only works for JPOS/JVEL case
+    if (mode == mtsVFBase::CONTROLLERMODE::JPOS || mode == mtsVFBase::CONTROLLERMODE::JVEL){
+        IneqConstraintMatrixRef.Assign(N * CurrentKinematics->Jacobian.Ref(3,planeData->NumJoints,0,0)); // first 3 rows are position
+    }
+    else if (mode == mtsVFBase::CONTROLLERMODE::CARTPOS || mode == mtsVFBase::CONTROLLERMODE::CARTVEL){
+        IneqConstraintMatrixRef.Assign(N);
+    }
 
+    // check if slack is used
+    if (Data->NumSlacks > 0){
+        ObjectiveMatrixSlackRef.Diagonal().Assign(Data->SlackCosts);
+        IneqConstraintMatrixSlackRef.Diagonal().SetAll(-1.0);
+        IneqConstraintVectorSlackRef.Assign(-1.0*Data->SlackLimits);
+    }
 
-//    std::cout << "Mat Ine \n" << IneqConstraintMatrixRef << std::endl;
-//    std::cout << "Vec Ine \n" << IneqConstraintVectorRef << std::endl;
-//    @TODO Fix convert Refs
-//    ConvertRefs(mode,TickTime);
 }
 
 void mtsVFPlane::SetFrame(const vctFrame4x4<double> &Frame)
 {
     IsFrameSet = true;
     frame = Frame;
+}
+
+void mtsVFPlane::ConvertRefs(const mtsVFBase::CONTROLLERMODE mode, const double tickTime)
+{
+    if (mode == mtsVFBase::CONTROLLERMODE::JVEL){
+        // min || J.N.v*t + J.N.q - d|| => min || N.dx - (d - N.x)||
+        IneqConstraintMatrixRef.Multiply(tickTime);
+    }
 }

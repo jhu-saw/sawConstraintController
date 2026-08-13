@@ -31,7 +31,7 @@ void mtsVFJointLimits::FillInTableauRefs(const CONTROLLERMODE mode, const double
          -I*dq >= -U
     */
 
-    mtsVFDataJointLimits * limitData = (mtsVFDataJointLimits*)(Data);
+    mtsVFDataJointLimits * limitData = reinterpret_cast<mtsVFDataJointLimits*>(Data);
 
     size_t numJoints = limitData->LowerLimits.size();
 

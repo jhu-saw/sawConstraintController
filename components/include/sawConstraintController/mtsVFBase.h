@@ -36,7 +36,7 @@ class CISST_EXPORT mtsVFBase: public mtsGenericObject
 
 public:
 
-    enum CONTROLLERMODE {JPOS = 1, JVEL = 2};
+        enum CONTROLLERMODE {JPOS = 1, JVEL = 2, CARTPOS = 3, CARTVEL = 4};
 
     //! Name of the virtual fixture
     std::string Name;
@@ -72,6 +72,9 @@ public:
     //! Inequality constraint vector reference
     vctDynamicVectorRef<double> IneqConstraintVectorRef;
 
+    //! Inequality constraint slack reference
+    vctDynamicVectorRef<double> IneqConstraintVectorSlackRef;
+
     //! Equality constraint data reference
     vctDynamicMatrixRef<double> EqConstraintMatrixRef;
 
@@ -98,6 +101,10 @@ public:
     ~mtsVFBase() {
         delete Data;
     }
+
+    //! Computes the necessary size of constraints, modifier the values in Data
+    //! Overload if constraint size varies (such as mesh constraint)
+    virtual void ComputeConstraintSize() {}
 
     //! Reserves space in the control optimizer.
     /*! reserve_space

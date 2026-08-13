@@ -1,0 +1,106 @@
+inline-header {
+#include <cisstParameterTypes/prmStateJoint.h>
+#include <cisstVector/vctDynamicMatrixTypes.h>
+// Always include last!
+#include <sawConstraintController/sawConstraintControllerExport.h>
+}
+class {
+    name prmKinematicsState;
+    attribute CISST_EXPORT;
+    virtual-dtor true;
+
+    //! The cartesian frame of the kinematics object
+    member {
+      name Frame;
+      type vctFrm3;
+      visibility public;
+    }
+
+    //! The cartesian velocity of the kinematics frame
+    member {
+      name CartesianVelocity;
+      type vct3;
+      visibility public;
+    }
+
+    //! The angular velocity of the kinematics frame
+    member {
+      name AngularVelocity;
+      type vct3;
+      visibility public;
+    }
+
+    //! The jacobian matrix associated with the kinematics frame
+    member {
+      name Jacobian;
+      type vctDoubleMat;
+      visibility public;
+    }
+
+    //! The inverse jacobian matrix associated with the kinematics frame
+    member {
+      name InverseJacobian;
+      type vctDoubleMat;
+      visibility public;
+    }
+
+    //! The number of virtual fixtures with pointers to the kinematics object
+    member {
+      name UserCount;
+      type int;
+      visibility public;
+    }
+
+    //! The name of the kinematics frame
+    member {
+      name Name;
+      type std::string;
+      visibility public;
+    }
+
+    //! If this object needs a "base", or if it has an offset from another kinematics object
+    member {
+      name NeedsBase;
+      type bool;
+      visibility public;
+    }
+
+    //! A pointer to the joint values associated with the kinematics frame
+    member {
+      name JointState;
+      type prmStateJoint*;
+      visibility public;
+      default 0;
+      is-data false;
+      accessors none;
+    }
+    inline-header{
+
+        //! This method looks up a base kinematics object for those with an offset, and nothing for others
+            /*! LookupKinematics
+            @param k map of kinematics names to kinematics objects
+            */
+            virtual void LookupKinematics(const std::map<std::string,prmKinematicsState *> &){}
+
+            /*! Constructor
+            */
+            prmKinematicsState(const std::string & n, prmStateJoint * js);
+
+            //! Updates the kinematics information using the pointer to a joint state.
+            /*! Update
+            */
+            virtual void Update(){};
+    }
+}
+
+inline-code {
+
+    /*! Constructor */
+    prmKinematicsState::prmKinematicsState(const std::string & n, prmStateJoint * js)
+    {
+        Name = n;
+        UserCount = 0;
+        JointState = js;
+        NeedsBase = false;
+    }
+}

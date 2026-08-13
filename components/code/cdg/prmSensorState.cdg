@@ -1,0 +1,62 @@
+inline-header {
+// Always include last!
+#include <sawConstraintController/sawConstraintControllerExport.h>
+}
+class {
+    name prmSensorState;
+    attribute CISST_EXPORT;
+    virtual-dtor true;
+
+    //! The name of the sensor object
+    member {
+      name Name;
+      type std::string;
+      visibility public;
+    }
+
+    //! The current values read from the associated sensor
+    member {
+      name Values;
+      type vctDynamicVector<double>;
+      visibility public;
+    }
+
+    //! The number of virtual fixtures with pointers to this sensor object
+    member {
+      name UserCount;
+      type int;
+      visibility public;
+    }
+
+    //! If this object needs a "base", or if it has an offset from another sensor object
+    member {
+      name NeedsBase;
+      type bool;
+      visibility public;
+    }
+
+    inline-header{
+
+        /*! Constructor
+        */
+        prmSensorState(const std::string & n);
+
+        //! Looks up the base sensor pointer if it is needed
+        /*! LookupSensor
+        @param s map of sensor names to sensor pointers
+        */
+        virtual void LookupSensor(const std::map<std::string,prmSensorState *> &){};
+    }
+
+}
+
+inline-code {
+
+    /*! Constructor
+    */
+    prmSensorState::prmSensorState(const std::string & n)
+    {
+        Name = n;
+    }
+
+}

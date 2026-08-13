@@ -1,0 +1,29 @@
+inline-header {
+#include <cisstVector/vctDynamicVectorTypes.h>
+#include <sawConstraintController/sawConstraintControllerExport.h>
+}
+class {
+    name prmJointState;
+
+    attribute CISST_EXPORT;
+
+    member {    
+      name JointPosition;
+      type vctDoubleVec;
+      visibility public;
+    }
+
+    member {    
+      name JointVelocity;
+      type vctDoubleVec;
+      visibility public;
+    }
+
+    member {    
+      name JointAcceleration;
+      type vctDoubleVec;
+      visibility public;
+    }
+
+}
+

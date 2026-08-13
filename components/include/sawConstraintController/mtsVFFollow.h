@@ -26,7 +26,6 @@
 #include <sawConstraintController/prmSensorState.h>
 #include <sawConstraintController/mtsVFBase.h>
 #include <sawConstraintController/mtsVFJointPos.h>
-#include <cisstRobot/robManipulator.h>
 
 /*! @brief Calculate joint angles that take the robot from the current position and orientation to a desired one.
 

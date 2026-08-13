@@ -12,6 +12,7 @@ set (sawConstraintController_VERSION_MAJOR "@sawConstraintController_VERSION_MAJ
 set (sawConstraintController_VERSION_MINOR "@sawConstraintController_VERSION_MINOR@")
 set (sawConstraintController_VERSION_PATCH "@sawConstraintController_VERSION_PATCH@")
 set (sawConstraintController_VERSION "@sawConstraintController_VERSION@")
+set (sawConstraintController_USE_EIGEN "@SAW_sawConstraintController_USE_EIGEN@")
 
 # figure out if this file is where it was configured (build tree) or
 # not (installed tree)

@@ -92,7 +92,7 @@ void mtsVFFollow::FillInTableauRefs(const CONTROLLERMODE mode, const double Tick
     // Note: depending on what you define as positive theta,
     //       you may need to account for the -CurrentFrame.Rotation()
     //       so that it is the equivalent of +CurrentFrame.Rotation().
-    dx_rotation = -CurrentFrame.Rotation() * dx_rotation;
+    dx_rotation = CurrentFrame.Rotation() * dx_rotation;
 
     if(Data->ObjectiveRows == 3)
     {
